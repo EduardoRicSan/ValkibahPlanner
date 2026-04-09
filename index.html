@@ -1,0 +1,1048 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0">
+<title>Grupo Valkibah · Planeador</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<style>
+:root{
+  --teal-900:#0a3d3d;--teal-800:#0f5252;--teal-700:#1a7a7a;
+  --teal-600:#2aacac;--teal-400:#40d9c0;--teal-200:#a8f0e8;
+  --teal-100:#d0f5f0;--teal-50:#e8fafa;
+  --mint:#7fffd4;--black:#0d0d0d;--white:#ffffff;
+  --event-bg:#b2f0e8;
+  --locked-stripe:repeating-linear-gradient(45deg,#e0e0e0 0px,#e0e0e0 4px,#ececec 4px,#ececec 10px);
+  --pm:#0e6b6b;--pa:#7fffd4;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;background:var(--teal-900);color:var(--white);min-height:100vh}
+.screen{display:none}
+.screen.active{display:flex;flex-direction:column;min-height:100vh}
+
+/* HOME */
+#screen-home{background:linear-gradient(160deg,var(--teal-900) 0%,#0a2e2e 100%);align-items:center;justify-content:flex-start;padding:0}
+.home-hero{width:100%;padding:48px 24px 32px;text-align:center;background:linear-gradient(180deg,rgba(0,0,0,.35) 0%,transparent 100%)}
+.home-logo{width:64px;height:64px;background:linear-gradient(135deg,var(--teal-700),var(--teal-400));border-radius:20px;display:flex;align-items:center;justify-content:center;font-family:'DM Serif Display',serif;font-size:26px;color:#fff;margin:0 auto 16px;box-shadow:0 8px 32px rgba(64,217,192,.3)}
+.home-title{font-family:'DM Serif Display',serif;font-size:28px;color:#fff;margin-bottom:6px}
+.home-sub{font-size:13px;color:var(--teal-400);letter-spacing:.12em;text-transform:uppercase}
+.home-cards{width:100%;max-width:520px;margin:0 auto;padding:24px 16px 40px;display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.person-card{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:18px;padding:22px 16px;cursor:pointer;transition:all .2s;text-align:center;-webkit-tap-highlight-color:transparent}
+.person-card:hover,.person-card:active{transform:translateY(-3px);border-color:var(--teal-400);background:rgba(64,217,192,.12)}
+.person-card .card-emoji{font-size:32px;margin-bottom:10px}
+.person-card .card-name{font-size:14px;font-weight:700;color:#fff;margin-bottom:3px}
+.person-card .card-role{font-size:11px;color:var(--teal-400);font-weight:600;letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px}
+.person-card .card-sched{font-size:10px;color:var(--teal-200);opacity:.75}
+
+/* APP */
+#screen-app{background:var(--teal-50);color:var(--black)}
+.app-header{background:var(--black);padding:14px 20px;display:flex;align-items:center;justify-content:space-between;border-bottom:2px solid var(--teal-700);position:sticky;top:0;z-index:100;flex-shrink:0}
+.logo-area{display:flex;align-items:center;gap:10px}
+.logo-circle{width:36px;height:36px;background:linear-gradient(135deg,var(--teal-700),var(--teal-400));border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'DM Serif Display',serif;font-size:15px;color:#fff}
+.brand-name{font-family:'DM Serif Display',serif;font-size:16px;color:#fff;letter-spacing:.04em}
+.header-right{display:flex;align-items:center;gap:8px}
+.person-badge{background:var(--pm);color:#fff;padding:6px 14px;border-radius:20px;font-size:12px;font-weight:700;white-space:nowrap}
+.back-btn{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:#fff;border-radius:8px;padding:6px 10px;font-size:13px;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.app-body{display:grid;grid-template-columns:280px 1fr;flex:1;overflow:hidden}
+.sidebar{background:var(--teal-800);border-right:1px solid var(--teal-700);padding:20px 18px;display:flex;flex-direction:column;gap:18px;overflow-y:auto}
+.sidebar-title{font-family:'DM Serif Display',serif;font-size:16px;color:var(--teal-400);padding-bottom:10px;border-bottom:1px solid var(--teal-700)}
+.nav-tabs{display:flex;flex-direction:column;gap:3px}
+.nav-tab{background:transparent;border:1px solid transparent;color:var(--teal-200);padding:9px 12px;border-radius:8px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;text-align:left;transition:all .15s;-webkit-tap-highlight-color:transparent}
+.nav-tab:hover{background:var(--teal-700);color:#fff}
+.nav-tab.active{background:var(--pm);color:#fff;border-color:var(--teal-400)}
+.month-selector{display:flex;flex-direction:column;gap:5px}
+.month-selector label{font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:var(--teal-400)}
+.month-selector select{background:var(--teal-900);color:#fff;border:1px solid var(--teal-600);padding:9px 11px;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:13px;cursor:pointer;outline:none}
+.activity-list{display:flex;flex-direction:column;gap:4px;max-height:220px;overflow-y:auto}
+.activity-chip{background:var(--teal-900);border:1px solid var(--teal-700);border-radius:7px;padding:6px 10px;font-size:12px;color:var(--teal-200);cursor:pointer;transition:all .13s;display:flex;align-items:center;gap:6px}
+.activity-chip:hover{border-color:var(--teal-400);color:#fff}
+.activity-chip .dot{width:6px;height:6px;border-radius:50%;background:var(--teal-400);flex-shrink:0}
+.main-area{background:var(--teal-50);color:var(--black);overflow-y:auto;overflow-x:hidden}
+.view{display:none;padding:24px}
+.view.active{display:block}
+
+/* FORM */
+.form-card{background:#fff;border-radius:14px;padding:28px;max-width:640px;box-shadow:0 4px 28px rgba(26,122,122,.11)}
+.form-title{font-family:'DM Serif Display',serif;font-size:22px;color:var(--teal-800);margin-bottom:4px}
+.form-sub{font-size:13px;color:var(--teal-600);margin-bottom:22px}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:15px}
+.form-group{display:flex;flex-direction:column;gap:4px}
+.form-group.full{grid-column:1/-1}
+.form-group label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--teal-700)}
+.form-group input,.form-group select,.form-group textarea{background:var(--teal-50);border:1.5px solid var(--teal-200);border-radius:8px;padding:10px 12px;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--teal-900);outline:none;transition:border-color .14s}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:var(--teal-600)}
+.form-group textarea{resize:vertical;min-height:70px}
+.btn-row{display:flex;gap:10px;margin-top:22px;flex-wrap:wrap}
+.btn{padding:10px 22px;border-radius:9px;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;transition:all .16s;-webkit-tap-highlight-color:transparent}
+.btn-primary{background:var(--pm);color:#fff}
+.btn-primary:hover{filter:brightness(1.15);transform:translateY(-1px)}
+.btn-secondary{background:var(--teal-100);color:var(--teal-800)}
+.btn-secondary:hover{background:var(--teal-200)}
+.btn-danger{background:#fee2e2;color:#c0392b}
+.btn-danger:hover{background:#fecaca}
+.status-group{display:flex;gap:7px;flex-wrap:wrap;margin-top:4px}
+.status-opt{padding:6px 14px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;border:2px solid transparent;transition:all .15s;-webkit-tap-highlight-color:transparent}
+.status-opt:hover{transform:scale(1.04)}
+.status-opt.sel{border-color:var(--black)!important;transform:scale(1.06)}
+.s-pendiente{background:#fff3cd;color:#856404}
+.s-en-progreso{background:#cfe2ff;color:#084298}
+.s-completada{background:#d1e7dd;color:#0f5132}
+.s-bloqueada{background:#f8d7da;color:#842029}
+
+/* CALENDAR GRID */
+.cal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;flex-wrap:wrap;gap:10px}
+.cal-title{font-family:'DM Serif Display',serif;font-size:24px;color:var(--teal-800)}
+.cal-actions{display:flex;gap:8px}
+.week-block{margin-bottom:24px}
+.week-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.14em;color:var(--teal-600);margin-bottom:6px;padding-left:2px;display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+.week-locked-badge{background:#aaa;color:#fff;font-size:9px;padding:2px 7px;border-radius:10px}
+.week-current-badge{background:var(--pm);color:#fff;font-size:9px;padding:2px 7px;border-radius:10px}
+.week-next-badge{background:var(--teal-600);color:#fff;font-size:9px;padding:2px 7px;border-radius:10px}
+.cal-grid{background:#fff;border-radius:11px;overflow:hidden;box-shadow:0 2px 14px rgba(26,122,122,.07);border:1px solid var(--teal-200)}
+
+/* Fixed column layout via table */
+.cal-table{width:100%;border-collapse:collapse;table-layout:fixed}
+.cal-table colgroup col:first-child{width:58px}
+.cal-th{background:var(--teal-800);color:#fff;font-weight:600;font-size:9px;text-align:center;letter-spacing:.07em;text-transform:uppercase;padding:9px 3px;border-right:1px solid var(--teal-700);vertical-align:top}
+.cal-th.event-day{background:var(--teal-700)}
+.cal-th .day-date{font-size:15px;font-weight:700;display:block;margin-top:2px;color:var(--teal-400)}
+.cal-th.event-day .day-date{color:var(--mint)}
+.cal-th-hour{background:var(--teal-900);color:var(--teal-400);font-weight:700;font-size:10px;border-right:2px solid var(--teal-600)}
+.cal-td{font-size:11px;border-right:1px solid var(--teal-100);border-bottom:1px solid var(--teal-100);vertical-align:top;position:relative;height:46px;padding:2px 3px;overflow:hidden}
+.cal-td:last-child{border-right:none}
+.cal-td.event-day{background:var(--event-bg)!important}
+.cal-td.locked{background:var(--locked-stripe)!important;cursor:not-allowed;pointer-events:none}
+.cal-td.editable{cursor:pointer;transition:background .1s}
+.cal-td.editable:hover{background:var(--teal-50)!important}
+.cal-td.drag-over{background:rgba(64,217,192,.25)!important;outline:2px dashed var(--teal-400);outline-offset:-2px}
+.cal-td.out-month{background:#f4f4f4!important;color:#ccc}
+.cal-td.span-occupied{padding:0;overflow:visible}
+
+/* all-day row */
+
+/* pills */
+.pill{display:block;border-radius:4px;font-size:9px;font-weight:700;padding:2px 5px;margin-bottom:2px;cursor:pointer;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:100%;box-sizing:border-box;line-height:1.4;transition:opacity .13s;color:#fff;position:relative}
+.pill:hover{opacity:.85}
+.pill-del{position:absolute;right:2px;top:50%;transform:translateY(-50%);background:rgba(0,0,0,.25);border:none;border-radius:50%;width:12px;height:12px;font-size:7px;cursor:pointer;color:#fff;display:none;align-items:center;justify-content:center;padding:0;line-height:1}
+.pill:hover .pill-del{display:flex}
+/* spanning pill: fills rowspan visually */
+.pill-span{position:absolute;left:2px;right:2px;top:2px;border-radius:5px;font-size:10px;font-weight:700;padding:4px 6px;cursor:pointer;overflow:hidden;color:#fff;z-index:3;display:flex;flex-direction:column;gap:2px;white-space:normal;word-break:break-word;box-sizing:border-box}
+.pill-span .pill-span-time{font-size:8px;opacity:.85;margin-top:2px}
+.pill-span .pill-del{position:absolute;top:4px;right:4px;display:none}
+.pill-span:hover .pill-del{display:flex}
+/* all-day pill */
+
+/* status colors on pills */
+.ps-pendiente{background:#856404}
+.ps-en-progreso{background:#084298}
+.ps-completada{background:#0f5132}
+.ps-bloqueada{background:#842029}
+.ps-default{background:var(--pm)}
+
+/* REGISTRO */
+.registro-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;flex-wrap:wrap;gap:10px}
+.reg-table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.reg-table{background:#fff;border-radius:11px;overflow:hidden;box-shadow:0 2px 14px rgba(26,122,122,.07);border:1px solid var(--teal-200);width:100%;border-collapse:collapse}
+.reg-table th{background:var(--teal-800);color:#fff;padding:10px 13px;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.09em;text-align:left;border-right:1px solid var(--teal-700)}
+.reg-table td{padding:9px 13px;font-size:13px;color:var(--teal-900);border-right:1px solid var(--teal-100);border-bottom:1px solid var(--teal-100)}
+.reg-table tr:nth-child(even) td{background:var(--teal-50)}
+.reg-table tr:hover td{background:var(--teal-100)}
+.del-row-btn{background:none;border:none;cursor:pointer;color:#e05555;font-size:13px;padding:2px 5px;border-radius:4px}
+.edit-row-btn{background:none;border:none;cursor:pointer;color:var(--teal-600);font-size:13px;padding:2px 5px;border-radius:4px}
+.status-badge{display:inline-block;padding:2px 9px;border-radius:10px;font-size:10px;font-weight:700}
+.sb-pendiente{background:#fff3cd;color:#856404}
+.sb-en-progreso{background:#cfe2ff;color:#084298}
+.sb-completada{background:#d1e7dd;color:#0f5132}
+.sb-bloqueada{background:#f8d7da;color:#842029}
+.empty-state{text-align:center;padding:50px 20px;color:var(--teal-600)}
+.empty-state .big-icon{font-size:42px;margin-bottom:10px}
+
+/* KANBAN */
+.kanban-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;flex-wrap:wrap;gap:10px}
+.kanban-board{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;align-items:start}
+.kanban-col{background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 2px 14px rgba(26,122,122,.07);border:1px solid var(--teal-200)}
+.kanban-col-header{padding:12px 14px;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;display:flex;align-items:center;justify-content:space-between}
+.kanban-col-body{padding:10px;display:flex;flex-direction:column;gap:8px;min-height:80px}
+.kh-pendiente{background:#fff3cd;color:#856404;border-bottom:2px solid #ffc107}
+.kh-en-progreso{background:#cfe2ff;color:#084298;border-bottom:2px solid #0d6efd}
+.kh-completada{background:#d1e7dd;color:#0f5132;border-bottom:2px solid #198754}
+.kh-bloqueada{background:#f8d7da;color:#842029;border-bottom:2px solid #dc3545}
+.kanban-card{background:var(--teal-50);border:1px solid var(--teal-200);border-radius:8px;padding:10px 12px;font-size:12px;cursor:grab;transition:all .15s;-webkit-tap-highlight-color:transparent;user-select:none}
+.kanban-card:active{cursor:grabbing}
+.kanban-card.dragging{opacity:.4}
+.kanban-col-body.kanbandrop{background:rgba(64,217,192,.12);outline:2px dashed var(--teal-400);border-radius:0 0 12px 12px}
+.kanban-card .kc-name{font-weight:700;color:var(--teal-900);margin-bottom:3px}
+.kanban-card .kc-date{font-size:10px;color:var(--teal-600)}
+.kanban-count{background:rgba(0,0,0,.12);border-radius:10px;padding:1px 7px;font-size:11px}
+
+/* IDEAS */
+.ideas-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;flex-wrap:wrap;gap:10px}
+.ideas-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px;margin-top:6px}
+.idea-card{background:#fff;border-radius:12px;padding:16px;border:1px solid var(--teal-200);box-shadow:0 2px 10px rgba(26,122,122,.06);position:relative}
+.idea-card .idea-title{font-weight:700;font-size:14px;color:var(--teal-800);margin-bottom:5px}
+.idea-card .idea-body{font-size:13px;color:#555;line-height:1.5}
+.idea-card .idea-date{font-size:10px;color:#aaa;margin-top:8px}
+.idea-card .idea-del{position:absolute;top:10px;right:10px;background:none;border:none;cursor:pointer;color:#ccc;font-size:14px}
+.idea-card .idea-del:hover{color:#e05555}
+.idea-form{background:#fff;border-radius:14px;padding:22px;max-width:560px;border:1px solid var(--teal-200);box-shadow:0 2px 14px rgba(26,122,122,.08);margin-bottom:22px}
+.idea-form input,.idea-form textarea{width:100%;background:var(--teal-50);border:1.5px solid var(--teal-200);border-radius:8px;padding:10px 12px;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--teal-900);outline:none;margin-top:6px}
+.idea-form textarea{resize:vertical;min-height:80px}
+
+/* MODAL */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:1000;align-items:center;justify-content:center;padding:16px}
+.modal-overlay.open{display:flex}
+.modal{background:#fff;border-radius:16px;padding:28px;width:100%;max-width:480px;max-height:90vh;overflow-y:auto;position:relative}
+.modal-title{font-family:'DM Serif Display',serif;font-size:20px;color:var(--teal-800);margin-bottom:16px}
+.modal-close{position:absolute;top:16px;right:16px;background:var(--teal-100);border:none;border-radius:50%;width:30px;height:30px;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--teal-800)}
+.modal-info-row{display:flex;align-items:center;gap:8px;font-size:13px;color:#555;padding:5px 0}
+.modal-info-row span:first-child{font-weight:600;color:var(--teal-700);min-width:80px}
+
+/* PRINT */
+@media print{
+  body{background:#fff;color:#000}
+  .app-header,.sidebar,.cal-actions,.btn-row,.nav-tabs,.month-selector,
+  .activity-list,.sidebar-title,.pill-del,.del-row-btn,.edit-row-btn,
+  .week-locked-badge,.week-current-badge,.week-next-badge,
+  .mobile-tabbar,.mobile-month-bar,.drawer{display:none!important}
+  .app-body{display:block}
+  .main-area{background:#fff;overflow:visible}
+  .view{display:block!important;padding:0}
+  #view-calendar{display:block!important}
+  #view-form,#view-registro,#view-kanban,#view-ideas{display:none!important}
+  .week-block.no-activities{display:none!important}
+  .cal-grid{box-shadow:none;border:1px solid #ccc;page-break-inside:avoid}
+  .week-block{page-break-inside:avoid;margin-bottom:14px}
+  .print-header{display:block!important}
+  .cal-td.editable,.cal-td.locked{background:#fff!important}
+  .cal-td.event-day{background:#e0f7f3!important}
+  .cal-th,.cal-th-hour{background:#1a7a7a!important;color:#fff!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .pill{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
+.print-header{display:none;font-family:'DM Serif Display',serif;font-size:20px;color:#1a7a7a;margin-bottom:12px;padding-bottom:8px;border-bottom:2px solid #1a7a7a}
+
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-thumb{background:var(--teal-600);border-radius:5px}
+.toast{position:fixed;bottom:26px;right:26px;background:var(--teal-700);color:#fff;padding:12px 18px;border-radius:9px;font-size:13px;font-weight:500;box-shadow:0 8px 28px rgba(0,0,0,.28);transform:translateY(70px);opacity:0;transition:all .28s ease;z-index:9999;max-width:calc(100vw - 32px)}
+.toast.show{transform:translateY(0);opacity:1}
+
+/* MOBILE */
+.mobile-tabbar{display:none;position:fixed;bottom:0;left:0;right:0;background:var(--black);border-top:2px solid var(--teal-700);z-index:200;padding:env(safe-area-inset-bottom,0) 0 0}
+.mobile-tabbar-inner{display:grid;grid-template-columns:repeat(5,1fr);height:58px}
+.mtab{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;background:none;border:none;color:var(--teal-400);font-family:'DM Sans',sans-serif;font-size:9px;font-weight:600;cursor:pointer;padding:5px 0;transition:color .15s,background .15s;-webkit-tap-highlight-color:transparent}
+.mtab .mtab-icon{font-size:18px;line-height:1}
+.mtab.active{color:#fff;background:rgba(255,255,255,.06);border-top:2px solid var(--pm)}
+.drawer-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:300}
+.drawer-overlay.open{display:block}
+.drawer{position:fixed;top:0;left:-100%;bottom:0;width:min(85vw,300px);background:var(--teal-800);z-index:400;overflow-y:auto;transition:left .28s cubic-bezier(.4,0,.2,1);padding:20px 16px 24px;display:flex;flex-direction:column;gap:16px}
+.drawer.open{left:0}
+.drawer-close{align-self:flex-end;background:none;border:1px solid var(--teal-600);color:var(--teal-400);border-radius:50%;width:30px;height:30px;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.mobile-month-bar{display:none;background:var(--teal-900);border-bottom:1px solid var(--teal-700);padding:9px 14px;align-items:center;gap:8px;flex-shrink:0}
+.mobile-month-bar label{font-size:11px;color:var(--teal-400);text-transform:uppercase;letter-spacing:.1em;white-space:nowrap}
+.mobile-month-bar select{flex:1;background:var(--teal-900);color:#fff;border:1px solid var(--teal-600);border-radius:8px;padding:7px 9px;font-family:'DM Sans',sans-serif;font-size:13px;outline:none;-webkit-appearance:none;appearance:none}
+.mobile-month-bar .drawer-btn{background:none;border:1px solid var(--teal-600);color:var(--teal-400);border-radius:8px;padding:7px 10px;font-size:14px;cursor:pointer}
+
+@media(max-width:900px){.kanban-board{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:768px){
+  .app-header{padding:10px 14px}
+  .brand-name{font-size:14px}
+  .sidebar{display:none}
+  .app-body{display:block}
+  .main-area{padding-bottom:calc(58px + env(safe-area-inset-bottom,0px))}
+  .mobile-tabbar{display:block}
+  .mobile-month-bar{display:flex}
+  .view{padding:0}
+  .form-card{border-radius:0;padding:16px;max-width:100%;box-shadow:none}
+  .idea-form{border-radius:0;margin-bottom:14px}
+  .form-grid{grid-template-columns:1fr}
+  .form-group.full{grid-column:1}
+  .form-group input,.form-group select,.form-group textarea{font-size:16px!important;padding:12px 13px}
+  .btn{padding:12px 18px;font-size:14px}
+  .btn-row{flex-direction:column}
+  .btn-row .btn{width:100%;text-align:center}
+  #view-calendar{padding:0}
+  .cal-header{padding:12px 14px 0;margin-bottom:12px}
+  .cal-title{font-size:19px}
+  #calendar-body{overflow-x:auto;-webkit-overflow-scrolling:touch;padding:10px 0 14px}
+  .week-block{margin-bottom:18px;padding:0 10px}
+  .cal-grid{min-width:520px}
+  .cal-td{height:38px}
+  #view-registro{padding:0}
+  .registro-header{padding:12px 14px;margin-bottom:10px}
+  .reg-table-wrap{padding:0 10px 12px}
+  .kanban-board{grid-template-columns:1fr 1fr;padding:0 14px 14px}
+  .kanban-header{padding:12px 14px 0}
+  #view-kanban{padding:0}
+  #view-ideas{padding:0}
+  .ideas-header{padding:12px 14px 0}
+  .ideas-grid{padding:0 14px 14px}
+  .toast{bottom:calc(68px + env(safe-area-inset-bottom,0px));right:14px;left:14px;text-align:center}
+  .modal{border-radius:12px;padding:20px}
+}
+@media(max-width:480px){.kanban-board{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<!-- HOME -->
+<div id="screen-home" class="screen active">
+  <div class="home-hero">
+    <div class="home-logo">V</div>
+    <div class="home-title">Grupo Valkibah</div>
+    <div class="home-sub">Studio · Planeador de Actividades</div>
+  </div>
+  <div class="home-cards" id="home-cards"></div>
+</div>
+
+<!-- APP -->
+<div id="screen-app" class="screen">
+  <header class="app-header">
+    <div class="logo-area">
+      <div class="logo-circle">V</div>
+      <div class="brand-name">Grupo Valkibah</div>
+    </div>
+    <div class="header-right">
+      <span class="person-badge" id="person-badge-header"></span>
+      <button class="back-btn" onclick="goHome()">← Inicio</button>
+    </div>
+  </header>
+
+  <div class="mobile-month-bar" id="mobile-month-bar" style="display:none">
+    <label>Mes</label>
+    <select id="month-select-m" onchange="syncMonthSelect(this.value)"></select>
+    <button class="drawer-btn" onclick="openDrawer()">☰</button>
+  </div>
+
+  <div class="drawer-overlay" id="drawer-overlay" onclick="closeDrawer()"></div>
+  <div class="drawer" id="drawer">
+    <button class="drawer-close" onclick="closeDrawer()">✕</button>
+    <div style="font-family:'DM Serif Display',serif;font-size:16px;color:var(--teal-400)">Actividades Base</div>
+    <div class="activity-list" id="activity-list-drawer"></div>
+  </div>
+
+  <div class="app-body">
+    <aside class="sidebar">
+      <div>
+        <div class="sidebar-title">Navegación</div>
+        <div style="font-size:11px;color:var(--teal-400);margin-top:3px" id="sidebar-schedule"></div>
+      </div>
+      <nav class="nav-tabs">
+        <button class="nav-tab active" onclick="showView('form')" id="tab-form">➕ Nueva Actividad</button>
+        <button class="nav-tab" onclick="showView('registro')" id="tab-registro">📋 Registro</button>
+        <button class="nav-tab" onclick="showView('calendar')" id="tab-calendar">📅 Calendario</button>
+        <button class="nav-tab" onclick="showView('kanban')" id="tab-kanban">🗂 Tablero</button>
+        <button class="nav-tab" onclick="showView('ideas')" id="tab-ideas">💡 Ideas</button>
+      </nav>
+      <div class="month-selector">
+        <label>Mes del Calendario</label>
+        <select id="month-select" onchange="renderCalendar();syncDesktopToMobile(this.value)"></select>
+      </div>
+      <div>
+        <div style="font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:var(--teal-400);margin-bottom:6px">Actividades base</div>
+        <div class="activity-list" id="activity-list"></div>
+      </div>
+      <div style="margin-top:auto;font-size:11px;color:var(--teal-400);line-height:1.9">
+        <div style="font-weight:600;margin-bottom:3px">Leyenda</div>
+        <div>🟢 Verde = Día de Eventos</div>
+        <div>🔒 Gris = Semana bloqueada</div>
+        <div>✏️ Semana actual + próxima editables</div>
+      </div>
+    </aside>
+
+    <main class="main-area">
+      <!-- FORM -->
+      <div class="view active" id="view-form">
+        <div class="form-card">
+          <div class="form-title" id="form-title-label">Nueva Actividad</div>
+          <div class="form-sub">Completa los datos y guarda</div>
+          <div class="form-grid">
+            <div class="form-group full">
+              <label>Nombre de Actividad *</label>
+              <input type="text" id="f-name" placeholder="Ej: Atención a clientes" list="act-suggestions">
+              <datalist id="act-suggestions"></datalist>
+            </div>
+            <div class="form-group full">
+              <label>Descripción</label>
+              <textarea id="f-desc" placeholder="Detalla en qué consiste…"></textarea>
+            </div>
+            <div class="form-group">
+              <label>Responsable</label>
+              <input type="text" id="f-person" readonly style="opacity:.65;cursor:not-allowed">
+            </div>
+            <div class="form-group">
+              <label>Fecha *</label>
+              <input type="date" id="f-date">
+            </div>
+            <div class="form-group">
+              <label>Hora Inicio *</label>
+              <select id="f-start" onchange="onStartChange(this.value)">
+                <option value="">-- Selecciona --</option>
+                <option value="todo-el-dia">☀️ Todo el día</option>
+                <option>9:00</option><option>10:00</option><option>11:00</option><option>12:00</option>
+                <option>13:00</option><option>14:00</option><option>15:00</option><option>16:00</option>
+                <option>17:00</option><option>18:00</option><option>19:00</option><option>20:00</option>
+              </select>
+            </div>
+            <div class="form-group" id="f-end-group">
+              <label>Hora Fin</label>
+              <select id="f-end">
+                <option value="">-- Sin hora fin --</option>
+                <option>9:00</option><option>10:00</option><option>11:00</option><option>12:00</option>
+                <option>13:00</option><option>14:00</option><option>15:00</option><option>16:00</option>
+                <option>17:00</option><option>18:00</option><option>19:00</option><option>20:00</option>
+              </select>
+            </div>
+            <div class="form-group full">
+              <label>Estado</label>
+              <div class="status-group" id="f-status-group">
+                <span class="status-opt s-pendiente sel" data-val="pendiente" onclick="selectStatus(this)">⏳ Pendiente</span>
+                <span class="status-opt s-en-progreso" data-val="en-progreso" onclick="selectStatus(this)">🔄 En Progreso</span>
+                <span class="status-opt s-completada" data-val="completada" onclick="selectStatus(this)">✅ Completada</span>
+                <span class="status-opt s-bloqueada" data-val="bloqueada" onclick="selectStatus(this)">🚫 Bloqueada</span>
+              </div>
+            </div>
+          </div>
+          <div id="date-warning" style="display:none;margin-top:12px;padding:9px 13px;background:#fff3cd;border-radius:8px;font-size:13px;color:#856404;border:1px solid #ffc107">
+            ⚠️ Esa fecha pertenece a una semana bloqueada.
+          </div>
+          <div class="btn-row">
+            <button class="btn btn-primary" id="form-save-btn" onclick="saveActivity()">➕ Agregar al Calendario</button>
+            <button class="btn btn-secondary" onclick="clearForm()">🗑 Limpiar</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- CALENDAR -->
+      <div class="view" id="view-calendar">
+        <div class="print-header" id="print-title"></div>
+        <div class="cal-header">
+          <div class="cal-title" id="cal-month-title"></div>
+          <div class="cal-actions">
+            <button class="btn btn-secondary" onclick="exportPDF()">🖨 PDF</button>
+          </div>
+        </div>
+        <div id="calendar-body"></div>
+      </div>
+
+      <!-- REGISTRO -->
+      <div class="view" id="view-registro">
+        <div class="registro-header">
+          <div>
+            <div style="font-family:'DM Serif Display',serif;font-size:22px;color:var(--teal-800)">Registro de Actividades</div>
+            <div style="font-size:13px;color:var(--teal-600);margin-top:2px" id="reg-subtitle"></div>
+          </div>
+          <button class="btn btn-secondary" onclick="exportPDF()">🖨 PDF</button>
+        </div>
+        <div class="reg-table-wrap">
+          <table class="reg-table" id="reg-table">
+            <thead><tr>
+              <th>#</th><th>Actividad</th><th>Fecha</th><th>Horario</th><th>Estado</th><th>Acciones</th>
+            </tr></thead>
+            <tbody id="reg-body"></tbody>
+          </table>
+        </div>
+        <div class="empty-state" id="empty-state">
+          <div class="big-icon">📭</div>
+          <p>Aún no hay actividades registradas.</p>
+        </div>
+      </div>
+
+      <!-- KANBAN -->
+      <div class="view" id="view-kanban">
+        <div class="kanban-header">
+          <div style="font-family:'DM Serif Display',serif;font-size:22px;color:var(--teal-800)">🗂 Tablero de Actividades</div>
+        </div>
+        <div class="kanban-board">
+          <div class="kanban-col">
+            <div class="kanban-col-header kh-pendiente"><span>⏳ Pendiente</span><span class="kanban-count" id="kcount-pendiente">0</span></div>
+            <div class="kanban-col-body" id="kcol-pendiente"></div>
+          </div>
+          <div class="kanban-col">
+            <div class="kanban-col-header kh-en-progreso"><span>🔄 En Progreso</span><span class="kanban-count" id="kcount-en-progreso">0</span></div>
+            <div class="kanban-col-body" id="kcol-en-progreso"></div>
+          </div>
+          <div class="kanban-col">
+            <div class="kanban-col-header kh-completada"><span>✅ Completada</span><span class="kanban-count" id="kcount-completada">0</span></div>
+            <div class="kanban-col-body" id="kcol-completada"></div>
+          </div>
+          <div class="kanban-col">
+            <div class="kanban-col-header kh-bloqueada"><span>🚫 Bloqueada</span><span class="kanban-count" id="kcount-bloqueada">0</span></div>
+            <div class="kanban-col-body" id="kcol-bloqueada"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- IDEAS -->
+      <div class="view" id="view-ideas">
+        <div class="ideas-header">
+          <div style="font-family:'DM Serif Display',serif;font-size:22px;color:var(--teal-800)">💡 Ideas y Propuestas</div>
+        </div>
+        <div class="idea-form">
+          <div style="font-weight:700;font-size:15px;color:var(--teal-800);margin-bottom:10px">Nueva Idea</div>
+          <input type="text" id="idea-title" placeholder="Título de la idea…">
+          <textarea id="idea-body" placeholder="Describe tu idea o propuesta…" style="margin-top:10px"></textarea>
+          <div style="margin-top:12px"><button class="btn btn-primary" onclick="addIdea()">💡 Guardar Idea</button></div>
+        </div>
+        <div class="ideas-grid" id="ideas-grid">
+          <div class="empty-state" id="ideas-empty"><div class="big-icon">💡</div><p>Aún no hay ideas registradas.</p></div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <div class="mobile-tabbar">
+    <div class="mobile-tabbar-inner">
+      <button class="mtab active" id="mtab-form" onclick="showView('form')"><span class="mtab-icon">➕</span>Nueva</button>
+      <button class="mtab" id="mtab-registro" onclick="showView('registro')"><span class="mtab-icon">📋</span>Registro</button>
+      <button class="mtab" id="mtab-calendar" onclick="showView('calendar')"><span class="mtab-icon">📅</span>Cal.</button>
+      <button class="mtab" id="mtab-kanban" onclick="showView('kanban')"><span class="mtab-icon">🗂</span>Tablero</button>
+      <button class="mtab" id="mtab-ideas" onclick="showView('ideas')"><span class="mtab-icon">💡</span>Ideas</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modal-overlay" onclick="closeModal(event)">
+  <div class="modal" id="modal">
+    <button class="modal-close" onclick="closeModalDirect()">✕</button>
+    <div class="modal-title" id="modal-title">Detalle</div>
+    <div id="modal-body"></div>
+    <div class="btn-row" id="modal-btns" style="margin-top:18px"></div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+const PERSONS_DATA = [{"key": "eduardo", "storage_key": "valkibah_eduardo_v3", "person": "Eduardo Rico", "badge": "💻 Eduardo Rico", "role": "Mobah", "schedule": "12:00 PM – 8:00 PM", "person_main": "#0e6b6b", "person_light": "#d0f5f0", "emoji": "💻", "day_start": "12:00", "day_end": "20:00", "base_activities": ["Desarrollo Mobah – sprints quincenales", "Coordinación diaria del equipo", "Documentación técnica", "Revisión de KPIs Mobah", "Validación de inventario"]}, {"key": "mayo", "storage_key": "valkibah_mayo_v3", "person": "Mayo Espínola", "badge": "🌸 Mayo Espínola", "role": "Mokino", "schedule": "1:30 PM – 8:00 PM", "person_main": "#2aacac", "person_light": "#e0fafa", "emoji": "🌸", "day_start": "13:00", "day_end": "20:00", "base_activities": ["Coordinación y montaje de eventos", "Inventario mensual (día 15)", "Ideas creativas y decoración", "Búsqueda de alianzas y proveedores", "Calendario Mokino", "Optimización de proveedores"]}, {"key": "paloma", "storage_key": "valkibah_paloma_v3", "person": "Paloma Arvizu", "badge": "👩 Paloma Arvizu", "role": "Valpa", "schedule": "9:30 AM – 3:00 PM", "person_main": "#1a7a7a", "person_light": "#d8f5f0", "emoji": "👩", "day_start": "9:00", "day_end": "15:00", "base_activities": ["Atención a clientes (cotizaciones)", "Seguimiento post-evento", "Documento de tendencias", "Apoyo en montajes", "Portafolio fotográfico", "Búsqueda de alianzas", "Valkibah Aprende", "Gestión de reseñas online", "Creación de contenido", "Reunión semanal de equipo"]}, {"key": "salma", "storage_key": "valkibah_salma_v3", "person": "Salma Castillo", "badge": "🌴 Salma Castillo", "role": "Estrategia", "schedule": "7:00 PM – 8:00 PM", "person_main": "#0f5252", "person_light": "#cceaea", "emoji": "🌴", "day_start": "19:00", "day_end": "20:00", "base_activities": ["Respuesta al equipo (máx 24 hrs)", "Feedback estratégico Mokino/Valpa", "Gestión financiera y presupuesto", "Revisión de métricas/KPIs", "Reunión semanal y Valkibah Aprende", "Calendario Mokino"]}];
+const PILL_COLORS  = [["#0e6b6b", "#fff"], ["#084298", "#fff"], ["#6f2da8", "#fff"], ["#c0392b", "#fff"], ["#856404", "#fff"], ["#0f5132", "#fff"], ["#7d3c98", "#fff"], ["#b7410e", "#fff"]];
+
+const HOURS        = ["9:00","10:00","11:00","12:00","13:00","14:00","15:00","16:00","17:00","18:00","19:00","20:00"];
+const HOUR_LABELS  = ["9 AM","10 AM","11 AM","12 PM","1 PM","2 PM","3 PM","4 PM","5 PM","6 PM","7 PM","8 PM"];
+const DAYS_FULL    = ["LUNES","MARTES","MIÉRCOLES","JUEVES","VIERNES","SÁBADO","DOMINGO"];
+const MONTH_NAMES  = {1:"Enero",2:"Febrero",3:"Marzo",4:"Abril",5:"Mayo",6:"Junio",7:"Julio",8:"Agosto",9:"Septiembre",10:"Octubre",11:"Noviembre",12:"Diciembre"};
+const MONTHS_OPT   = [[4,"Abril 2026"],[5,"Mayo 2026"],[6,"Junio 2026"],[7,"Julio 2026"],[8,"Agosto 2026"],[9,"Septiembre 2026"],[10,"Octubre 2026"],[11,"Noviembre 2026"],[12,"Diciembre 2026"]];
+
+let currentPerson = null;
+let activities    = [];
+let ideas         = [];
+let editingId     = null;
+let currentStatus = "pendiente";
+
+// ── HOME ──
+function buildHome() {
+  const grid = document.getElementById("home-cards");
+  grid.innerHTML = "";
+  PERSONS_DATA.forEach(p => {
+    const c = document.createElement("div");
+    c.className = "person-card";
+    c.innerHTML = `<div class="card-emoji">${p.emoji}</div><div class="card-name">${p.person}</div><div class="card-role">${p.role}</div><div class="card-sched">${p.schedule}</div>`;
+    c.onclick = () => openPerson(p);
+    grid.appendChild(c);
+  });
+}
+
+function openPerson(p) {
+  currentPerson = p;
+  activities = JSON.parse(localStorage.getItem(p.storage_key)||"[]");
+  activities.forEach(a => { if (!a.status) a.status="pendiente"; });
+  ideas = JSON.parse(localStorage.getItem(p.storage_key+"_ideas")||"[]");
+  document.documentElement.style.setProperty("--pm", p.person_main);
+  document.documentElement.style.setProperty("--pa", p.person_accent||"#7fffd4");
+  document.getElementById("person-badge-header").textContent = p.badge;
+  document.getElementById("sidebar-schedule").textContent = "Horario: "+p.schedule;
+  document.getElementById("reg-subtitle").textContent = "Historial completo · "+p.person;
+  document.getElementById("f-person").value = p.person;
+  buildMonthSelects();
+  buildActivityLists(p.base_activities);
+  document.getElementById("f-date").onchange = function() {
+    const w = document.getElementById("date-warning");
+    w.style.display = (this.value && !isEditableDate(this.value))?"block":"none";
+  };
+  document.getElementById("screen-home").classList.remove("active");
+  document.getElementById("screen-app").classList.add("active");
+  clearForm(); showView("form"); renderCalendar(); renderRegistro();
+}
+
+function goHome() {
+  document.getElementById("screen-app").classList.remove("active");
+  document.getElementById("screen-home").classList.add("active");
+  currentPerson = null;
+}
+
+// ── MONTHS ──
+function buildMonthSelects() {
+  const nowM = new Date().getMonth()+1;
+  ["month-select","month-select-m"].forEach(id => {
+    const s = document.getElementById(id); s.innerHTML = "";
+    MONTHS_OPT.forEach(([m,label]) => {
+      const o = document.createElement("option");
+      o.value = "2026-"+m; o.textContent = label;
+      if (m===nowM) o.selected=true;
+      s.appendChild(o);
+    });
+  });
+}
+function syncDesktopToMobile(val) { const m=document.getElementById("month-select-m"); if(m) m.value=val; }
+function syncMonthSelect(val)    { const d=document.getElementById("month-select"); if(d) d.value=val; renderCalendar(); }
+
+// ── ACTIVITY CHIPS ──
+function buildActivityLists(baseActs) {
+  const list=document.getElementById("activity-list"),drawer=document.getElementById("activity-list-drawer"),dl=document.getElementById("act-suggestions");
+  list.innerHTML="";drawer.innerHTML="";dl.innerHTML="";
+  baseActs.filter(Boolean).forEach(a => {
+    const o=document.createElement("option");o.value=a;dl.appendChild(o);
+    [list,drawer].forEach(c => {
+      const chip=document.createElement("div");chip.className="activity-chip";
+      chip.innerHTML=`<span class="dot"></span>${a}`;
+      chip.onclick=()=>{document.getElementById("f-name").value=a;closeDrawer();showView("form");};
+      c.appendChild(chip);
+    });
+  });
+}
+
+// ── VIEWS ──
+function showView(v) {
+  document.querySelectorAll(".view").forEach(el=>el.classList.remove("active"));
+  document.querySelectorAll(".nav-tab").forEach(el=>el.classList.remove("active"));
+  document.getElementById("view-"+v).classList.add("active");
+  const dt=document.getElementById("tab-"+v);if(dt)dt.classList.add("active");
+  document.querySelectorAll(".mtab").forEach(el=>el.classList.remove("active"));
+  const mt=document.getElementById("mtab-"+v);if(mt)mt.classList.add("active");
+  const mbar=document.getElementById("mobile-month-bar");
+  if(mbar)mbar.style.display=v==="calendar"?"flex":"none";
+  if(v==="calendar")renderCalendar();
+  if(v==="registro")renderRegistro();
+  if(v==="kanban")renderKanban();
+  if(v==="ideas")renderIdeas();
+}
+
+// ── STATUS ──
+function selectStatus(el) { document.querySelectorAll(".status-opt").forEach(e=>e.classList.remove("sel")); el.classList.add("sel"); currentStatus=el.dataset.val; }
+function setStatusUI(val) {
+  currentStatus=val||"pendiente";
+  document.querySelectorAll(".status-opt").forEach(e=>e.classList.toggle("sel",e.dataset.val===currentStatus));
+}
+
+// ── FORM ──
+function onStartChange(val) {
+  const eg=document.getElementById("f-end-group");
+  if(val==="todo-el-dia"){eg.style.display="none";document.getElementById("f-end").value="";}
+  else if(eg) eg.style.display="";
+}
+
+function saveActivity() {
+  const name=document.getElementById("f-name").value.trim();
+  const desc=document.getElementById("f-desc").value.trim();
+  const date=document.getElementById("f-date").value;
+  const start=document.getElementById("f-start").value;
+  const end=document.getElementById("f-end").value;
+  if(!name||!date||!start){showToast("⚠️ Nombre, fecha y hora inicio son requeridos");return;}
+  if(!isEditableDate(date)){showToast("🔒 Esa semana está bloqueada.","#c0392b");return;}
+  const d=new Date(date+"T12:00:00"),dow=d.getDay();
+  if(dow===5||dow===6||dow===0)showToast("🎪 Día de Eventos (Vie/Sáb/Dom).","#e08030");
+  if(editingId!==null){
+    const idx=activities.findIndex(a=>a.id===editingId);
+    if(idx!==-1) activities[idx]={...activities[idx],name,desc,date,start,end,status:currentStatus};
+    showToast("✏️ Actividad actualizada"); editingId=null;
+  } else {
+    activities.push({id:Date.now(),name,desc,person:currentPerson.person,date,start,end,status:currentStatus});
+    showToast("✅ Actividad agregada");
+  }
+  save();renderCalendar();renderRegistro();renderKanban();clearForm();
+  const [y,m]=date.split("-").map(Number);
+  document.getElementById("month-select").value=`${y}-${m}`;
+  showView("calendar");
+}
+
+function clearForm() {
+  editingId=null;
+  document.getElementById("form-title-label").textContent="Nueva Actividad";
+  document.getElementById("form-save-btn").textContent="➕ Agregar al Calendario";
+  ["f-name","f-desc","f-date"].forEach(id=>document.getElementById(id).value="");
+  ["f-start","f-end"].forEach(id=>document.getElementById(id).selectedIndex=0);
+  document.getElementById("date-warning").style.display="none";
+  const eg=document.getElementById("f-end-group");if(eg)eg.style.display="";
+  setStatusUI("pendiente");
+}
+
+// ── WEEK UTILS ──
+function weekMonday(d){const dt=new Date(d);dt.setHours(0,0,0,0);dt.setDate(dt.getDate()-((dt.getDay()+6)%7));return dt;}
+function getAllowedWeeks(){const today=new Date();today.setHours(0,0,0,0);const curMon=weekMonday(today);const nextMon=new Date(curMon);nextMon.setDate(nextMon.getDate()+7);return{curMon,nextMon};}
+function isEditableDate(dateStr){const d=new Date(dateStr+"T12:00:00"),mon=weekMonday(d),{curMon,nextMon}=getAllowedWeeks();return mon.getTime()===curMon.getTime()||mon.getTime()===nextMon.getTime();}
+
+// ── CALENDAR ──
+// Returns hour index in HOURS array, or -1
+function hIdx(h){return HOURS.indexOf(h);}
+
+function renderCalendar() {
+  const sel=document.getElementById("month-select").value;
+  const [year,month]=sel.split("-").map(Number);
+  const monthName=MONTH_NAMES[month];
+  document.getElementById("cal-month-title").textContent=`${monthName} ${year}`;
+  document.getElementById("print-title").textContent=`Calendario · ${currentPerson.person} · ${monthName} ${year}`;
+
+  const body=document.getElementById("calendar-body");
+  body.innerHTML="";
+  const {curMon,nextMon}=getAllowedWeeks();
+
+  // Solo renderizar semana actual y siguiente
+  const weeksToRender=[{wMon:new Date(curMon),isCurrent:true,isNext:false},{wMon:new Date(nextMon),isCurrent:false,isNext:true}];
+  let weekNum=0;
+
+  weeksToRender.forEach(({wMon,isCurrent,isNext})=>{
+    weekNum++;
+    const weekEnd=new Date(wMon);weekEnd.setDate(weekEnd.getDate()+6);
+    const weekDates=Array.from({length:7},(_,i)=>{const d=new Date(wMon);d.setDate(d.getDate()+i);return d;});
+    const isLocked=false; // ambas semanas son editables
+    const weekDateStrs=weekDates.map(toDateStr);
+
+    const weekBlock=document.createElement("div");
+    weekBlock.className="week-block";
+    if(isCurrent) weekBlock.id="current-week-block";
+
+    const wLabel=document.createElement("div");wLabel.className="week-label";
+    let badge=isCurrent?`<span class="week-current-badge">✏️ Semana actual</span>`:`<span class="week-next-badge">➡️ Próxima semana</span>`;
+    wLabel.innerHTML=`Semana ${weekNum} · ${fmtDate(wMon)} – ${fmtDate(weekEnd)} ${badge}`;
+    weekBlock.appendChild(wLabel);
+
+    // Build grid using TABLE for strict column control
+    const table=document.createElement("table");
+    table.className="cal-table";
+    table.innerHTML=`<colgroup><col style="width:58px">${weekDates.map(()=>'<col>').join("")}</colgroup>`;
+    const thead=document.createElement("thead"),tbody=document.createElement("tbody");
+    table.appendChild(thead);table.appendChild(tbody);
+
+    // ── Header row ──
+    const hRow=document.createElement("tr");
+    const thHour=document.createElement("th");thHour.className="cal-th cal-th-hour";thHour.textContent="HORA";hRow.appendChild(thHour);
+    weekDates.forEach((d,i)=>{
+      const isEvent=i>=4,inMonth=d.getMonth()+1===month;
+      const th=document.createElement("th");th.className="cal-th"+(isEvent?" event-day":"");
+      th.innerHTML=`${DAYS_FULL[i]}<span class="day-date">${inMonth?d.getDate():"·"}</span>${isEvent?'<br><span style="font-size:8px;opacity:.6">🎪</span>':""}`;
+      hRow.appendChild(th);
+    });
+    thead.appendChild(hRow);
+
+    // ── Build span map ──
+    // spanMap[dateStr][hourStr] = [{act, span}, ...] — array para soportar múltiples spans
+    // occupied[dateStr][hourStr] = [actId, ...] — ids que ya ocupan esa fila
+    const spanMap={}, occupied={};
+
+    // Primero: actividades con rango de horas (start -> end)
+    activities.filter(a=>weekDateStrs.includes(a.date)&&a.start!=="todo-el-dia"&&a.end&&a.end!=="").forEach(act=>{
+      const si=hIdx(act.start),ei=hIdx(act.end);
+      if(si<0||ei<=si)return;
+      const span=ei-si;
+      if(!spanMap[act.date])spanMap[act.date]={};
+      if(!spanMap[act.date][act.start])spanMap[act.date][act.start]=[];
+      spanMap[act.date][act.start].push({act,span});
+      for(let k=1;k<span;k++){
+        const h=HOURS[si+k];if(!h)break;
+        if(!occupied[act.date])occupied[act.date]={};
+        if(!occupied[act.date][h])occupied[act.date][h]=[];
+        occupied[act.date][h].push(act.id);
+      }
+    });
+
+    // Segundo: actividades "todo el dia" — span desde day_start hasta day_end del colaborador
+    const dayStartH=currentPerson.day_start||HOURS[0];
+    const dayEndH=currentPerson.day_end||HOURS[HOURS.length-1];
+    const dsi=hIdx(dayStartH),dei=hIdx(dayEndH);
+    const alldaySpan=(dsi>=0&&dei>dsi)?dei-dsi:HOURS.length;
+    const alldayStartH=dsi>=0?dayStartH:HOURS[0];
+
+    activities.filter(a=>weekDateStrs.includes(a.date)&&a.start==="todo-el-dia").forEach(act=>{
+      const fakeAct={...act,start:alldayStartH,end:dayEndH};
+      if(!spanMap[fakeAct.date])spanMap[fakeAct.date]={};
+      if(!spanMap[fakeAct.date][alldayStartH])spanMap[fakeAct.date][alldayStartH]=[];
+      spanMap[fakeAct.date][alldayStartH].push({act:fakeAct,span:alldaySpan,isAllday:true});
+      for(let k=1;k<alldaySpan;k++){
+        const h=HOURS[dsi+k];if(!h)break;
+        if(!occupied[fakeAct.date])occupied[fakeAct.date]={};
+        if(!occupied[fakeAct.date][h])occupied[fakeAct.date][h]=[];
+        occupied[fakeAct.date][h].push(act.id);
+      }
+    });
+
+    // ── Assign colors a todas las actividades de la semana ──
+    const colorMap={};
+    let colorIdx=0;
+    activities.filter(a=>weekDateStrs.includes(a.date)).forEach(act=>{
+      if(colorMap[act.id]===undefined){ colorMap[act.id]=colorIdx%PILL_COLORS.length; colorIdx++; }
+    });
+
+    // ── Hour rows ──
+    HOURS.forEach((h,hi)=>{
+      const tr=document.createElement("tr");
+      const tdHour=document.createElement("td");tdHour.className="cal-cell hour-label";tdHour.textContent=HOUR_LABELS[hi];
+      // style the hour td as a th-like cell
+      tdHour.style.cssText="background:var(--teal-800);color:var(--teal-400);font-weight:700;font-size:10px;text-align:center;border-right:2px solid var(--teal-600);border-bottom:1px solid var(--teal-100);height:46px;vertical-align:middle;padding:2px";
+      tr.appendChild(tdHour);
+
+      weekDates.forEach((d,di)=>{
+        const isEvent=di>=4,inMonth=d.getMonth()+1===month;
+        const td=document.createElement("td");
+        const dateStr=toDateStr(d);
+
+        if(isEvent){
+          td.className="cal-td event-day";
+          if(hi===0)td.innerHTML=`<span style="font-size:8px;font-weight:700;color:var(--teal-700);opacity:.65">🎪 Día de Eventos</span>`;
+        } else if(!inMonth){
+          td.className="cal-td out-month";
+        } else if(isLocked){
+          td.className="cal-td locked";
+          if(hi===0){const ov=document.createElement("div");ov.style.cssText="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none";ov.innerHTML=`<span style="font-size:10px;color:#bbb">🔒</span>`;td.appendChild(ov);}
+        } else {
+          td.className="cal-td editable";
+          td.style.background=hi%2===0?"var(--teal-50)":"var(--white)";
+          // Drop events
+          td.addEventListener("dragover",e=>{e.preventDefault();td.classList.add("drag-over");});
+          td.addEventListener("dragleave",()=>td.classList.remove("drag-over"));
+          td.addEventListener("drop",e=>{
+            e.preventDefault();td.classList.remove("drag-over");
+            const id=parseInt(e.dataTransfer.getData("text/plain"));
+            const act=activities.find(a=>a.id===id);
+            if(act&&isEditableDate(dateStr)){act.date=dateStr;act.start=h;save();renderCalendar();renderRegistro();renderKanban();showToast("📅 Actividad movida");}
+          });
+          td.addEventListener("touchend",e=>{
+            if(window._draggingId!==undefined){
+              const act=activities.find(a=>a.id===window._draggingId);
+              if(act&&isEditableDate(dateStr)){act.date=dateStr;act.start=h;save();renderCalendar();renderRegistro();renderKanban();showToast("📅 Actividad movida");}
+              window._draggingId=undefined;
+            }
+          });
+        }
+
+        // ── Render pills ──
+        // Actividades simples en esta hora (sin span, sin todo-el-dia)
+        const spanActIds=spanMap[dateStr]&&spanMap[dateStr][h]?spanMap[dateStr][h].map(e=>e.act.id):[];
+        const occupiedIds=(occupied[dateStr]&&occupied[dateStr][h])||[];
+        const cellActs=activities.filter(a=>a.date===dateStr&&a.start===h&&a.start!=="todo-el-dia"&&!spanActIds.includes(a.id));
+
+        // Si esta celda tiene spans iniciando aquí, necesita rowSpan
+        // Usamos la estrategia: la primera span toma el rowSpan, las demás se renderizan como pills normales
+        if(spanMap[dateStr]&&spanMap[dateStr][h]&&spanMap[dateStr][h].length>0){
+          const spans=spanMap[dateStr][h];
+          // La primera span define el rowSpan de la celda
+          const mainSpan=spans[0];
+          td.rowSpan=mainSpan.span;
+          td.style.verticalAlign="top";
+          td.style.position="relative";
+          td.style.height="auto";
+          td.style.overflow="visible";
+          // Flex column para apilar múltiples pills dentro del span
+          td.style.display="flex";
+          td.style.flexDirection="column";
+          td.style.gap="2px";
+          td.style.padding="3px";
+
+          // Renderizar todas las spans como pills en esta celda
+          spans.forEach(({act:sAct,span:sSpan,isAllday})=>{
+            const pill=document.createElement("div");
+            pill.className="pill-span";
+            const [bg,fg]=colorMap[sAct.id]!==undefined?PILL_COLORS[colorMap[sAct.id]]:[currentPerson.person_main,"#fff"];
+            const label=isAllday?`${sAct.name}<br><span style="font-size:8px;opacity:.75">☀️ Todo el día</span>`:sAct.name;
+            const timeLabel=isAllday?`${currentPerson.day_start} – ${currentPerson.day_end}`:`${sAct.start} – ${sAct.end}`;
+            pill.style.cssText=`background:${bg};color:${fg};position:relative;flex:1;min-height:0`;
+            pill.innerHTML=`<span style="font-weight:700;font-size:10px;overflow:hidden;display:block">${label}</span><span class="pill-span-time">${timeLabel}</span>${!isLocked?`<button class="pill-del" onclick="deleteActivity(${sAct.id},event)" style="position:absolute;top:3px;right:3px">×</button>`:""}`;
+            pill.title=sAct.desc||sAct.name;
+            pill.draggable=!isLocked;
+            pill.addEventListener("dragstart",e=>{e.dataTransfer.setData("text/plain",""+sAct.id);pill.style.opacity="0.5";});
+            pill.addEventListener("dragend",()=>pill.style.opacity="");
+            pill.addEventListener("touchstart",()=>{window._draggingId=sAct.id;},{passive:true});
+            pill.addEventListener("click",e=>{if(e.target.classList.contains("pill-del"))return;openDetailModal(sAct.id);});
+            td.appendChild(pill);
+          });
+          // Actividades normales en el mismo horario también se apilan
+          cellActs.forEach(act=>addNormalPill(td,act,0,isLocked,colorMap));
+        } else {
+          // Sin spans: apilar todas las actividades de esta hora
+          cellActs.forEach((act)=>addNormalPill(td,act,0,isLocked,colorMap));
+        }
+
+        tr.appendChild(td);
+      });
+      tbody.appendChild(tr);
+    });
+
+    const gridDiv=document.createElement("div");gridDiv.className="cal-grid";
+    gridDiv.appendChild(table);
+    weekBlock.appendChild(gridDiv);
+    body.appendChild(weekBlock);
+  });
+
+  // Semana actual siempre es la primera — scroll al inicio
+  setTimeout(()=>{
+    const ma=document.querySelector(".main-area");
+    if(ma) ma.scrollTop=0;
+  },60);
+}
+
+function addNormalPill(td,act,slotIdx,isLocked,colorMap){
+  const pill=document.createElement("div");
+  pill.className="pill";
+  const ci=colorMap[act.id]!==undefined?colorMap[act.id]:(act.id%PILL_COLORS.length);
+  const [bg,fg]=PILL_COLORS[ci];
+  pill.style.cssText=`background:${bg};color:${fg}`;
+  pill.textContent=act.name;
+  pill.title=act.desc||act.name;
+  pill.draggable=!isLocked;
+  if(!isLocked){
+    const del=document.createElement("button");del.className="pill-del";del.textContent="×";
+    del.onclick=e=>deleteActivity(act.id,e);pill.appendChild(del);
+  }
+  pill.addEventListener("dragstart",e=>{e.dataTransfer.setData("text/plain",""+act.id);pill.style.opacity="0.5";});
+  pill.addEventListener("dragend",()=>pill.style.opacity="");
+  pill.addEventListener("touchstart",()=>{window._draggingId=act.id;},{passive:true});
+  pill.addEventListener("click",e=>{if(e.target.classList.contains("pill-del"))return;openDetailModal(act.id);});
+  td.appendChild(pill);
+  // Allow cell to grow if multiple pills
+  if(td.children.length>1) td.style.height="auto";
+}
+
+// ── MODAL ──
+function openDetailModal(id){
+  const act=activities.find(a=>a.id===id);if(!act)return;
+  const locked=!isEditableDate(act.date);
+  const sL={"pendiente":"⏳ Pendiente","en-progreso":"🔄 En Progreso","completada":"✅ Completada","bloqueada":"🚫 Bloqueada"};
+  const horario=act.start==="todo-el-dia"?"☀️ Todo el día":act.start+(act.end?" – "+act.end:"");
+  document.getElementById("modal-title").textContent=act.name;
+  document.getElementById("modal-body").innerHTML=`
+    <div class="modal-info-row"><span>Descripción</span><span>${act.desc||"—"}</span></div>
+    <div class="modal-info-row"><span>Fecha</span><span>${formatDisplayDate(act.date)}</span></div>
+    <div class="modal-info-row"><span>Horario</span><span>${horario}</span></div>
+    <div class="modal-info-row"><span>Estado</span><span class="status-badge sb-${act.status||'pendiente'}">${sL[act.status||"pendiente"]}</span></div>
+    ${locked?'<div style="margin-top:10px;font-size:12px;color:#aaa">🔒 Semana bloqueada</div>':""}`;
+  const btns=document.getElementById("modal-btns");btns.innerHTML="";
+  if(!locked){
+    const eb=document.createElement("button");eb.className="btn btn-primary";eb.textContent="✏️ Editar";eb.onclick=()=>editActivity(id);btns.appendChild(eb);
+    const db=document.createElement("button");db.className="btn btn-danger";db.textContent="🗑 Eliminar";db.onclick=()=>{deleteActivity(id);closeModalDirect();};btns.appendChild(db);
+  }
+  const cb=document.createElement("button");cb.className="btn btn-secondary";cb.textContent="Cerrar";cb.onclick=closeModalDirect;btns.appendChild(cb);
+  document.getElementById("modal-overlay").classList.add("open");
+}
+function closeModal(e){if(!e||e.target===document.getElementById("modal-overlay"))closeModalDirect();}
+function closeModalDirect(){document.getElementById("modal-overlay").classList.remove("open");}
+
+function editActivity(id){
+  const act=activities.find(a=>a.id===id);if(!act)return;
+  if(!isEditableDate(act.date)){showToast("🔒 Semana bloqueada.","#c0392b");return;}
+  editingId=id;
+  document.getElementById("form-title-label").textContent="Editar Actividad";
+  document.getElementById("form-save-btn").textContent="💾 Guardar Cambios";
+  document.getElementById("f-name").value=act.name;
+  document.getElementById("f-desc").value=act.desc||"";
+  document.getElementById("f-date").value=act.date;
+  document.getElementById("f-start").value=act.start;
+  document.getElementById("f-end").value=act.end||"";
+  // Show/hide end group based on start value
+  const egE=document.getElementById("f-end-group");
+  if(egE) egE.style.display="";
+  setStatusUI(act.status);
+  closeModal();showView("form");window.scrollTo(0,0);
+}
+
+// ── REGISTRO ──
+function renderRegistro(){
+  const tbody=document.getElementById("reg-body"),empty=document.getElementById("empty-state"),table=document.getElementById("reg-table");
+  tbody.innerHTML="";
+  const sL={"pendiente":"⏳ Pendiente","en-progreso":"🔄 En Progreso","completada":"✅ Completada","bloqueada":"🚫 Bloqueada"};
+  if(activities.length===0){empty.style.display="block";table.style.display="none";return;}
+  empty.style.display="none";table.style.display="table";
+  [...activities].sort((a,b)=>a.date.localeCompare(b.date)).forEach((act,i)=>{
+    const tr=document.createElement("tr"),locked=!isEditableDate(act.date);
+    const horario=act.start==="todo-el-dia"?"☀️ Todo el día":act.start+(act.end?" – "+act.end:"");
+    tr.innerHTML=`<td style="color:var(--teal-600);font-weight:700">${i+1}</td>
+      <td style="font-weight:600">${act.name}</td>
+      <td>${formatDisplayDate(act.date)}</td>
+      <td style="text-align:center">${horario}</td>
+      <td><span class="status-badge sb-${act.status||'pendiente'}">${sL[act.status||"pendiente"]}</span></td>
+      <td style="display:flex;gap:4px;align-items:center">
+        <button class="edit-row-btn" onclick="editActivity(${act.id})">✏️</button>
+        ${locked?'<span style="font-size:11px;color:#aaa">🔒</span>':`<button class="del-row-btn" onclick="deleteActivity(${act.id})">🗑</button>`}
+      </td>`;
+    tbody.appendChild(tr);
+  });
+}
+
+// ── KANBAN ──
+function renderKanban(){
+  const cols=["pendiente","en-progreso","completada","bloqueada"];
+  cols.forEach(s=>{
+    const col=document.getElementById("kcol-"+s),count=document.getElementById("kcount-"+s);
+    col.innerHTML="";
+    col.addEventListener("dragover",e=>{e.preventDefault();col.classList.add("kanbandrop");});
+    col.addEventListener("dragleave",e=>{if(!col.contains(e.relatedTarget))col.classList.remove("kanbandrop");});
+    col.addEventListener("drop",e=>{
+      e.preventDefault();col.classList.remove("kanbandrop");
+      const id=parseInt(e.dataTransfer.getData("kanban-id"));
+      if(!isNaN(id)){const act=activities.find(a=>a.id===id);if(act){act.status=s;save();renderKanban();renderRegistro();renderCalendar();showToast("🗂 Estado actualizado");}}
+    });
+    col.addEventListener("touchend",e=>{
+      if(window._kanbanDragId!==undefined){
+        const act=activities.find(a=>a.id===window._kanbanDragId);
+        if(act){act.status=s;save();renderKanban();renderRegistro();renderCalendar();showToast("🗂 Estado actualizado");}
+        window._kanbanDragId=undefined;
+      }
+    });
+    const filtered=activities.filter(a=>(a.status||"pendiente")===s);
+    count.textContent=filtered.length;
+    filtered.sort((a,b)=>a.date.localeCompare(b.date)).forEach(act=>{
+      const card=document.createElement("div");card.className="kanban-card";card.draggable=true;
+      const h=act.start==="todo-el-dia"?"☀️ Todo el día":act.start;
+      card.innerHTML=`<div class="kc-name">${act.name}</div><div class="kc-date">📅 ${formatDisplayDate(act.date)} · ${h}</div>`;
+      card.addEventListener("dragstart",e=>{e.dataTransfer.setData("kanban-id",""+act.id);card.classList.add("dragging");});
+      card.addEventListener("dragend",()=>card.classList.remove("dragging"));
+      card.addEventListener("touchstart",()=>{window._kanbanDragId=act.id;},{passive:true});
+      card.addEventListener("click",()=>openDetailModal(act.id));
+      col.appendChild(card);
+    });
+    if(filtered.length===0){const e=document.createElement("div");e.style.cssText="text-align:center;color:#ccc;font-size:12px;padding:16px 0";e.textContent="Sin actividades";col.appendChild(e);}
+  });
+}
+
+// ── IDEAS ──
+function addIdea(){
+  const title=document.getElementById("idea-title").value.trim(),body=document.getElementById("idea-body").value.trim();
+  if(!title){showToast("⚠️ Escribe un título");return;}
+  ideas.push({id:Date.now(),title,body,date:new Date().toISOString().slice(0,10)});
+  saveIdeas();renderIdeas();
+  document.getElementById("idea-title").value="";document.getElementById("idea-body").value="";
+  showToast("💡 Idea guardada");
+}
+function deleteIdea(id){ideas=ideas.filter(i=>i.id!==id);saveIdeas();renderIdeas();showToast("🗑 Idea eliminada");}
+function renderIdeas(){
+  const grid=document.getElementById("ideas-grid"),empty=document.getElementById("ideas-empty");
+  grid.innerHTML="";
+  if(ideas.length===0){grid.appendChild(empty);empty.style.display="block";return;}
+  ideas.slice().reverse().forEach(idea=>{
+    const c=document.createElement("div");c.className="idea-card";
+    c.innerHTML=`<button class="idea-del" onclick="deleteIdea(${idea.id})">✕</button><div class="idea-title">${idea.title}</div><div class="idea-body">${idea.body||""}</div><div class="idea-date">📅 ${formatDisplayDate(idea.date)}</div>`;
+    grid.appendChild(c);
+  });
+}
+
+// ── HELPERS ──
+function deleteActivity(id,e){
+  if(e)e.stopPropagation();
+  const act=activities.find(a=>a.id===id);
+  if(act&&!isEditableDate(act.date)){showToast("🔒 Semana bloqueada.","#c0392b");return;}
+  activities=activities.filter(a=>a.id!==id);
+  save();renderCalendar();renderRegistro();renderKanban();showToast("🗑 Actividad eliminada");
+}
+function save(){localStorage.setItem(currentPerson.storage_key,JSON.stringify(activities));}
+function saveIdeas(){localStorage.setItem(currentPerson.storage_key+"_ideas",JSON.stringify(ideas));}
+function toDateStr(d){return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;}
+function fmtDate(d){return `${d.getDate()} ${Object.values(MONTH_NAMES)[d.getMonth()].slice(0,3)}`;}
+function formatDisplayDate(str){const[y,m,d]=str.split("-");return `${d}/${m}/${y}`;}
+function exportPDF(){showView("calendar");setTimeout(()=>window.print(),250);}
+function showToast(msg,bg){
+  const t=document.getElementById("toast");t.textContent=msg;t.style.background=bg||"";
+  t.classList.add("show");setTimeout(()=>{t.classList.remove("show");t.style.background="";},3500);
+}
+function openDrawer(){document.getElementById("drawer").classList.add("open");document.getElementById("drawer-overlay").classList.add("open");}
+function closeDrawer(){document.getElementById("drawer").classList.remove("open");document.getElementById("drawer-overlay").classList.remove("open");}
+
+buildHome();
+</script>
+</body>
+</html>
