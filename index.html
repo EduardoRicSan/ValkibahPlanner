@@ -220,6 +220,11 @@ body{font-family:'DM Sans',sans-serif;background:var(--teal-900);color:var(--whi
 }
 .print-header{display:none;font-family:'DM Serif Display',serif;font-size:20px;color:#1a7a7a;margin-bottom:12px;padding-bottom:8px;border-bottom:2px solid #1a7a7a}
 
+.profile-avatar{width:64px;height:64px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:28px;margin:0 auto 14px;box-shadow:0 4px 18px rgba(0,0,0,.15)}
+.profile-name{font-family:'DM Serif Display',serif;font-size:20px;color:var(--teal-800);text-align:center;margin-bottom:4px}
+.profile-title{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;text-align:center;margin-bottom:12px;line-height:1.4}
+.profile-bio{font-size:13px;color:#555;line-height:1.6;text-align:center;padding:0 4px}
+.profile-schedule{display:inline-flex;align-items:center;gap:6px;background:var(--teal-50);border:1px solid var(--teal-200);border-radius:20px;padding:5px 14px;font-size:12px;color:var(--teal-700);font-weight:600;margin-top:12px}
 ::-webkit-scrollbar{width:5px;height:5px}
 ::-webkit-scrollbar-thumb{background:var(--teal-600);border-radius:5px}
 .toast{position:fixed;bottom:26px;right:26px;background:var(--teal-700);color:#fff;padding:12px 18px;border-radius:9px;font-size:13px;font-weight:500;box-shadow:0 8px 28px rgba(0,0,0,.28);transform:translateY(70px);opacity:0;transition:all .28s ease;z-index:9999;max-width:calc(100vw - 32px)}
@@ -301,7 +306,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--teal-900);color:var(--whi
       <div class="brand-name">Grupo Valkibah</div>
     </div>
     <div class="header-right">
-      <span class="person-badge" id="person-badge-header"></span>
+      <span class="person-badge" id="person-badge-header" onclick="openProfileModal()" style="cursor:pointer" title="Ver perfil"></span>
       <button class="back-btn" onclick="goHome()">← Inicio</button>
     </div>
   </header>
@@ -500,6 +505,14 @@ body{font-family:'DM Sans',sans-serif;background:var(--teal-900);color:var(--whi
   </div>
 </div>
 
+<!-- PROFILE MODAL -->
+<div class="modal-overlay" id="profile-modal-overlay" onclick="if(event.target===this)closeProfileModal()" style="display:none">
+  <div class="modal" id="profile-modal" style="max-width:400px">
+    <button class="modal-close" onclick="closeProfileModal()">✕</button>
+    <div id="profile-modal-body"></div>
+  </div>
+</div>
+
 <!-- MODAL -->
 <div class="modal-overlay" id="modal-overlay" onclick="closeModal(event)">
   <div class="modal" id="modal">
@@ -538,7 +551,12 @@ window._fbSubscribe = (key, callback) => {
 </script>
 
 <script>
-const PERSONS_DATA = [{"key": "eduardo", "storage_key": "valkibah_eduardo_v3", "person": "Eduardo Rico", "badge": "💻 Eduardo Rico", "role": "Mobah", "schedule": "12:00 PM – 8:00 PM", "person_main": "#0e6b6b", "person_light": "#d0f5f0", "emoji": "💻", "day_start": "12:00", "day_end": "20:00", "base_activities": ["Desarrollo Mobah – sprints quincenales", "Coordinación diaria del equipo", "Documentación técnica", "Revisión de KPIs Mobah", "Validación de inventario"]}, {"key": "mayo", "storage_key": "valkibah_mayo_v3", "person": "Mayo Espínola", "badge": "🌸 Mayo Espínola", "role": "Mokino", "schedule": "1:30 PM – 8:00 PM", "person_main": "#2aacac", "person_light": "#e0fafa", "emoji": "🌸", "day_start": "13:00", "day_end": "20:00", "base_activities": ["Coordinación y montaje de eventos", "Inventario mensual (día 15)", "Ideas creativas y decoración", "Búsqueda de alianzas y proveedores", "Calendario Mokino", "Optimización de proveedores"]}, {"key": "paloma", "storage_key": "valkibah_paloma_v3", "person": "Paloma Arvizu", "badge": "👩 Paloma Arvizu", "role": "Valpa", "schedule": "9:30 AM – 3:00 PM", "person_main": "#1a7a7a", "person_light": "#d8f5f0", "emoji": "👩", "day_start": "9:00", "day_end": "15:00", "base_activities": ["Atención a clientes (cotizaciones)", "Seguimiento post-evento", "Documento de tendencias", "Apoyo en montajes", "Portafolio fotográfico", "Búsqueda de alianzas", "Valkibah Aprende", "Gestión de reseñas online", "Creación de contenido", "Reunión semanal de equipo"]}, {"key": "salma", "storage_key": "valkibah_salma_v3", "person": "Salma Castillo", "badge": "🌴 Salma Castillo", "role": "Estrategia", "schedule": "7:00 PM – 8:00 PM", "person_main": "#0f5252", "person_light": "#cceaea", "emoji": "🌴", "day_start": "19:00", "day_end": "20:00", "base_activities": ["Respuesta al equipo (máx 24 hrs)", "Feedback estratégico Mokino/Valpa", "Gestión financiera y presupuesto", "Revisión de métricas/KPIs", "Reunión semanal y Valkibah Aprende", "Calendario Mokino"]}];
+const PERSONS_DATA = [
+  {"key":"eduardo","storage_key":"valkibah_eduardo_v3","person":"Eduardo Rico","badge":"💻 Eduardo Rico","role":"Mobah","schedule":"12:00 PM – 8:00 PM","person_main":"#0e6b6b","person_light":"#d0f5f0","emoji":"💻","day_start":"12:00","day_end":"20:00","title":"Desarrollo Tecnológico","bio":"Lidera el desarrollo y mantenimiento de las plataformas tecnológicas del grupo, incluyendo sprints de Mobah, coordinación del equipo técnico y validación de KPIs.","base_activities":["Desarrollo Mobah – sprints quincenales","Coordinación diaria del equipo","Documentación técnica","Revisión de KPIs Mobah","Validación de inventario"]},
+  {"key":"mayo","storage_key":"valkibah_mayo_v3","person":"Mayo Espínola","badge":"🌸 Mayo Espínola","role":"Mokino","schedule":"1:30 PM – 8:00 PM","person_main":"#2aacac","person_light":"#e0fafa","emoji":"🌸","day_start":"13:00","day_end":"20:00","title":"Directora Creativa Mokino","bio":"Dirige la coordinación y montaje de eventos, gestión de proveedores y alianzas, y el desarrollo creativo de la marca Mokino.","base_activities":["Coordinación y montaje de eventos","Inventario mensual (día 15)","Ideas creativas y decoración","Búsqueda de alianzas y proveedores","Calendario Mokino","Optimización de proveedores"]},
+  {"key":"paloma","storage_key":"valkibah_paloma_v3","person":"Paloma Arvizu","badge":"🎨 Paloma Arvizu","role":"Valpa","schedule":"9:30 AM – 3:00 PM","person_main":"#1a7a7a","person_light":"#d8f5f0","emoji":"🎨","day_start":"9:00","day_end":"15:00","title":"Contenido Digital & Atención al Cliente","bio":"Responsable de la creación de contenido digital, atención y seguimiento a clientes, portafolio fotográfico y gestión de reseñas online.","base_activities":["Atención a clientes (cotizaciones)","Seguimiento post-evento","Documento de tendencias","Apoyo en montajes","Portafolio fotográfico","Búsqueda de alianzas","Valkibah Aprende","Gestión de reseñas online","Creación de contenido","Reunión semanal de equipo"]},
+  {"key":"salma","storage_key":"valkibah_salma_v3","person":"Salma Castillo","badge":"🌴 Salma Castillo","role":"Estrategia","schedule":"7:00 PM – 8:00 PM","person_main":"#0f5252","person_light":"#cceaea","emoji":"🌴","day_start":"19:00","day_end":"20:00","title":"Directora Fundadora · Estrategia de Marca, Ventas y Ops","bio":"Fundadora del grupo, responsable de la visión estratégica, gestión financiera, presupuesto, métricas y alineación de todas las áreas del negocio.","base_activities":["Respuesta al equipo (máx 24 hrs)","Feedback estratégico Mokino/Valpa","Gestión financiera y presupuesto","Revisión de métricas/KPIs","Reunión semanal y Valkibah Aprende","Calendario Mokino"]}
+];
 const PILL_COLORS  = [["#0e6b6b", "#fff"], ["#084298", "#fff"], ["#6f2da8", "#fff"], ["#c0392b", "#fff"], ["#856404", "#fff"], ["#0f5132", "#fff"], ["#7d3c98", "#fff"], ["#b7410e", "#fff"]];
 
 const HOURS        = ["9:00","10:00","11:00","12:00","13:00","14:00","15:00","16:00","17:00","18:00","19:00","20:00"];
@@ -653,7 +671,7 @@ function showView(v) {
   if(mbar)mbar.style.display=v==="calendar"?"flex":"none";
   if(v==="calendar")renderCalendar();
   if(v==="registro")renderRegistro();
-  if(v==="kanban")renderKanban();
+  if(v==="kanban"){loadOtherPersonsForKanban();renderKanban();}
   if(v==="ideas")renderIdeas();
 }
 
@@ -1009,6 +1027,12 @@ function renderRegistro(){
 // ── KANBAN ──
 function renderKanban(){
   const cols=["pendiente","en-progreso","completada","bloqueada"];
+  // Build a combined list: current person's activities + all others from Firestore cache
+  const allActs = window._allKanbanActs || [];
+  // Merge: own activities override any cached version
+  const ownIds = new Set(activities.map(a=>a.id));
+  const merged = [...activities, ...allActs.filter(a=>a._personKey!==currentPerson.key&&!ownIds.has(a.id))];
+
   cols.forEach(s=>{
     const col=document.getElementById("kcol-"+s),count=document.getElementById("kcount-"+s);
     col.innerHTML="";
@@ -1017,28 +1041,59 @@ function renderKanban(){
     col.addEventListener("drop",e=>{
       e.preventDefault();col.classList.remove("kanbandrop");
       const id=parseInt(e.dataTransfer.getData("kanban-id"));
-      if(!isNaN(id)){const act=activities.find(a=>a.id===id);if(act){act.status=s;save();renderKanban();renderRegistro();renderCalendar();showToast("🗂 Estado actualizado");}}
+      if(!isNaN(id)){
+        const act=activities.find(a=>a.id===id);
+        if(act){act.status=s;save();renderKanban();renderRegistro();renderCalendar();showToast("🗂 Estado actualizado");}
+        else{showToast("ℹ️ Solo puedes mover tus propias actividades");}
+      }
     });
     col.addEventListener("touchend",e=>{
       if(window._kanbanDragId!==undefined){
         const act=activities.find(a=>a.id===window._kanbanDragId);
         if(act){act.status=s;save();renderKanban();renderRegistro();renderCalendar();showToast("🗂 Estado actualizado");}
+        else{showToast("ℹ️ Solo puedes mover tus propias actividades");}
         window._kanbanDragId=undefined;
       }
     });
-    const filtered=activities.filter(a=>(a.status||"pendiente")===s);
+    const filtered=merged.filter(a=>(a.status||"pendiente")===s);
     count.textContent=filtered.length;
     filtered.sort((a,b)=>a.date.localeCompare(b.date)).forEach(act=>{
-      const card=document.createElement("div");card.className="kanban-card";card.draggable=true;
+      const isOwn=!act._personKey||act._personKey===currentPerson.key;
+      const p=PERSONS_DATA.find(p=>p.key===act._personKey)||currentPerson;
+      const card=document.createElement("div");card.className="kanban-card";
+      card.draggable=isOwn;
+      card.style.borderLeft=`3px solid ${p.person_main}`;
       const h=act.start==="todo-el-dia"?"☀️ Todo el día":act.start;
-      card.innerHTML=`<div class="kc-name">${act.name}</div><div class="kc-date">📅 ${formatDisplayDate(act.date)} · ${h}</div>`;
-      card.addEventListener("dragstart",e=>{e.dataTransfer.setData("kanban-id",""+act.id);card.classList.add("dragging");});
-      card.addEventListener("dragend",()=>card.classList.remove("dragging"));
-      card.addEventListener("touchstart",()=>{window._kanbanDragId=act.id;},{passive:true});
-      card.addEventListener("click",()=>openDetailModal(act.id));
+      card.innerHTML=`
+        <div class="kc-name">${act.name}</div>
+        <div class="kc-date">📅 ${formatDisplayDate(act.date)} · ${h}</div>
+        <div style="margin-top:5px;display:inline-flex;align-items:center;gap:4px;background:${p.person_light||"#eee"};border-radius:10px;padding:2px 8px;font-size:10px;font-weight:700;color:${p.person_main}">${p.emoji} ${p.person}</div>`;
+      if(isOwn){
+        card.addEventListener("dragstart",e=>{e.dataTransfer.setData("kanban-id",""+act.id);card.classList.add("dragging");});
+        card.addEventListener("dragend",()=>card.classList.remove("dragging"));
+        card.addEventListener("touchstart",()=>{window._kanbanDragId=act.id;},{passive:true});
+      }
+      card.addEventListener("click",()=>isOwn?openDetailModal(act.id):showToast(`${p.emoji} ${p.person} · ${act.name}`));
       col.appendChild(card);
     });
     if(filtered.length===0){const e=document.createElement("div");e.style.cssText="text-align:center;color:#ccc;font-size:12px;padding:16px 0";e.textContent="Sin actividades";col.appendChild(e);}
+  });
+}
+
+// Load other persons' activities for Kanban display (read-only)
+function loadOtherPersonsForKanban(){
+  if(!currentPerson||!window._fbSubscribe)return;
+  window._allKanbanActs=[];
+  window._kanbanUnsubs=window._kanbanUnsubs||[];
+  window._kanbanUnsubs.forEach(u=>u());
+  window._kanbanUnsubs=[];
+  PERSONS_DATA.filter(p=>p.key!==currentPerson.key).forEach(p=>{
+    const unsub=window._fbSubscribe(p.storage_key, data=>{
+      const acts=(data?data.activities||[]:[]).map(a=>({...a,_personKey:p.key}));
+      window._allKanbanActs=window._allKanbanActs.filter(a=>a._personKey!==p.key).concat(acts);
+      renderKanban();
+    });
+    window._kanbanUnsubs.push(unsub);
   });
 }
 
@@ -1086,6 +1141,20 @@ function exportPDF(){showView("calendar");setTimeout(()=>window.print(),250);}
 function showToast(msg,bg){
   const t=document.getElementById("toast");t.textContent=msg;t.style.background=bg||"";
   t.classList.add("show");setTimeout(()=>{t.classList.remove("show");t.style.background="";},3500);
+}
+function openProfileModal(){
+  if(!currentPerson)return;
+  const p=currentPerson;
+  document.getElementById("profile-modal-body").innerHTML=`
+    <div class="profile-avatar" style="background:${p.person_light}">${p.emoji}</div>
+    <div class="profile-name">${p.person}</div>
+    <div class="profile-title" style="color:${p.person_main}">${p.title||p.role}</div>
+    <div class="profile-bio">${p.bio||""}</div>
+    <div style="text-align:center"><span class="profile-schedule">🕐 ${p.schedule}</span></div>`;
+  document.getElementById("profile-modal-overlay").style.display="flex";
+}
+function closeProfileModal(){
+  document.getElementById("profile-modal-overlay").style.display="none";
 }
 function openDrawer(){document.getElementById("drawer").classList.add("open");document.getElementById("drawer-overlay").classList.add("open");}
 function closeDrawer(){document.getElementById("drawer").classList.remove("open");document.getElementById("drawer-overlay").classList.remove("open");}
