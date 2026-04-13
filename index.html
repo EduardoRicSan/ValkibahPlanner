@@ -512,9 +512,8 @@ body{font-family:'DM Sans',sans-serif;background:var(--teal-900);color:var(--whi
 <div class="toast" id="toast"></div>
 
 <script type="module">
-// ── FIREBASE ──
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
-import { getFirestore, doc, getDoc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
+import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBPqyuPwriIVJ2z9sIf6wCSKZ-NJD7dhVQ",
@@ -527,32 +526,18 @@ const firebaseConfig = {
 const fbApp = initializeApp(firebaseConfig);
 const db    = getFirestore(fbApp);
 
-let unsubscribeActivities = null;
-let unsubscribeIdeas      = null;
-
-async function save() {
-  await setDoc(doc(db, "planners", currentPerson.storage_key), { activities });
-}
-async function saveIdeas() {
-  await setDoc(doc(db, "planners", currentPerson.storage_key + "_ideas"), { ideas });
-}
-
-function subscribeToData(p) {
-  if (unsubscribeActivities) unsubscribeActivities();
-  if (unsubscribeIdeas)      unsubscribeIdeas();
-
-  unsubscribeActivities = onSnapshot(doc(db, "planners", p.storage_key), snap => {
-    activities = snap.exists() ? (snap.data().activities || []) : [];
-    activities.forEach(a => { if (!a.status) a.status = "pendiente"; });
-    renderCalendar(); renderRegistro(); renderKanban();
+// Expose Firebase helpers to global scope so the main script can use them
+window._fbSave = async (key, data) => {
+  await setDoc(doc(db, "planners", key), data);
+};
+window._fbSubscribe = (key, callback) => {
+  return onSnapshot(doc(db, "planners", key), snap => {
+    callback(snap.exists() ? snap.data() : null);
   });
+};
+</script>
 
-  unsubscribeIdeas = onSnapshot(doc(db, "planners", p.storage_key + "_ideas"), snap => {
-    ideas = snap.exists() ? (snap.data().ideas || []) : [];
-    renderIdeas();
-  });
-}
-
+<script>
 const PERSONS_DATA = [{"key": "eduardo", "storage_key": "valkibah_eduardo_v3", "person": "Eduardo Rico", "badge": "💻 Eduardo Rico", "role": "Mobah", "schedule": "12:00 PM – 8:00 PM", "person_main": "#0e6b6b", "person_light": "#d0f5f0", "emoji": "💻", "day_start": "12:00", "day_end": "20:00", "base_activities": ["Desarrollo Mobah – sprints quincenales", "Coordinación diaria del equipo", "Documentación técnica", "Revisión de KPIs Mobah", "Validación de inventario"]}, {"key": "mayo", "storage_key": "valkibah_mayo_v3", "person": "Mayo Espínola", "badge": "🌸 Mayo Espínola", "role": "Mokino", "schedule": "1:30 PM – 8:00 PM", "person_main": "#2aacac", "person_light": "#e0fafa", "emoji": "🌸", "day_start": "13:00", "day_end": "20:00", "base_activities": ["Coordinación y montaje de eventos", "Inventario mensual (día 15)", "Ideas creativas y decoración", "Búsqueda de alianzas y proveedores", "Calendario Mokino", "Optimización de proveedores"]}, {"key": "paloma", "storage_key": "valkibah_paloma_v3", "person": "Paloma Arvizu", "badge": "👩 Paloma Arvizu", "role": "Valpa", "schedule": "9:30 AM – 3:00 PM", "person_main": "#1a7a7a", "person_light": "#d8f5f0", "emoji": "👩", "day_start": "9:00", "day_end": "15:00", "base_activities": ["Atención a clientes (cotizaciones)", "Seguimiento post-evento", "Documento de tendencias", "Apoyo en montajes", "Portafolio fotográfico", "Búsqueda de alianzas", "Valkibah Aprende", "Gestión de reseñas online", "Creación de contenido", "Reunión semanal de equipo"]}, {"key": "salma", "storage_key": "valkibah_salma_v3", "person": "Salma Castillo", "badge": "🌴 Salma Castillo", "role": "Estrategia", "schedule": "7:00 PM – 8:00 PM", "person_main": "#0f5252", "person_light": "#cceaea", "emoji": "🌴", "day_start": "19:00", "day_end": "20:00", "base_activities": ["Respuesta al equipo (máx 24 hrs)", "Feedback estratégico Mokino/Valpa", "Gestión financiera y presupuesto", "Revisión de métricas/KPIs", "Reunión semanal y Valkibah Aprende", "Calendario Mokino"]}];
 const PILL_COLORS  = [["#0e6b6b", "#fff"], ["#084298", "#fff"], ["#6f2da8", "#fff"], ["#c0392b", "#fff"], ["#856404", "#fff"], ["#0f5132", "#fff"], ["#7d3c98", "#fff"], ["#b7410e", "#fff"]];
 
@@ -600,12 +585,26 @@ function openPerson(p) {
   document.getElementById("screen-home").classList.remove("active");
   document.getElementById("screen-app").classList.add("active");
   clearForm(); showView("form");
-  subscribeToData(p);
+
+  // Subscribe to live Firestore updates
+  if (window._unsubActs) window._unsubActs();
+  if (window._unsubIdeas) window._unsubIdeas();
+
+  window._unsubActs = window._fbSubscribe(p.storage_key, data => {
+    activities = data ? (data.activities || []) : [];
+    activities.forEach(a => { if (!a.status) a.status = "pendiente"; });
+    renderCalendar(); renderRegistro(); renderKanban();
+  });
+
+  window._unsubIdeas = window._fbSubscribe(p.storage_key + "_ideas", data => {
+    ideas = data ? (data.ideas || []) : [];
+    renderIdeas();
+  });
 }
 
 function goHome() {
-  if (unsubscribeActivities) { unsubscribeActivities(); unsubscribeActivities = null; }
-  if (unsubscribeIdeas)      { unsubscribeIdeas();      unsubscribeIdeas = null; }
+  if (window._unsubActs)  { window._unsubActs();  window._unsubActs  = null; }
+  if (window._unsubIdeas) { window._unsubIdeas(); window._unsubIdeas = null; }
   document.getElementById("screen-app").classList.remove("active");
   document.getElementById("screen-home").classList.add("active");
   currentPerson = null;
@@ -1072,7 +1071,14 @@ function deleteActivity(id,e){
   activities=activities.filter(a=>a.id!==id);
   save();renderCalendar();renderRegistro();renderKanban();showToast("🗑 Actividad eliminada");
 }
-// save() and saveIdeas() are defined above in the Firebase section
+async function save() {
+  if (!currentPerson) return;
+  await window._fbSave(currentPerson.storage_key, { activities });
+}
+async function saveIdeas() {
+  if (!currentPerson) return;
+  await window._fbSave(currentPerson.storage_key + "_ideas", { ideas });
+}
 function toDateStr(d){return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;}
 function fmtDate(d){return `${d.getDate()} ${Object.values(MONTH_NAMES)[d.getMonth()].slice(0,3)}`;}
 function formatDisplayDate(str){const[y,m,d]=str.split("-");return `${d}/${m}/${y}`;}
