@@ -527,6 +527,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--teal-900);color:var(--whi
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
 import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-storage.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBPqyuPwriIVJ2z9sIf6wCSKZ-NJD7dhVQ",
@@ -537,7 +538,8 @@ const firebaseConfig = {
   appId: "1:210898512187:web:12c3795c50b25b83d26f1e"
 };
 const fbApp = initializeApp(firebaseConfig);
-const db    = getFirestore(fbApp);
+const db      = getFirestore(fbApp);
+const storage = getStorage(fbApp);
 
 // Expose Firebase helpers to global scope so the main script can use them
 window._fbSave = async (key, data) => {
@@ -546,6 +548,22 @@ window._fbSave = async (key, data) => {
 window._fbSubscribe = (key, callback) => {
   return onSnapshot(doc(db, "planners", key), snap => {
     callback(snap.exists() ? snap.data() : null);
+  });
+};
+
+// Upload avatar to Storage and save URL to Firestore
+window._fbUploadAvatar = async (personKey, file) => {
+  const storageRef = ref(storage, `avatars/${personKey}`);
+  await uploadBytes(storageRef, file);
+  const url = await getDownloadURL(storageRef);
+  await setDoc(doc(db, "avatars", personKey), { url });
+  return url;
+};
+
+// Subscribe to avatar URL changes
+window._fbSubscribeAvatar = (personKey, callback) => {
+  return onSnapshot(doc(db, "avatars", personKey), snap => {
+    callback(snap.exists() ? snap.data().url : null);
   });
 };
 </script>
@@ -618,6 +636,9 @@ function openPerson(p) {
     ideas = data ? (data.ideas || []) : [];
     renderIdeas();
   });
+
+  // Subscribe avatars for all persons (for kanban display)
+  PERSONS_DATA.forEach(pd => subscribeAvatar(pd.key));
 }
 
 function goHome() {
@@ -1031,11 +1052,7 @@ function renderKanban(){
   const allActs = window._allKanbanActs || [];
   // Merge: own activities override any cached version
   const ownIds = new Set(activities.map(a=>a.id));
-  // Solo mostrar actividades de las 2 semanas editables
-  const {curMon,nextMon}=getAllowedWeeks();
-  const weekEnd=new Date(nextMon);weekEnd.setDate(weekEnd.getDate()+6);weekEnd.setHours(23,59,59,999);
-  function inEditableWindow(a){const d=new Date(a.date+"T12:00:00");return d>=curMon&&d<=weekEnd;}
-  const merged = [...activities, ...allActs.filter(a=>a._personKey!==currentPerson.key&&!ownIds.has(a.id))].filter(inEditableWindow);
+  const merged = [...activities, ...allActs.filter(a=>a._personKey!==currentPerson.key&&!ownIds.has(a.id))];
 
   cols.forEach(s=>{
     const col=document.getElementById("kcol-"+s),count=document.getElementById("kcount-"+s);
@@ -1068,10 +1085,14 @@ function renderKanban(){
       card.draggable=isOwn;
       card.style.borderLeft=`3px solid ${p.person_main}`;
       const h=act.start==="todo-el-dia"?"☀️ Todo el día":act.start;
+      const avatarUrl = avatarCache[p.key];
+      const avatarEl = avatarUrl
+        ? `<img src="${avatarUrl}" style="width:16px;height:16px;border-radius:50%;object-fit:cover;vertical-align:middle">`
+        : p.emoji;
       card.innerHTML=`
         <div class="kc-name">${act.name}</div>
         <div class="kc-date">📅 ${formatDisplayDate(act.date)} · ${h}</div>
-        <div style="margin-top:5px;display:inline-flex;align-items:center;gap:4px;background:${p.person_light||"#eee"};border-radius:10px;padding:2px 8px;font-size:10px;font-weight:700;color:${p.person_main}">${p.emoji} ${p.person}</div>`;
+        <div style="margin-top:5px;display:inline-flex;align-items:center;gap:4px;background:${p.person_light||"#eee"};border-radius:10px;padding:2px 8px;font-size:10px;font-weight:700;color:${p.person_main}">${avatarEl} ${p.person}</div>`;
       if(isOwn){
         card.addEventListener("dragstart",e=>{e.dataTransfer.setData("kanban-id",""+act.id);card.classList.add("dragging");});
         card.addEventListener("dragend",()=>card.classList.remove("dragging"));
@@ -1146,17 +1167,90 @@ function showToast(msg,bg){
   const t=document.getElementById("toast");t.textContent=msg;t.style.background=bg||"";
   t.classList.add("show");setTimeout(()=>{t.classList.remove("show");t.style.background="";},3500);
 }
+// Avatar URL cache: {personKey: url}
+const avatarCache = {};
+const avatarUnsubs = {};
+
+function getAvatarImg(p, size=80){
+  const url = avatarCache[p.key];
+  if(url) return `<img src="${url}" alt="${p.person}" style="width:${size}px;height:${size}px;border-radius:50%;object-fit:cover">`;
+  return p.emoji;
+}
+
+function subscribeAvatar(personKey){
+  if(avatarUnsubs[personKey]) return; // already subscribed
+  if(!window._fbSubscribeAvatar) return;
+  avatarUnsubs[personKey] = window._fbSubscribeAvatar(personKey, url => {
+    if(url) avatarCache[personKey] = url;
+    else delete avatarCache[personKey];
+    // Refresh header badge if it's the current person
+    if(currentPerson && currentPerson.key === personKey) updateHeaderAvatar();
+    // Refresh modal avatar if open
+    const av = document.getElementById("profile-avatar-wrap");
+    if(av && currentPerson && currentPerson.key === personKey){
+      av.innerHTML = getAvatarImg(currentPerson);
+    }
+    // Refresh kanban cards
+    renderKanban();
+  });
+}
+
 function openProfileModal(){
   if(!currentPerson)return;
   const p=currentPerson;
+  subscribeAvatar(p.key);
   document.getElementById("profile-modal-body").innerHTML=`
-    <div class="profile-avatar" style="background:${p.person_light}">${p.emoji}</div>
+    <div id="profile-avatar-wrap" class="profile-avatar" style="background:${p.person_light}" onclick="triggerAvatarUpload()" title="Cambiar foto">
+      ${getAvatarImg(p)}
+    </div>
+    <input type="file" id="avatar-input" accept="image/*" style="display:none" onchange="handleAvatarUpload(event)">
+    <div style="text-align:center;margin-bottom:12px">
+      <span id="avatar-upload-label" style="font-size:11px;color:#aaa;cursor:pointer" onclick="triggerAvatarUpload()">📷 Cambiar foto</span>
+    </div>
     <div class="profile-name">${p.person}</div>
     <div class="profile-title" style="color:${p.person_main}">${p.title||p.role}</div>
     <div class="profile-bio">${p.bio||""}</div>
     <div style="text-align:center"><span class="profile-schedule">🕐 ${p.schedule}</span></div>`;
   document.getElementById("profile-modal-overlay").style.display="flex";
 }
+
+function triggerAvatarUpload(){
+  document.getElementById("avatar-input").click();
+}
+
+async function handleAvatarUpload(e){
+  const file = e.target.files[0];
+  if(!file) return;
+  if(file.size > 3*1024*1024){ showToast("⚠️ La imagen debe pesar menos de 3 MB","#c0392b"); return; }
+  const label = document.getElementById("avatar-upload-label");
+  if(label) label.textContent = "⏳ Subiendo...";
+  try {
+    const url = await window._fbUploadAvatar(currentPerson.key, file);
+    avatarCache[currentPerson.key] = url;
+    // Update modal avatar
+    const av = document.getElementById("profile-avatar-wrap");
+    if(av) av.innerHTML = `<img src="${url}" alt="${currentPerson.person}">`;
+    if(label) label.textContent = "📷 Cambiar foto";
+    updateHeaderAvatar();
+    showToast("✅ Foto actualizada");
+  } catch(err){
+    console.error(err);
+    if(label) label.textContent = "📷 Cambiar foto";
+    showToast("❌ Error al subir la foto","#c0392b");
+  }
+}
+
+function updateHeaderAvatar(){
+  const badge = document.getElementById("person-badge-header");
+  if(!badge || !currentPerson) return;
+  const url = avatarCache[currentPerson.key];
+  if(url){
+    badge.innerHTML = `<img src="${url}" style="width:22px;height:22px;border-radius:50%;object-fit:cover;margin-right:6px;vertical-align:middle;border:1px solid rgba(255,255,255,.3)">${currentPerson.person}`;
+  } else {
+    badge.textContent = currentPerson.badge;
+  }
+}
+
 function closeProfileModal(){
   document.getElementById("profile-modal-overlay").style.display="none";
 }
