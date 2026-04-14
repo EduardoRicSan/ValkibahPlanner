@@ -220,11 +220,24 @@ body{font-family:'DM Sans',sans-serif;background:var(--teal-900);color:var(--whi
 }
 .print-header{display:none;font-family:'DM Serif Display',serif;font-size:20px;color:#1a7a7a;margin-bottom:12px;padding-bottom:8px;border-bottom:2px solid #1a7a7a}
 
-.profile-avatar{width:64px;height:64px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:28px;margin:0 auto 14px;box-shadow:0 4px 18px rgba(0,0,0,.15)}
-.profile-name{font-family:'DM Serif Display',serif;font-size:20px;color:var(--teal-800);text-align:center;margin-bottom:4px}
-.profile-title{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;text-align:center;margin-bottom:12px;line-height:1.4}
-.profile-bio{font-size:13px;color:#555;line-height:1.6;text-align:center;padding:0 4px}
-.profile-schedule{display:inline-flex;align-items:center;gap:6px;background:var(--teal-50);border:1px solid var(--teal-200);border-radius:20px;padding:5px 14px;font-size:12px;color:var(--teal-700);font-weight:600;margin-top:12px}
+/* PROFILE SIDEBAR */
+.profile-sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:500}
+.profile-sidebar-overlay.open{display:block}
+.profile-sidebar{position:fixed;top:0;right:-340px;width:320px;max-width:90vw;height:100vh;background:#fff;z-index:501;display:flex;flex-direction:column;box-shadow:-8px 0 32px rgba(0,0,0,.18);transition:right .28s cubic-bezier(.4,0,.2,1);overflow-y:auto}
+.profile-sidebar.open{right:0}
+.profile-sidebar-header{padding:18px 18px 0;display:flex;justify-content:flex-end}
+.profile-sidebar-close{background:var(--teal-100);border:none;border-radius:50%;width:32px;height:32px;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--teal-700)}
+.profile-sidebar-body{padding:4px 28px 36px;display:flex;flex-direction:column;align-items:center}
+.profile-avatar-wrap{width:100px;height:100px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:40px;margin:14px auto 0;box-shadow:0 4px 20px rgba(0,0,0,.13);overflow:hidden;cursor:pointer;position:relative;flex-shrink:0;border:3px solid var(--teal-200)}
+.profile-avatar-wrap img{width:100%;height:100%;object-fit:cover;border-radius:50%;display:block}
+.profile-avatar-wrap:hover::after{content:"📷";position:absolute;inset:0;background:rgba(0,0,0,.45);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:24px}
+.profile-change-photo{font-size:11px;color:#aaa;cursor:pointer;margin-top:8px;margin-bottom:18px}
+.profile-change-photo:hover{color:var(--teal-600)}
+.profile-name{font-family:'DM Serif Display',serif;font-size:22px;color:var(--teal-800);text-align:center;margin-bottom:4px}
+.profile-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;text-align:center;margin-bottom:16px;line-height:1.5;padding:0 8px}
+.profile-divider{width:100%;height:1px;background:var(--teal-100);margin-bottom:16px}
+.profile-bio{font-size:13px;color:#666;line-height:1.65;text-align:center;padding:0 4px;margin-bottom:18px}
+.profile-schedule{display:inline-flex;align-items:center;gap:6px;background:var(--teal-50);border:1px solid var(--teal-200);border-radius:20px;padding:6px 16px;font-size:12px;color:var(--teal-700);font-weight:600}
 ::-webkit-scrollbar{width:5px;height:5px}
 ::-webkit-scrollbar-thumb{background:var(--teal-600);border-radius:5px}
 .toast{position:fixed;bottom:26px;right:26px;background:var(--teal-700);color:#fff;padding:12px 18px;border-radius:9px;font-size:13px;font-weight:500;box-shadow:0 8px 28px rgba(0,0,0,.28);transform:translateY(70px);opacity:0;transition:all .28s ease;z-index:9999;max-width:calc(100vw - 32px)}
@@ -505,13 +518,14 @@ body{font-family:'DM Sans',sans-serif;background:var(--teal-900);color:var(--whi
   </div>
 </div>
 
-<!-- PROFILE MODAL -->
-<div class="modal-overlay" id="profile-modal-overlay" onclick="if(event.target===this)closeProfileModal()" style="display:none">
-  <div class="modal" id="profile-modal" style="max-width:400px">
-    <button class="modal-close" onclick="closeProfileModal()">✕</button>
-    <div id="profile-modal-body"></div>
+<!-- PROFILE SIDEBAR -->
+<div class="profile-sidebar-overlay" id="profile-sidebar-overlay" onclick="closeProfileModal()"></div>
+<aside class="profile-sidebar" id="profile-sidebar">
+  <div class="profile-sidebar-header">
+    <button class="profile-sidebar-close" onclick="closeProfileModal()">✕</button>
   </div>
-</div>
+  <div class="profile-sidebar-body" id="profile-modal-body"></div>
+</aside>
 
 <!-- MODAL -->
 <div class="modal-overlay" id="modal-overlay" onclick="closeModal(event)">
@@ -537,11 +551,10 @@ const firebaseConfig = {
   messagingSenderId: "210898512187",
   appId: "1:210898512187:web:12c3795c50b25b83d26f1e"
 };
-const fbApp = initializeApp(firebaseConfig);
+const fbApp   = initializeApp(firebaseConfig);
 const db      = getFirestore(fbApp);
 const storage = getStorage(fbApp);
 
-// Expose Firebase helpers to global scope so the main script can use them
 window._fbSave = async (key, data) => {
   await setDoc(doc(db, "planners", key), data);
 };
@@ -550,8 +563,6 @@ window._fbSubscribe = (key, callback) => {
     callback(snap.exists() ? snap.data() : null);
   });
 };
-
-// Upload avatar to Storage and save URL to Firestore
 window._fbUploadAvatar = async (personKey, file) => {
   const storageRef = ref(storage, `avatars/${personKey}`);
   await uploadBytes(storageRef, file);
@@ -559,8 +570,6 @@ window._fbUploadAvatar = async (personKey, file) => {
   await setDoc(doc(db, "avatars", personKey), { url });
   return url;
 };
-
-// Subscribe to avatar URL changes
 window._fbSubscribeAvatar = (personKey, callback) => {
   return onSnapshot(doc(db, "avatars", personKey), snap => {
     callback(snap.exists() ? snap.data().url : null);
@@ -636,9 +645,8 @@ function openPerson(p) {
     ideas = data ? (data.ideas || []) : [];
     renderIdeas();
   });
-
-  // Subscribe avatars for all persons (for kanban display)
   PERSONS_DATA.forEach(pd => subscribeAvatar(pd.key));
+  setTimeout(updateHeaderAvatar, 300);
 }
 
 function goHome() {
@@ -1085,14 +1093,12 @@ function renderKanban(){
       card.draggable=isOwn;
       card.style.borderLeft=`3px solid ${p.person_main}`;
       const h=act.start==="todo-el-dia"?"☀️ Todo el día":act.start;
-      const avatarUrl = avatarCache[p.key];
-      const avatarEl = avatarUrl
-        ? `<img src="${avatarUrl}" style="width:16px;height:16px;border-radius:50%;object-fit:cover;vertical-align:middle">`
-        : p.emoji;
+      const avUrl=avatarCache&&avatarCache[p.key];
+      const avEl=avUrl?`<img src="${avUrl}" style="width:16px;height:16px;border-radius:50%;object-fit:cover;vertical-align:middle">`:p.emoji;
       card.innerHTML=`
         <div class="kc-name">${act.name}</div>
         <div class="kc-date">📅 ${formatDisplayDate(act.date)} · ${h}</div>
-        <div style="margin-top:5px;display:inline-flex;align-items:center;gap:4px;background:${p.person_light||"#eee"};border-radius:10px;padding:2px 8px;font-size:10px;font-weight:700;color:${p.person_main}">${avatarEl} ${p.person}</div>`;
+        <div style="margin-top:5px;display:inline-flex;align-items:center;gap:4px;background:${p.person_light||"#eee"};border-radius:10px;padding:2px 8px;font-size:10px;font-weight:700;color:${p.person_main}">${avEl} ${p.person}</div>`;
       if(isOwn){
         card.addEventListener("dragstart",e=>{e.dataTransfer.setData("kanban-id",""+act.id);card.classList.add("dragging");});
         card.addEventListener("dragend",()=>card.classList.remove("dragging"));
@@ -1167,51 +1173,26 @@ function showToast(msg,bg){
   const t=document.getElementById("toast");t.textContent=msg;t.style.background=bg||"";
   t.classList.add("show");setTimeout(()=>{t.classList.remove("show");t.style.background="";},3500);
 }
-// Avatar URL cache: {personKey: url}
+// ── AVATAR ──
 const avatarCache = {};
 const avatarUnsubs = {};
 
-function getAvatarImg(p, size=80){
+function getAvatarImg(p){
   const url = avatarCache[p.key];
-  if(url) return `<img src="${url}" alt="${p.person}" style="width:${size}px;height:${size}px;border-radius:50%;object-fit:cover">`;
+  if(url) return `<img src="${url}" alt="${p.person}">`;
   return p.emoji;
 }
 
 function subscribeAvatar(personKey){
-  if(avatarUnsubs[personKey]) return; // already subscribed
+  if(avatarUnsubs[personKey]) return;
   if(!window._fbSubscribeAvatar) return;
   avatarUnsubs[personKey] = window._fbSubscribeAvatar(personKey, url => {
     if(url) avatarCache[personKey] = url;
     else delete avatarCache[personKey];
-    // Refresh header badge if it's the current person
     if(currentPerson && currentPerson.key === personKey) updateHeaderAvatar();
-    // Refresh modal avatar if open
-    const av = document.getElementById("profile-avatar-wrap");
-    if(av && currentPerson && currentPerson.key === personKey){
-      av.innerHTML = getAvatarImg(currentPerson);
-    }
-    // Refresh kanban cards
-    renderKanban();
+    const av = document.querySelector(".profile-avatar-wrap");
+    if(av && currentPerson && currentPerson.key === personKey) av.innerHTML = getAvatarImg(currentPerson);
   });
-}
-
-function openProfileModal(){
-  if(!currentPerson)return;
-  const p=currentPerson;
-  subscribeAvatar(p.key);
-  document.getElementById("profile-modal-body").innerHTML=`
-    <div id="profile-avatar-wrap" class="profile-avatar" style="background:${p.person_light}" onclick="triggerAvatarUpload()" title="Cambiar foto">
-      ${getAvatarImg(p)}
-    </div>
-    <input type="file" id="avatar-input" accept="image/*" style="display:none" onchange="handleAvatarUpload(event)">
-    <div style="text-align:center;margin-bottom:12px">
-      <span id="avatar-upload-label" style="font-size:11px;color:#aaa;cursor:pointer" onclick="triggerAvatarUpload()">📷 Cambiar foto</span>
-    </div>
-    <div class="profile-name">${p.person}</div>
-    <div class="profile-title" style="color:${p.person_main}">${p.title||p.role}</div>
-    <div class="profile-bio">${p.bio||""}</div>
-    <div style="text-align:center"><span class="profile-schedule">🕐 ${p.schedule}</span></div>`;
-  document.getElementById("profile-modal-overlay").style.display="flex";
 }
 
 function triggerAvatarUpload(){
@@ -1227,9 +1208,8 @@ async function handleAvatarUpload(e){
   try {
     const url = await window._fbUploadAvatar(currentPerson.key, file);
     avatarCache[currentPerson.key] = url;
-    // Update modal avatar
-    const av = document.getElementById("profile-avatar-wrap");
-    if(av) av.innerHTML = `<img src="${url}" alt="${currentPerson.person}">`;
+    const av = document.querySelector(".profile-avatar-wrap");
+    if(av) av.innerHTML = getAvatarImg(currentPerson);
     if(label) label.textContent = "📷 Cambiar foto";
     updateHeaderAvatar();
     showToast("✅ Foto actualizada");
@@ -1251,8 +1231,28 @@ function updateHeaderAvatar(){
   }
 }
 
+// ── PROFILE SIDEBAR ──
+function openProfileModal(){
+  if(!currentPerson) return;
+  const p = currentPerson;
+  subscribeAvatar(p.key);
+  document.getElementById("profile-modal-body").innerHTML=`
+    <div class="profile-avatar-wrap" style="background:${p.person_light}" onclick="triggerAvatarUpload()" title="Cambiar foto">
+      ${getAvatarImg(p)}
+    </div>
+    <input type="file" id="avatar-input" accept="image/*" style="display:none" onchange="handleAvatarUpload(event)">
+    <span class="profile-change-photo" id="avatar-upload-label" onclick="triggerAvatarUpload()">📷 Cambiar foto</span>
+    <div class="profile-name">${p.person}</div>
+    <div class="profile-title" style="color:${p.person_main}">${p.title||p.role}</div>
+    <div class="profile-divider"></div>
+    <div class="profile-bio">${p.bio||""}</div>
+    <span class="profile-schedule">🕐 ${p.schedule}</span>`;
+  document.getElementById("profile-sidebar-overlay").classList.add("open");
+  document.getElementById("profile-sidebar").classList.add("open");
+}
 function closeProfileModal(){
-  document.getElementById("profile-modal-overlay").style.display="none";
+  document.getElementById("profile-sidebar-overlay").classList.remove("open");
+  document.getElementById("profile-sidebar").classList.remove("open");
 }
 function openDrawer(){document.getElementById("drawer").classList.add("open");document.getElementById("drawer-overlay").classList.add("open");}
 function closeDrawer(){document.getElementById("drawer").classList.remove("open");document.getElementById("drawer-overlay").classList.remove("open");}
