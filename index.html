@@ -1031,7 +1031,11 @@ function renderKanban(){
   const allActs = window._allKanbanActs || [];
   // Merge: own activities override any cached version
   const ownIds = new Set(activities.map(a=>a.id));
-  const merged = [...activities, ...allActs.filter(a=>a._personKey!==currentPerson.key&&!ownIds.has(a.id))];
+  // Solo mostrar actividades de las 2 semanas editables
+  const {curMon,nextMon}=getAllowedWeeks();
+  const weekEnd=new Date(nextMon);weekEnd.setDate(weekEnd.getDate()+6);weekEnd.setHours(23,59,59,999);
+  function inEditableWindow(a){const d=new Date(a.date+"T12:00:00");return d>=curMon&&d<=weekEnd;}
+  const merged = [...activities, ...allActs.filter(a=>a._personKey!==currentPerson.key&&!ownIds.has(a.id))].filter(inEditableWindow);
 
   cols.forEach(s=>{
     const col=document.getElementById("kcol-"+s),count=document.getElementById("kcount-"+s);
