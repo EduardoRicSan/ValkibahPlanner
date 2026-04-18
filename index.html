@@ -972,59 +972,61 @@ body{font-family:'DM Sans',sans-serif;background:var(--teal-900);color:var(--whi
   </div>
 </div>
 
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
-import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
-import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-storage.js";
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
+<script>
+(function() {
+  const firebaseConfig = {
+    apiKey: "AIzaSyBPqyuPwriIVJ2z9sIf6wCSKZ-NJD7dhVQ",
+    authDomain: "valkibah.firebaseapp.com",
+    projectId: "valkibah",
+    storageBucket: "valkibah.firebasestorage.app",
+    messagingSenderId: "210898512187",
+    appId: "1:210898512187:web:12c3795c50b25b83d26f1e"
+  };
 
-const firebaseConfig = {
-  apiKey: "AIzaSyBPqyuPwriIVJ2z9sIf6wCSKZ-NJD7dhVQ",
-  authDomain: "valkibah.firebaseapp.com",
-  projectId: "valkibah",
-  storageBucket: "valkibah.firebasestorage.app",
-  messagingSenderId: "210898512187",
-  appId: "1:210898512187:web:12c3795c50b25b83d26f1e"
-};
-const fbApp   = initializeApp(firebaseConfig);
-const db      = getFirestore(fbApp);
-const storage = getStorage(fbApp);
+  const fbApp   = firebase.initializeApp(firebaseConfig);
+  const db      = firebase.firestore();
+  const storage = firebase.storage();
 
-window._fbSave = async (key, data) => {
-  await setDoc(doc(db, "planners", key), data);
-};
-window._fbSubscribe = (key, callback) => {
-  return onSnapshot(doc(db, "planners", key), snap => {
-    callback(snap.exists() ? snap.data() : null);
-  });
-};
-window._fbSaveShared = async (key, data) => {
-  await setDoc(doc(db, "shared", key), data);
-};
-window._fbSubscribeShared = (key, callback) => {
-  return onSnapshot(doc(db, "shared", key), snap => {
-    callback(snap.exists() ? snap.data() : null);
-  });
-};
-window._fbUploadAvatar = async (personKey, file) => {
-  const storageRef = ref(storage, `avatars/${personKey}`);
-  await uploadBytes(storageRef, file);
-  const url = await getDownloadURL(storageRef);
-  await setDoc(doc(db, "avatars", personKey), { url });
-  return url;
-};
-window._fbSubscribeAvatar = (personKey, callback) => {
-  return onSnapshot(doc(db, "avatars", personKey), snap => {
-    callback(snap.exists() ? snap.data().url : null);
-  });
-};
-// Signal that Firebase is ready
-window._fbReady = true;
-if (window._onFbReady) window._onFbReady();
+  window._fbSave = async (key, data) => {
+    await db.collection("planners").doc(key).set(data);
+  };
+  window._fbSubscribe = (key, callback) => {
+    return db.collection("planners").doc(key).onSnapshot(snap => {
+      callback(snap.exists ? snap.data() : null);
+    });
+  };
+  window._fbSaveShared = async (key, data) => {
+    await db.collection("shared").doc(key).set(data);
+  };
+  window._fbSubscribeShared = (key, callback) => {
+    return db.collection("shared").doc(key).onSnapshot(snap => {
+      callback(snap.exists ? snap.data() : null);
+    });
+  };
+  window._fbUploadAvatar = async (personKey, file) => {
+    const storageRef = storage.ref(`avatars/${personKey}`);
+    await storageRef.put(file);
+    const url = await storageRef.getDownloadURL();
+    await db.collection("avatars").doc(personKey).set({ url });
+    return url;
+  };
+  window._fbSubscribeAvatar = (personKey, callback) => {
+    return db.collection("avatars").doc(personKey).onSnapshot(snap => {
+      callback(snap.exists ? snap.data().url : null);
+    });
+  };
+
+  // Signal ready
+  window._fbReady = true;
+  if (window._onFbReady) window._onFbReady();
+})();
 </script>
 
 <script>
-// Stub Firebase functions in case module failed to load
-// (will be overwritten if Firebase loaded successfully)
+// Fallback if Firebase CDN also failed
 if (!window._fbSave) {
   console.warn('Firebase no cargó — modo sin conexión');
   window._fbSave = async () => {};
