@@ -3,7 +3,6 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' 'unsafe-eval' https: data: blob:;">
 <title>Grupo Valkibah · Planeador</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
 <style>
@@ -198,82 +197,6 @@ body{font-family:'DM Sans',sans-serif;background:var(--teal-900);color:var(--whi
 .modal-info-row{display:flex;align-items:center;gap:8px;font-size:13px;color:#555;padding:5px 0}
 .modal-info-row span:first-child{font-weight:600;color:var(--teal-700);min-width:80px}
 
-/* PIN OVERLAY */
-.pin-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:2000;align-items:center;justify-content:center}
-.pin-overlay.open{display:flex}
-.pin-box{background:#fff;border-radius:20px;padding:36px 32px;max-width:320px;width:90%;text-align:center;box-shadow:0 16px 60px rgba(0,0,0,.35)}
-.pin-box-title{font-family:'DM Serif Display',serif;font-size:20px;color:var(--teal-800);margin-bottom:6px}
-.pin-box-sub{font-size:13px;color:#888;margin-bottom:22px}
-.pin-dots{display:flex;justify-content:center;gap:12px;margin-bottom:22px}
-.pin-dot{width:14px;height:14px;border-radius:50%;border:2px solid var(--teal-400);transition:background .15s}
-.pin-dot.filled{background:var(--teal-600);border-color:var(--teal-700)}
-.pin-numpad{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px}
-.pin-key{background:var(--teal-50);border:1.5px solid var(--teal-200);border-radius:12px;padding:14px;font-size:20px;font-weight:700;color:var(--teal-900);cursor:pointer;transition:all .12s;-webkit-tap-highlight-color:transparent}
-.pin-key:hover{background:var(--teal-100);transform:scale(1.04)}
-.pin-key:active{transform:scale(.97)}
-.pin-key.del-key{font-size:16px;color:var(--teal-700)}
-.pin-key.ok-key{background:var(--pm);color:#fff;border-color:var(--pm)}
-.pin-error{font-size:12px;color:#c0392b;min-height:16px;font-weight:600}
-.pin-cancel{margin-top:12px;font-size:12px;color:#aaa;cursor:pointer;border:none;background:none;text-decoration:underline}
-
-/* GENERAL SCREEN */
-#screen-general{background:linear-gradient(160deg,var(--teal-900) 0%,#0a2e2e 100%)}
-.general-header{background:var(--black);padding:14px 20px;display:flex;align-items:center;justify-content:space-between;border-bottom:2px solid var(--teal-700);flex-shrink:0;position:sticky;top:0;z-index:100}
-.general-body{flex:1;overflow-y:auto;padding:24px 20px 40px;max-width:1100px;margin:0 auto;width:100%}
-.general-tabs{display:flex;gap:8px;margin-bottom:24px;flex-wrap:wrap}
-.gtab{padding:9px 18px;border-radius:20px;border:1.5px solid rgba(255,255,255,.2);color:var(--teal-200);background:transparent;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:all .15s;-webkit-tap-highlight-color:transparent}
-.gtab.active{background:var(--teal-700);border-color:var(--teal-400);color:#fff}
-.gtab:hover{border-color:var(--teal-400);color:#fff}
-.gview{display:none}.gview.active{display:block}
-
-/* PRESUPUESTADOR */
-.presup-section{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);border-radius:16px;padding:22px;margin-bottom:20px}
-.presup-title{font-family:'DM Serif Display',serif;font-size:18px;color:var(--teal-400);margin-bottom:6px}
-.presup-sub{font-size:12px;color:var(--teal-200);opacity:.7;margin-bottom:16px}
-.presup-input-row{display:grid;grid-template-columns:1fr 100px 100px auto;gap:10px;align-items:end;margin-bottom:10px}
-.presup-input-row input,.presup-input-row select{background:rgba(255,255,255,.08);border:1.5px solid rgba(255,255,255,.18);border-radius:8px;padding:9px 12px;font-family:'DM Sans',sans-serif;font-size:13px;color:#fff;outline:none}
-.presup-input-row input::placeholder{color:rgba(255,255,255,.4)}
-.presup-input-row input:focus,.presup-input-row select:focus{border-color:var(--teal-400)}
-.presup-input-row select option{background:var(--teal-800);color:#fff}
-.btn-add-item{background:var(--teal-700);border:none;border-radius:8px;color:#fff;font-size:18px;font-weight:700;cursor:pointer;width:38px;height:38px;display:flex;align-items:center;justify-content:center;flex-shrink:0;-webkit-tap-highlight-color:transparent}
-.btn-add-item:hover{background:var(--teal-600)}
-.presup-items-table{width:100%;border-collapse:collapse;margin-bottom:8px;font-size:13px}
-.presup-items-table th{background:rgba(255,255,255,.08);color:var(--teal-400);font-size:10px;text-transform:uppercase;letter-spacing:.1em;padding:7px 10px;text-align:left;border-bottom:1px solid rgba(255,255,255,.1)}
-.presup-items-table td{padding:8px 10px;border-bottom:1px solid rgba(255,255,255,.06);color:var(--teal-100)}
-.presup-items-table tr:hover td{background:rgba(255,255,255,.04)}
-.del-item-btn{background:none;border:none;cursor:pointer;color:#e05555;font-size:14px;padding:2px 5px}
-.presup-extras{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:20px}
-.extra-box{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);border-radius:12px;padding:16px}
-.extra-box label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--teal-400);display:block;margin-bottom:8px}
-.extra-type-toggle{display:flex;gap:6px;margin-bottom:10px}
-.etype-btn{padding:4px 12px;border-radius:14px;border:1.5px solid rgba(255,255,255,.2);background:transparent;color:var(--teal-200);font-size:12px;font-weight:600;cursor:pointer;transition:all .14s}
-.etype-btn.active{background:var(--teal-700);border-color:var(--teal-400);color:#fff}
-.extra-input{background:rgba(255,255,255,.08);border:1.5px solid rgba(255,255,255,.18);border-radius:8px;padding:9px 12px;font-family:'DM Sans',sans-serif;font-size:14px;color:#fff;outline:none;width:100%}
-.extra-input:focus{border-color:var(--teal-400)}
-.presup-totals{background:rgba(64,217,192,.07);border:1.5px solid var(--teal-600);border-radius:14px;padding:18px 22px}
-.totals-row{display:flex;justify-content:space-between;align-items:center;padding:5px 0;font-size:14px;color:var(--teal-200)}
-.totals-row.grand{border-top:2px solid var(--teal-600);margin-top:10px;padding-top:12px;font-family:'DM Serif Display',serif;font-size:20px;color:var(--mint)}
-.totals-label{font-weight:600}
-.totals-val{font-weight:700;color:#fff}
-.totals-val.grand-val{font-size:22px;color:var(--mint)}
-.presup-project-row{display:flex;gap:10px;margin-bottom:16px;align-items:center;flex-wrap:wrap}
-.presup-project-row input,.presup-project-row select{background:rgba(255,255,255,.08);border:1.5px solid rgba(255,255,255,.18);border-radius:8px;padding:9px 12px;font-family:'DM Sans',sans-serif;font-size:13px;color:#fff;outline:none;min-width:0}
-.presup-project-row input::placeholder{color:rgba(255,255,255,.4)}
-.presup-project-row input:focus,.presup-project-row select:focus{border-color:var(--teal-400)}
-.presup-saved-list{display:flex;flex-direction:column;gap:8px;margin-top:8px}
-.presup-saved-item{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:12px 16px;display:flex;justify-content:space-between;align-items:center;cursor:pointer;transition:all .14s}
-.presup-saved-item:hover{border-color:var(--teal-400);background:rgba(64,217,192,.07)}
-.presup-saved-name{font-weight:700;color:#fff;font-size:14px}
-.presup-saved-meta{font-size:11px;color:var(--teal-400);margin-top:2px}
-.presup-saved-total{font-family:'DM Serif Display',serif;font-size:16px;color:var(--mint);font-weight:700}
-@media(max-width:768px){
-  .presup-input-row{grid-template-columns:1fr 80px;gap:8px}
-  .presup-input-row .qty-input,.presup-input-row .unit-sel{display:none}
-  .presup-extras{grid-template-columns:1fr}
-  .general-body{padding:14px 14px 80px}
-  .general-tabs{padding:0 0 4px}
-}
-
 /* PRINT */
 @media print{
   body{background:#fff;color:#000}
@@ -373,89 +296,8 @@ body{font-family:'DM Sans',sans-serif;background:var(--teal-900);color:var(--whi
   .toast{bottom:calc(68px + env(safe-area-inset-bottom,0px));right:14px;left:14px;text-align:center}
   .modal{border-radius:12px;padding:20px}
 }
-/* EVENTOS CALENDAR */
-.ev-layout{display:grid;grid-template-columns:1fr 340px;gap:24px;align-items:start}
-.ev-cal-wrap{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);border-radius:16px;padding:20px}
-.ev-cal-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
-.ev-cal-title{font-family:'DM Serif Display',serif;font-size:18px;color:var(--teal-400)}
-.ev-cal-nav-btn{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:8px;color:var(--teal-200);width:32px;height:32px;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center}
-.ev-cal-nav-btn:hover{background:rgba(255,255,255,.15)}
-.ev-month-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
-.ev-day-header{text-align:center;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--teal-600);padding:4px 0}
-.ev-day{min-height:36px;border-radius:8px;display:flex;flex-direction:column;align-items:center;padding:4px 2px;cursor:pointer;transition:background .12s;position:relative}
-.ev-day:hover{background:rgba(64,217,192,.12)}
-.ev-day.other-month{opacity:.3;cursor:default}
-.ev-day.today .ev-day-num{background:var(--teal-600);color:#fff;border-radius:50%;width:22px;height:22px;display:flex;align-items:center;justify-content:center}
-.ev-day.has-event::after{content:'';width:5px;height:5px;border-radius:50%;background:var(--mint);margin-top:2px}
-.ev-day-num{font-size:12px;font-weight:600;color:var(--teal-200);line-height:1;padding:3px}
-.ev-day.selected{background:rgba(64,217,192,.18);outline:1.5px solid var(--teal-400)}
-/* Upcoming events panel */
-.ev-panel{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);border-radius:16px;padding:20px;display:flex;flex-direction:column;gap:14px;max-height:calc(100vh - 200px);overflow-y:auto}
-.ev-panel-title{font-family:'DM Serif Display',serif;font-size:17px;color:var(--teal-400);margin-bottom:4px}
-.ev-card{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:14px;cursor:pointer;transition:all .14s;position:relative}
-.ev-card:hover{border-color:var(--teal-400);background:rgba(64,217,192,.07)}
-.ev-card-date{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--teal-600);margin-bottom:4px}
-.ev-card-name{font-weight:700;font-size:14px;color:#fff;margin-bottom:3px}
-.ev-card-tipo{font-size:11px;color:var(--teal-400);margin-bottom:6px}
-.ev-card-cliente{font-size:11px;color:var(--teal-200)}
-.ev-status-badge{display:inline-block;padding:2px 10px;border-radius:10px;font-size:10px;font-weight:700;margin-top:6px}
-.evs-primer-contacto{background:#e3f2fd;color:#1565c0}
-.evs-propuesta-enviada{background:#fff8e1;color:#f57f17}
-.evs-propuesta-revisada{background:#fce4ec;color:#c62828}
-.evs-cotizacion-aprobada{background:#e8f5e9;color:#2e7d32}
-.evs-produccion{background:#f3e5f5;color:#6a1b9a}
-.evs-listo-entregar{background:#e0f7fa;color:#00695c}
-.evs-evento-finalizado{background:#d1c4e9;color:#311b92}
-.evs-sin-respuesta{background:#eceff1;color:#546e7a}
-.ev-del-btn{position:absolute;top:10px;right:10px;background:none;border:none;cursor:pointer;color:rgba(255,255,255,.25);font-size:13px}
-.ev-del-btn:hover{color:#e05555}
-/* Event form modal */
-.ev-form-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:2000;align-items:center;justify-content:center;padding:16px}
-.ev-form-overlay.open{display:flex}
-.ev-form-box{background:#0f3535;border:1px solid var(--teal-700);border-radius:20px;padding:28px;width:100%;max-width:560px;max-height:90vh;overflow-y:auto;position:relative}
-.ev-form-box h2{font-family:'DM Serif Display',serif;font-size:20px;color:var(--teal-400);margin-bottom:20px}
-.ev-form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.ev-form-group{display:flex;flex-direction:column;gap:4px}
-.ev-form-group.full{grid-column:1/-1}
-.ev-form-group label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--teal-600)}
-.ev-form-group input,.ev-form-group select,.ev-form-group textarea{background:rgba(255,255,255,.07);border:1.5px solid rgba(255,255,255,.15);border-radius:8px;padding:10px 12px;font-family:'DM Sans',sans-serif;font-size:13px;color:#fff;outline:none}
-.ev-form-group input:focus,.ev-form-group select:focus,.ev-form-group textarea:focus{border-color:var(--teal-400)}
-.ev-form-group select option{background:#0f3535;color:#fff}
-.ev-form-group textarea{resize:vertical;min-height:60px}
-.ev-form-group input::placeholder,.ev-form-group textarea::placeholder{color:rgba(255,255,255,.3)}
-/* Event detail / elementos */
-.ev-detail-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:2000;align-items:center;justify-content:center;padding:16px}
-.ev-detail-overlay.open{display:flex}
-.ev-detail-box{background:#0f3535;border:1px solid var(--teal-700);border-radius:20px;padding:0;width:100%;max-width:680px;max-height:92vh;overflow-y:auto;position:relative;display:flex;flex-direction:column}
-.ev-detail-header{padding:22px 28px 16px;border-bottom:1px solid rgba(255,255,255,.1);position:sticky;top:0;background:#0f3535;z-index:10}
-.ev-detail-body{padding:20px 28px 28px;flex:1}
-.ev-det-meta{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
-.ev-det-chip{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:20px;padding:4px 12px;font-size:11px;color:var(--teal-200)}
-.ev-elementos-section{margin-top:20px}
-.ev-elementos-title{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:var(--teal-600);margin-bottom:12px}
-.ev-elem-add-row{display:grid;grid-template-columns:1fr 160px auto;gap:8px;margin-bottom:12px;align-items:end}
-.ev-elem-add-row input,.ev-elem-add-row select{background:rgba(255,255,255,.07);border:1.5px solid rgba(255,255,255,.15);border-radius:8px;padding:9px 11px;font-family:'DM Sans',sans-serif;font-size:13px;color:#fff;outline:none}
-.ev-elem-add-row input::placeholder{color:rgba(255,255,255,.3)}
-.ev-elem-add-row select option{background:#0f3535;color:#fff}
-.ev-elem-add-row input:focus,.ev-elem-add-row select:focus{border-color:var(--teal-400)}
-.ev-elem-list{display:flex;flex-direction:column;gap:8px}
-.ev-elem-item{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.09);border-radius:10px;padding:10px 14px;display:flex;align-items:center;justify-content:space-between;gap:10px}
-.ev-elem-cat{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;padding:2px 8px;border-radius:10px}
-.cat-decoracion{background:#fce4ec;color:#c62828}
-.cat-centro{background:#e3f2fd;color:#1565c0}
-.cat-mobiliario{background:#fff8e1;color:#e65100}
-.cat-servicio{background:#e8f5e9;color:#2e7d32}
-.ev-elem-name{font-size:13px;font-weight:600;color:#fff;flex:1}
-.ev-status-select{background:rgba(255,255,255,.07);border:1.5px solid rgba(255,255,255,.15);border-radius:8px;padding:7px 10px;font-family:'DM Sans',sans-serif;font-size:12px;color:#fff;outline:none;cursor:pointer}
-.ev-status-select option{background:#0f3535}
-@media(max-width:900px){.ev-layout{grid-template-columns:1fr}}
-@media(max-width:600px){
-  .ev-form-grid{grid-template-columns:1fr}
-  .ev-form-group.full{grid-column:1}
-  .ev-elem-add-row{grid-template-columns:1fr auto;gap:6px}
-  .ev-elem-add-row select{display:none}
-}
-
+@media(max-width:480px){.kanban-board{grid-template-columns:1fr}}
+</style>
 </head>
 <body>
 
@@ -466,297 +308,8 @@ body{font-family:'DM Sans',sans-serif;background:var(--teal-900);color:var(--whi
     <div class="home-title">Grupo Valkibah</div>
     <div class="home-sub">Studio · Planeador de Actividades</div>
   </div>
-  <!-- General access buttons -->
-  <div style="width:100%;max-width:520px;margin:0 auto;padding:0 16px 6px;display:grid;grid-template-columns:1fr 1fr;gap:10px">
-    <button onclick="openGeneral('kanban')" style="background:rgba(64,217,192,.13);border:1.5px solid var(--teal-400);border-radius:12px;color:var(--teal-200);padding:11px 10px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:700;cursor:pointer">🗂 Tablero General</button>
-    <button onclick="openGeneral('ideas')" style="background:rgba(64,217,192,.13);border:1.5px solid var(--teal-400);border-radius:12px;color:var(--teal-200);padding:11px 10px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:700;cursor:pointer">💡 Ideas</button>
-    <button onclick="openGeneral('presup')" style="background:rgba(64,217,192,.13);border:1.5px solid var(--teal-400);border-radius:12px;color:var(--teal-200);padding:11px 10px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:700;cursor:pointer">💰 Presupuesto</button>
-    <button onclick="openGeneral('eventos')" style="background:rgba(127,255,212,.15);border:1.5px solid var(--mint);border-radius:12px;color:var(--mint);padding:11px 10px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:700;cursor:pointer">🎉 Eventos</button>
-  </div>
   <div class="home-cards" id="home-cards"></div>
 </div>
-
-<!-- GENERAL SCREEN -->
-<div id="screen-general" class="screen">
-  <header class="general-header">
-    <div class="logo-area">
-      <div class="logo-circle">V</div>
-      <div class="brand-name">Grupo Valkibah</div>
-    </div>
-    <div class="header-right">
-      <button class="back-btn" onclick="closeGeneral()">← Inicio</button>
-    </div>
-  </header>
-  <div class="general-body">
-    <div class="general-tabs">
-      <button class="gtab" id="gtab-kanban" onclick="showGView('kanban')">🗂 Tablero</button>
-      <button class="gtab" id="gtab-ideas" onclick="showGView('ideas')">💡 Ideas</button>
-      <button class="gtab" id="gtab-presup" onclick="showGView('presup')">💰 Presupuestador</button>
-      <button class="gtab" id="gtab-eventos" onclick="showGView('eventos')">🎉 Eventos</button>
-    </div>
-
-    <!-- KANBAN GENERAL -->
-    <div class="gview" id="gview-kanban">
-      <div style="font-family:'DM Serif Display',serif;font-size:22px;color:var(--teal-400);margin-bottom:16px">🗂 Tablero General del Equipo</div>
-      <div style="font-size:12px;color:var(--teal-200);opacity:.7;margin-bottom:18px">Vista de todas las actividades del equipo. Puedes filtrar por persona.</div>
-      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px" id="kanban-filter-btns">
-        <button class="gtab active" data-filter="all" onclick="setKanbanFilter('all',this)">👥 Todos</button>
-      </div>
-      <div class="kanban-board" id="g-kanban-board" style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px;align-items:start">
-        <div class="kanban-col"><div class="kanban-col-header kh-pendiente"><span>⏳ Pendiente</span><span class="kanban-count" id="gkcount-pendiente">0</span></div><div class="kanban-col-body" id="gkcol-pendiente"></div></div>
-        <div class="kanban-col"><div class="kanban-col-header kh-en-progreso"><span>🔄 En Progreso</span><span class="kanban-count" id="gkcount-en-progreso">0</span></div><div class="kanban-col-body" id="gkcol-en-progreso"></div></div>
-        <div class="kanban-col"><div class="kanban-col-header kh-completada"><span>✅ Completada</span><span class="kanban-count" id="gkcount-completada">0</span></div><div class="kanban-col-body" id="gkcol-completada"></div></div>
-        <div class="kanban-col"><div class="kanban-col-header kh-bloqueada"><span>🚫 Bloqueada</span><span class="kanban-count" id="gkcount-bloqueada">0</span></div><div class="kanban-col-body" id="gkcol-bloqueada"></div></div>
-      </div>
-    </div>
-
-    <!-- IDEAS GENERAL -->
-    <div class="gview" id="gview-ideas">
-      <div style="font-family:'DM Serif Display',serif;font-size:22px;color:var(--teal-400);margin-bottom:6px">💡 Ideas y Propuestas del Equipo</div>
-      <div style="font-size:12px;color:var(--teal-200);opacity:.7;margin-bottom:18px">Ideas compartidas de todo el equipo.</div>
-      <div class="idea-form" style="background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.14)">
-        <div style="font-weight:700;font-size:15px;color:var(--teal-400);margin-bottom:10px">Nueva Idea del Equipo</div>
-        <select id="g-idea-person" style="width:100%;background:rgba(255,255,255,.08);border:1.5px solid rgba(255,255,255,.18);border-radius:8px;padding:10px 12px;font-family:'DM Sans',sans-serif;font-size:14px;color:#fff;outline:none;margin-bottom:8px"></select>
-        <input type="text" id="g-idea-title" placeholder="Título de la idea…" style="background:rgba(255,255,255,.08);border:1.5px solid rgba(255,255,255,.18);color:#fff">
-        <textarea id="g-idea-body" placeholder="Describe tu idea o propuesta…" style="margin-top:10px;background:rgba(255,255,255,.08);border:1.5px solid rgba(255,255,255,.18);color:#fff"></textarea>
-        <div style="margin-top:12px"><button class="btn btn-primary" onclick="addGIdea()">💡 Guardar Idea</button></div>
-      </div>
-      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px" id="ideas-filter-btns">
-        <button class="gtab active" data-filter="all" onclick="setIdeasFilter('all',this)">👥 Todos</button>
-      </div>
-      <div class="ideas-grid" id="g-ideas-grid">
-        <div class="empty-state" id="g-ideas-empty" style="color:var(--teal-400)"><div class="big-icon">💡</div><p>Aún no hay ideas registradas.</p></div>
-      </div>
-    </div>
-
-    <!-- PRESUPUESTADOR -->
-    <div class="gview" id="gview-presup">
-      <div style="font-family:'DM Serif Display',serif;font-size:22px;color:var(--teal-400);margin-bottom:6px">💰 Presupuestador de Decoraciones</div>
-      <div style="font-size:12px;color:var(--teal-200);opacity:.7;margin-bottom:20px">Calcula el costo de materiales, mano de obra y ganancia para cada proyecto.</div>
-
-      <!-- Proyecto selector -->
-      <div class="presup-section">
-        <div class="presup-title">📁 Proyecto</div>
-        <div class="presup-sub">Nombra tu presupuesto o carga uno guardado</div>
-        <div class="presup-project-row">
-          <input type="text" id="presup-name" placeholder="Nombre del proyecto (ej: Árbol decorativo Mokino)" style="flex:1">
-          <button class="btn btn-primary" onclick="savePresup()" style="flex-shrink:0">💾 Guardar</button>
-          <button class="btn btn-secondary" onclick="newPresup()" style="flex-shrink:0">➕ Nuevo</button>
-        </div>
-        <div id="presup-saved-list" class="presup-saved-list"></div>
-      </div>
-
-      <!-- Artículos -->
-      <div class="presup-section">
-        <div class="presup-title">📦 Artículos / Materiales</div>
-        <div class="presup-sub">Agrega cada material utilizado en la decoración</div>
-        <div class="presup-input-row">
-          <input type="text" id="item-name" placeholder="Nombre del artículo (ej: Ramas, Pampas…)">
-          <input type="number" id="item-qty" placeholder="Cant." min="1" step="1" class="qty-input" value="1">
-          <input type="number" id="item-price" placeholder="$ Precio" min="0" step="0.01">
-          <button class="btn-add-item" onclick="addPresupItem()" title="Agregar artículo">+</button>
-        </div>
-        <!-- mobile: show qty inline -->
-        <div style="display:flex;gap:8px;margin-bottom:10px" class="mobile-qty-row">
-          <input type="number" id="item-qty-m" placeholder="Cant." min="1" step="1" value="1" style="width:70px;background:rgba(255,255,255,.08);border:1.5px solid rgba(255,255,255,.18);border-radius:8px;padding:9px 10px;font-family:'DM Sans',sans-serif;font-size:13px;color:#fff;outline:none">
-          <span style="font-size:12px;color:var(--teal-400);align-self:center">unidades</span>
-        </div>
-        <div id="presup-items-wrap" style="overflow-x:auto">
-          <table class="presup-items-table" id="presup-items-table">
-            <thead><tr><th>Artículo</th><th>Cant.</th><th>Precio Unit.</th><th>Subtotal</th><th></th></tr></thead>
-            <tbody id="presup-items-body"></tbody>
-          </table>
-        </div>
-        <div id="presup-items-empty" style="text-align:center;padding:24px;color:rgba(255,255,255,.3);font-size:13px">Sin artículos aún. Agrega el primero ↑</div>
-        <div style="text-align:right;margin-top:8px;font-size:14px;color:var(--teal-200)">Subtotal materiales: <strong style="color:#fff" id="subtotal-mats">$0.00</strong></div>
-      </div>
-
-      <!-- Mano de obra y ganancia -->
-      <div class="presup-extras">
-        <div class="extra-box">
-          <label>⏱ Tiempo de elaboración</label>
-          <div style="display:flex;gap:8px;align-items:center;margin-bottom:10px">
-            <input type="number" class="extra-input" id="tiempo-horas" placeholder="0" min="0" step="0.5" oninput="updateTotals()" style="width:70px">
-            <span style="color:var(--teal-400);font-size:12px">hrs</span>
-            <input type="number" class="extra-input" id="costo-hora" placeholder="$/hr" min="0" step="0.01" oninput="updateTotals()" style="width:90px">
-          </div>
-          <div style="font-size:11px;color:var(--teal-400)" id="tiempo-preview">= $0.00 en mano de obra</div>
-        </div>
-        <div class="extra-box">
-          <label>🔨 Mano de Obra adicional</label>
-          <div class="extra-type-toggle">
-            <button class="etype-btn active" id="mdo-pct-btn" onclick="setExtraType('mdo','pct',this)">%</button>
-            <button class="etype-btn" id="mdo-fixed-btn" onclick="setExtraType('mdo','fixed',this)">$ Fijo</button>
-          </div>
-          <input type="number" class="extra-input" id="mdo-val" placeholder="0" min="0" step="0.01" oninput="updateTotals()">
-          <div style="font-size:11px;color:var(--teal-400);margin-top:6px" id="mdo-preview">= $0.00</div>
-        </div>
-        <div class="extra-box">
-          <label>📈 Ganancia</label>
-          <div class="extra-type-toggle">
-            <button class="etype-btn active" id="gan-pct-btn" onclick="setExtraType('gan','pct',this)">%</button>
-            <button class="etype-btn" id="gan-fixed-btn" onclick="setExtraType('gan','fixed',this)">$ Fijo</button>
-          </div>
-          <input type="number" class="extra-input" id="gan-val" placeholder="0" min="0" step="0.01" oninput="updateTotals()">
-          <div style="font-size:11px;color:var(--teal-400);margin-top:6px" id="gan-preview">= $0.00</div>
-        </div>
-      </div>
-
-      <!-- Totales -->
-      <div class="presup-totals">
-        <div class="totals-row"><span class="totals-label">Materiales</span><span class="totals-val" id="tot-mats">$0.00</span></div>
-        <div class="totals-row"><span class="totals-label">⏱ Mano de Obra (tiempo)</span><span class="totals-val" id="tot-tiempo">$0.00</span></div>
-        <div class="totals-row"><span class="totals-label">🔨 Mano de Obra (adicional)</span><span class="totals-val" id="tot-mdo">$0.00</span></div>
-        <div class="totals-row"><span class="totals-label">📈 Ganancia</span><span class="totals-val" id="tot-gan">$0.00</span></div>
-        <div class="totals-row grand"><span class="totals-label">PRECIO FINAL</span><span class="totals-val grand-val" id="tot-final">$0.00</span></div>
-      </div>
-    </div>
-
-    <!-- CALENDARIO DE EVENTOS -->
-    <div class="gview" id="gview-eventos">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;flex-wrap:wrap;gap:10px">
-        <div>
-          <div style="font-family:'DM Serif Display',serif;font-size:22px;color:var(--teal-400)">🎉 Calendario de Eventos</div>
-          <div style="font-size:12px;color:var(--teal-200);opacity:.7;margin-top:2px">Gestión de clientes, eventos y elementos contratados</div>
-        </div>
-        <button class="btn btn-primary" onclick="openEvForm(null)" style="background:var(--teal-600);border:none">+ Nuevo Evento</button>
-      </div>
-      <div class="ev-layout">
-        <!-- Calendar -->
-        <div>
-          <div class="ev-cal-wrap">
-            <div class="ev-cal-nav">
-              <button class="ev-cal-nav-btn" onclick="evCalNav(-1)">‹</button>
-              <div class="ev-cal-title" id="ev-cal-title">—</div>
-              <button class="ev-cal-nav-btn" onclick="evCalNav(1)">›</button>
-            </div>
-            <div class="ev-month-grid" id="ev-month-grid"></div>
-          </div>
-          <!-- Events for selected day -->
-          <div id="ev-day-events" style="margin-top:14px"></div>
-        </div>
-        <!-- Upcoming events panel -->
-        <div class="ev-panel">
-          <div class="ev-panel-title">📋 Próximos Eventos</div>
-          <div id="ev-upcoming-list"><div style="color:rgba(255,255,255,.3);font-size:13px;text-align:center;padding:20px 0">Sin eventos registrados</div></div>
-        </div>
-      </div>
-    </div>
-
-  </div>
-</div>
-
-<!-- EVENT FORM MODAL -->
-<div class="ev-form-overlay" id="ev-form-overlay">
-  <div class="ev-form-box">
-    <button onclick="closeEvForm()" style="position:absolute;top:16px;right:16px;background:rgba(255,255,255,.1);border:none;border-radius:50%;width:30px;height:30px;color:#fff;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center">✕</button>
-    <h2 id="ev-form-title">Nuevo Evento</h2>
-    <div class="ev-form-grid">
-      <div class="ev-form-group full">
-        <label>Nombre del Evento *</label>
-        <input type="text" id="ev-nombre" placeholder="Ej: Boda García-López">
-      </div>
-      <div class="ev-form-group full">
-        <label>Cliente *</label>
-        <input type="text" id="ev-cliente" placeholder="Nombre del cliente">
-      </div>
-      <div class="ev-form-group">
-        <label>Tipo de Evento *</label>
-        <select id="ev-tipo">
-          <option value="">-- Selecciona --</option>
-          <option>Boda</option>
-          <option>XV Años</option>
-          <option>Bautizo</option>
-          <option>Baby Shower</option>
-          <option>Graduación</option>
-          <option>Cumpleaños</option>
-          <option>Corporativo</option>
-          <option>Invitación Digital</option>
-          <option>Otro</option>
-        </select>
-      </div>
-      <div class="ev-form-group">
-        <label>Fecha del Evento *</label>
-        <input type="date" id="ev-fecha">
-      </div>
-      <div class="ev-form-group full">
-        <label>Estatus</label>
-        <select id="ev-estatus">
-          <option value="primer-contacto">🤝 1ra Visita / Primer Contacto</option>
-          <option value="propuesta-enviada">📨 Propuesta Enviada</option>
-          <option value="propuesta-revisada">🔄 Propuesta en Revisión</option>
-          <option value="cotizacion-aprobada">✅ Cotización Aprobada</option>
-          <option value="produccion">🔨 En Producción</option>
-          <option value="listo-entregar">📦 Listo para Entregar</option>
-          <option value="evento-finalizado">🎊 Evento Finalizado</option>
-          <option value="sin-respuesta">🔕 Sin Respuesta</option>
-        </select>
-      </div>
-      <div class="ev-form-group full">
-        <label>Observaciones</label>
-        <textarea id="ev-obs" placeholder="Notas del cliente, detalles especiales…"></textarea>
-      </div>
-    </div>
-    <div style="display:flex;gap:10px;margin-top:20px;flex-wrap:wrap">
-      <button class="btn btn-primary" onclick="saveEvento()" style="background:var(--teal-600)">💾 Guardar Evento</button>
-      <button class="btn btn-secondary" onclick="closeEvForm()">Cancelar</button>
-    </div>
-  </div>
-</div>
-
-<!-- EVENT DETAIL MODAL -->
-<div class="ev-detail-overlay" id="ev-detail-overlay">
-  <div class="ev-detail-box">
-    <div class="ev-detail-header">
-      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px">
-        <div>
-          <div style="font-family:'DM Serif Display',serif;font-size:20px;color:var(--teal-400)" id="evd-nombre">—</div>
-          <div style="font-size:12px;color:var(--teal-200);margin-top:3px" id="evd-cliente">—</div>
-        </div>
-        <div style="display:flex;gap:8px;flex-shrink:0">
-          <button onclick="openEvForm(window._evDetailId)" style="background:rgba(255,255,255,.1);border:none;border-radius:8px;color:#fff;padding:6px 12px;font-size:12px;cursor:pointer">✏️ Editar</button>
-          <button onclick="closeEvDetail()" style="background:rgba(255,255,255,.1);border:none;border-radius:50%;width:30px;height:30px;color:#fff;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center">✕</button>
-        </div>
-      </div>
-      <div class="ev-det-meta" id="evd-meta" style="margin-top:10px"></div>
-      <div style="margin-top:10px">
-        <label style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--teal-600);display:block;margin-bottom:5px">Cambiar Estatus</label>
-        <select class="ev-status-select" id="evd-status-sel" onchange="changeEvStatus(this.value)">
-          <option value="primer-contacto">🤝 1ra Visita / Primer Contacto</option>
-          <option value="propuesta-enviada">📨 Propuesta Enviada</option>
-          <option value="propuesta-revisada">🔄 Propuesta en Revisión</option>
-          <option value="cotizacion-aprobada">✅ Cotización Aprobada</option>
-          <option value="produccion">🔨 En Producción</option>
-          <option value="listo-entregar">📦 Listo para Entregar</option>
-          <option value="evento-finalizado">🎊 Evento Finalizado</option>
-          <option value="sin-respuesta">🔕 Sin Respuesta</option>
-        </select>
-      </div>
-    </div>
-    <div class="ev-detail-body">
-      <div id="evd-obs" style="font-size:13px;color:var(--teal-200);line-height:1.6;margin-bottom:16px"></div>
-
-      <!-- Elementos section - only shown when cotizacion-aprobada or later -->
-      <div class="ev-elementos-section" id="evd-elementos-section">
-        <div class="ev-elementos-title">📦 Elementos del Evento</div>
-        <div class="ev-elem-add-row" id="evd-elem-add-row">
-          <input type="text" id="ev-elem-name" placeholder="Ej: Arco de flores, Silla Tiffany…">
-          <select id="ev-elem-cat">
-            <option value="decoracion">🌸 Decoración</option>
-            <option value="centro">🌺 Centro de Mesa</option>
-            <option value="mobiliario">🪑 Mobiliario</option>
-            <option value="servicio">⚙️ Servicio</option>
-          </select>
-          <button class="btn-add-item" onclick="addEvElem()" title="Agregar">+</button>
-        </div>
-        <div class="ev-elem-list" id="evd-elem-list">
-          <div id="evd-elem-empty" style="color:rgba(255,255,255,.3);font-size:13px;text-align:center;padding:16px 0">Sin elementos agregados</div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
 
 <!-- APP -->
 <div id="screen-app" class="screen">
@@ -794,6 +347,8 @@ body{font-family:'DM Sans',sans-serif;background:var(--teal-900);color:var(--whi
         <button class="nav-tab active" onclick="showView('form')" id="tab-form">➕ Nueva Actividad</button>
         <button class="nav-tab" onclick="showView('registro')" id="tab-registro">📋 Registro</button>
         <button class="nav-tab" onclick="showView('calendar')" id="tab-calendar">📅 Calendario</button>
+        <button class="nav-tab" onclick="showView('kanban')" id="tab-kanban">🗂 Tablero</button>
+        <button class="nav-tab" onclick="showView('ideas')" id="tab-ideas">💡 Ideas</button>
       </nav>
       <div class="month-selector">
         <label>Mes del Calendario</label>
@@ -909,15 +464,56 @@ body{font-family:'DM Sans',sans-serif;background:var(--teal-900);color:var(--whi
         </div>
       </div>
 
-      <!-- (Tablero e Ideas movidos a sección General) -->
+      <!-- KANBAN -->
+      <div class="view" id="view-kanban">
+        <div class="kanban-header">
+          <div style="font-family:'DM Serif Display',serif;font-size:22px;color:var(--teal-800)">🗂 Tablero de Actividades</div>
+        </div>
+        <div class="kanban-board">
+          <div class="kanban-col">
+            <div class="kanban-col-header kh-pendiente"><span>⏳ Pendiente</span><span class="kanban-count" id="kcount-pendiente">0</span></div>
+            <div class="kanban-col-body" id="kcol-pendiente"></div>
+          </div>
+          <div class="kanban-col">
+            <div class="kanban-col-header kh-en-progreso"><span>🔄 En Progreso</span><span class="kanban-count" id="kcount-en-progreso">0</span></div>
+            <div class="kanban-col-body" id="kcol-en-progreso"></div>
+          </div>
+          <div class="kanban-col">
+            <div class="kanban-col-header kh-completada"><span>✅ Completada</span><span class="kanban-count" id="kcount-completada">0</span></div>
+            <div class="kanban-col-body" id="kcol-completada"></div>
+          </div>
+          <div class="kanban-col">
+            <div class="kanban-col-header kh-bloqueada"><span>🚫 Bloqueada</span><span class="kanban-count" id="kcount-bloqueada">0</span></div>
+            <div class="kanban-col-body" id="kcol-bloqueada"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- IDEAS -->
+      <div class="view" id="view-ideas">
+        <div class="ideas-header">
+          <div style="font-family:'DM Serif Display',serif;font-size:22px;color:var(--teal-800)">💡 Ideas y Propuestas</div>
+        </div>
+        <div class="idea-form">
+          <div style="font-weight:700;font-size:15px;color:var(--teal-800);margin-bottom:10px">Nueva Idea</div>
+          <input type="text" id="idea-title" placeholder="Título de la idea…">
+          <textarea id="idea-body" placeholder="Describe tu idea o propuesta…" style="margin-top:10px"></textarea>
+          <div style="margin-top:12px"><button class="btn btn-primary" onclick="addIdea()">💡 Guardar Idea</button></div>
+        </div>
+        <div class="ideas-grid" id="ideas-grid">
+          <div class="empty-state" id="ideas-empty"><div class="big-icon">💡</div><p>Aún no hay ideas registradas.</p></div>
+        </div>
+      </div>
     </main>
   </div>
 
   <div class="mobile-tabbar">
-    <div class="mobile-tabbar-inner" style="grid-template-columns:repeat(3,1fr)">
+    <div class="mobile-tabbar-inner">
       <button class="mtab active" id="mtab-form" onclick="showView('form')"><span class="mtab-icon">➕</span>Nueva</button>
       <button class="mtab" id="mtab-registro" onclick="showView('registro')"><span class="mtab-icon">📋</span>Registro</button>
       <button class="mtab" id="mtab-calendar" onclick="showView('calendar')"><span class="mtab-icon">📅</span>Cal.</button>
+      <button class="mtab" id="mtab-kanban" onclick="showView('kanban')"><span class="mtab-icon">🗂</span>Tablero</button>
+      <button class="mtab" id="mtab-ideas" onclick="showView('ideas')"><span class="mtab-icon">💡</span>Ideas</button>
     </div>
   </div>
 </div>
@@ -942,110 +538,51 @@ body{font-family:'DM Sans',sans-serif;background:var(--teal-900);color:var(--whi
 </div>
 <div class="toast" id="toast"></div>
 
-<!-- PIN OVERLAY -->
-<div class="pin-overlay" id="pin-overlay">
-  <div class="pin-box">
-    <div class="pin-box-title" id="pin-title">Ingresa tu PIN</div>
-    <div class="pin-box-sub" id="pin-sub">Solo el titular puede modificar este perfil</div>
-    <div class="pin-dots" id="pin-dots">
-      <div class="pin-dot" id="pd0"></div>
-      <div class="pin-dot" id="pd1"></div>
-      <div class="pin-dot" id="pd2"></div>
-      <div class="pin-dot" id="pd3"></div>
-    </div>
-    <div class="pin-numpad">
-      <button class="pin-key" onclick="pinKey('1')">1</button>
-      <button class="pin-key" onclick="pinKey('2')">2</button>
-      <button class="pin-key" onclick="pinKey('3')">3</button>
-      <button class="pin-key" onclick="pinKey('4')">4</button>
-      <button class="pin-key" onclick="pinKey('5')">5</button>
-      <button class="pin-key" onclick="pinKey('6')">6</button>
-      <button class="pin-key" onclick="pinKey('7')">7</button>
-      <button class="pin-key" onclick="pinKey('8')">8</button>
-      <button class="pin-key" onclick="pinKey('9')">9</button>
-      <button class="pin-key del-key" onclick="pinDel()">⌫</button>
-      <button class="pin-key" onclick="pinKey('0')">0</button>
-      <button class="pin-key ok-key" onclick="pinOk()">OK</button>
-    </div>
-    <div class="pin-error" id="pin-error"></div>
-    <button class="pin-cancel" onclick="cancelPin()">Cancelar</button>
-  </div>
-</div>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
+import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-storage.js";
 
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
-<script>
-(function() {
-  const firebaseConfig = {
-    apiKey: "AIzaSyBPqyuPwriIVJ2z9sIf6wCSKZ-NJD7dhVQ",
-    authDomain: "valkibah.firebaseapp.com",
-    projectId: "valkibah",
-    storageBucket: "valkibah.firebasestorage.app",
-    messagingSenderId: "210898512187",
-    appId: "1:210898512187:web:12c3795c50b25b83d26f1e"
-  };
+const firebaseConfig = {
+  apiKey: "AIzaSyBPqyuPwriIVJ2z9sIf6wCSKZ-NJD7dhVQ",
+  authDomain: "valkibah.firebaseapp.com",
+  projectId: "valkibah",
+  storageBucket: "valkibah.firebasestorage.app",
+  messagingSenderId: "210898512187",
+  appId: "1:210898512187:web:12c3795c50b25b83d26f1e"
+};
+const fbApp   = initializeApp(firebaseConfig);
+const db      = getFirestore(fbApp);
+const storage = getStorage(fbApp);
 
-  const fbApp   = firebase.initializeApp(firebaseConfig);
-  const db      = firebase.firestore();
-  const storage = firebase.storage();
-
-  window._fbSave = async (key, data) => {
-    await db.collection("planners").doc(key).set(data);
-  };
-  window._fbSubscribe = (key, callback) => {
-    return db.collection("planners").doc(key).onSnapshot(snap => {
-      callback(snap.exists ? snap.data() : null);
-    });
-  };
-  window._fbSaveShared = async (key, data) => {
-    await db.collection("shared").doc(key).set(data);
-  };
-  window._fbSubscribeShared = (key, callback) => {
-    return db.collection("shared").doc(key).onSnapshot(snap => {
-      callback(snap.exists ? snap.data() : null);
-    });
-  };
-  window._fbUploadAvatar = async (personKey, file) => {
-    const storageRef = storage.ref(`avatars/${personKey}`);
-    await storageRef.put(file);
-    const url = await storageRef.getDownloadURL();
-    await db.collection("avatars").doc(personKey).set({ url });
-    return url;
-  };
-  window._fbSubscribeAvatar = (personKey, callback) => {
-    return db.collection("avatars").doc(personKey).onSnapshot(snap => {
-      callback(snap.exists ? snap.data().url : null);
-    });
-  };
-
-  // Signal ready
-  window._fbReady = true;
-  if (window._onFbReady) window._onFbReady();
-})();
-</script>
-
-<script>
-// Fallback if Firebase CDN also failed
-if (!window._fbSave) {
-  console.warn('Firebase no cargó — modo sin conexión');
-  window._fbSave = async () => {};
-  window._fbSubscribe = () => () => {};
-  window._fbSaveShared = async () => {};
-  window._fbSubscribeShared = () => () => {};
-  window._fbUploadAvatar = async () => { throw new Error('Sin Firebase'); };
-  window._fbSubscribeAvatar = () => () => {};
-  window._fbReady = true;
-  if (window._onFbReady) window._onFbReady();
-}
+window._fbSave = async (key, data) => {
+  await setDoc(doc(db, "planners", key), data);
+};
+window._fbSubscribe = (key, callback) => {
+  return onSnapshot(doc(db, "planners", key), snap => {
+    callback(snap.exists() ? snap.data() : null);
+  });
+};
+window._fbUploadAvatar = async (personKey, file) => {
+  const storageRef = ref(storage, `avatars/${personKey}`);
+  await uploadBytes(storageRef, file);
+  const url = await getDownloadURL(storageRef);
+  await setDoc(doc(db, "avatars", personKey), { url });
+  return url;
+};
+window._fbSubscribeAvatar = (personKey, callback) => {
+  return onSnapshot(doc(db, "avatars", personKey), snap => {
+    callback(snap.exists() ? snap.data().url : null);
+  });
+};
 </script>
 
 <script>
 const PERSONS_DATA = [
-  {"key":"eduardo","pin":"1234","storage_key":"valkibah_eduardo_v3","person":"Eduardo Rico","badge":"💻 Eduardo Rico","role":"Mobah","schedule":"12:00 PM – 8:00 PM","person_main":"#0e6b6b","person_light":"#d0f5f0","emoji":"💻","day_start":"12:00","day_end":"20:00","title":"Desarrollo Tecnológico","bio":"Lidera el desarrollo y mantenimiento de las plataformas tecnológicas del grupo, incluyendo sprints de Mobah, coordinación del equipo técnico y validación de KPIs.","base_activities":["Desarrollo Mobah – sprints quincenales","Coordinación diaria del equipo","Documentación técnica","Revisión de KPIs Mobah","Validación de inventario"]},
-  {"key":"mayo","pin":"2222","storage_key":"valkibah_mayo_v3","person":"Mayo Espínola","badge":"🌸 Mayo Espínola","role":"Mokino","schedule":"1:30 PM – 8:00 PM","person_main":"#2aacac","person_light":"#e0fafa","emoji":"🌸","day_start":"13:00","day_end":"20:00","title":"Directora Creativa Mokino","bio":"Dirige la coordinación y montaje de eventos, gestión de proveedores y alianzas, y el desarrollo creativo de la marca Mokino.","base_activities":["Coordinación y montaje de eventos","Inventario mensual (día 15)","Ideas creativas y decoración","Búsqueda de alianzas y proveedores","Calendario Mokino","Optimización de proveedores"]},
-  {"key":"paloma","pin":"3333","storage_key":"valkibah_paloma_v3","person":"Paloma Arvizu","badge":"🎨 Paloma Arvizu","role":"Valpa","schedule":"9:30 AM – 3:00 PM","person_main":"#1a7a7a","person_light":"#d8f5f0","emoji":"🎨","day_start":"9:00","day_end":"15:00","title":"Contenido Digital & Atención al Cliente","bio":"Responsable de la creación de contenido digital, atención y seguimiento a clientes, portafolio fotográfico y gestión de reseñas online.","base_activities":["Atención a clientes (cotizaciones)","Seguimiento post-evento","Documento de tendencias","Apoyo en montajes","Portafolio fotográfico","Búsqueda de alianzas","Valkibah Aprende","Gestión de reseñas online","Creación de contenido","Reunión semanal de equipo"]},
-  {"key":"salma","pin":"4444","storage_key":"valkibah_salma_v3","person":"Salma Castillo","badge":"🌴 Salma Castillo","role":"Estrategia","schedule":"7:00 PM – 8:00 PM","person_main":"#0f5252","person_light":"#cceaea","emoji":"🌴","day_start":"19:00","day_end":"20:00","title":"Directora Fundadora · Estrategia de Marca, Ventas y Ops","bio":"Fundadora del grupo, responsable de la visión estratégica, gestión financiera, presupuesto, métricas y alineación de todas las áreas del negocio.","base_activities":["Respuesta al equipo (máx 24 hrs)","Feedback estratégico Mokino/Valpa","Gestión financiera y presupuesto","Revisión de métricas/KPIs","Reunión semanal y Valkibah Aprende","Calendario Mokino"]}
+  {"key":"eduardo","storage_key":"valkibah_eduardo_v3","person":"Eduardo Rico","badge":"💻 Eduardo Rico","role":"Mobah","schedule":"12:00 PM – 8:00 PM","person_main":"#0e6b6b","person_light":"#d0f5f0","emoji":"💻","day_start":"12:00","day_end":"20:00","title":"Desarrollo Tecnológico","bio":"Lidera el desarrollo y mantenimiento de las plataformas tecnológicas del grupo, incluyendo sprints de Mobah, coordinación del equipo técnico y validación de KPIs.","base_activities":["Desarrollo Mobah – sprints quincenales","Coordinación diaria del equipo","Documentación técnica","Revisión de KPIs Mobah","Validación de inventario"]},
+  {"key":"mayo","storage_key":"valkibah_mayo_v3","person":"Mayo Espínola","badge":"🌸 Mayo Espínola","role":"Mokino","schedule":"1:30 PM – 8:00 PM","person_main":"#2aacac","person_light":"#e0fafa","emoji":"🌸","day_start":"13:00","day_end":"20:00","title":"Directora Creativa Mokino","bio":"Dirige la coordinación y montaje de eventos, gestión de proveedores y alianzas, y el desarrollo creativo de la marca Mokino.","base_activities":["Coordinación y montaje de eventos","Inventario mensual (día 15)","Ideas creativas y decoración","Búsqueda de alianzas y proveedores","Calendario Mokino","Optimización de proveedores"]},
+  {"key":"paloma","storage_key":"valkibah_paloma_v3","person":"Paloma Arvizu","badge":"🎨 Paloma Arvizu","role":"Valpa","schedule":"9:30 AM – 3:00 PM","person_main":"#1a7a7a","person_light":"#d8f5f0","emoji":"🎨","day_start":"9:00","day_end":"15:00","title":"Contenido Digital & Atención al Cliente","bio":"Responsable de la creación de contenido digital, atención y seguimiento a clientes, portafolio fotográfico y gestión de reseñas online.","base_activities":["Atención a clientes (cotizaciones)","Seguimiento post-evento","Documento de tendencias","Apoyo en montajes","Portafolio fotográfico","Búsqueda de alianzas","Valkibah Aprende","Gestión de reseñas online","Creación de contenido","Reunión semanal de equipo"]},
+  {"key":"salma","storage_key":"valkibah_salma_v3","person":"Salma Castillo","badge":"🌴 Salma Castillo","role":"Estrategia","schedule":"7:00 PM – 8:00 PM","person_main":"#0f5252","person_light":"#cceaea","emoji":"🌴","day_start":"19:00","day_end":"20:00","title":"Directora Fundadora · Estrategia de Marca, Ventas y Ops","bio":"Fundadora del grupo, responsable de la visión estratégica, gestión financiera, presupuesto, métricas y alineación de todas las áreas del negocio.","base_activities":["Respuesta al equipo (máx 24 hrs)","Feedback estratégico Mokino/Valpa","Gestión financiera y presupuesto","Revisión de métricas/KPIs","Reunión semanal y Valkibah Aprende","Calendario Mokino"]}
 ];
 const PILL_COLORS  = [["#0e6b6b", "#fff"], ["#084298", "#fff"], ["#6f2da8", "#fff"], ["#c0392b", "#fff"], ["#856404", "#fff"], ["#0f5132", "#fff"], ["#7d3c98", "#fff"], ["#b7410e", "#fff"]];
 
@@ -1061,84 +598,6 @@ let ideas         = [];
 let editingId     = null;
 let currentStatus = "pendiente";
 
-// Eventos variables — declared here to avoid ReferenceError
-let _eventos = [];
-let _evCalYear = new Date().getFullYear();
-let _evCalMonth = new Date().getMonth();
-let _evSelectedDate = null;
-let _evDetailId = null;
-let _evEditId = null;
-let _evUnsub = null;
-
-// General screen variables
-let _generalKanbanActs = {};
-let _generalKanbanUnsubs = [];
-let _generalIdeas = [];
-let _generalIdeasUnsub = null;
-let _generalKanbanFilter = "all";
-let _generalIdeasFilter = "all";
-
-// Presupuestador variables
-let presupItems = [];
-let presupSaved = [];
-let presupCurrentId = null;
-let mdoType = "pct";
-let ganType = "pct";
-
-// ── PIN SYSTEM ──
-let _pinTarget = null;
-let _pinBuffer = "";
-const SESSION_KEY = "valkibah_sessions";
-
-function getUnlockedSessions() {
-  try { return JSON.parse(sessionStorage.getItem(SESSION_KEY) || "{}"); } catch { return {}; }
-}
-function setUnlockedSession(key) {
-  const s = getUnlockedSessions(); s[key] = true;
-  sessionStorage.setItem(SESSION_KEY, JSON.stringify(s));
-}
-function isUnlocked(key) { return !!getUnlockedSessions()[key]; }
-
-function openPinOverlay(person, onSuccess) {
-  _pinTarget = { person, onSuccess };
-  _pinBuffer = "";
-  document.getElementById("pin-title").textContent = `PIN de ${person.person}`;
-  document.getElementById("pin-sub").textContent = "Ingresa tu PIN de 4 dígitos para acceder";
-  document.getElementById("pin-error").textContent = "";
-  updatePinDots();
-  document.getElementById("pin-overlay").classList.add("open");
-}
-function pinKey(k) {
-  if (_pinBuffer.length >= 4) return;
-  _pinBuffer += k;
-  updatePinDots();
-  if (_pinBuffer.length === 4) setTimeout(pinOk, 180);
-}
-function pinDel() { _pinBuffer = _pinBuffer.slice(0, -1); updatePinDots(); }
-function updatePinDots() {
-  for (let i = 0; i < 4; i++) {
-    document.getElementById("pd" + i).classList.toggle("filled", i < _pinBuffer.length);
-  }
-}
-function pinOk() {
-  if (!_pinTarget) return;
-  if (_pinBuffer === _pinTarget.person.pin) {
-    setUnlockedSession(_pinTarget.person.key);
-    document.getElementById("pin-overlay").classList.remove("open");
-    document.getElementById("pin-error").textContent = "";
-    const cb = _pinTarget.onSuccess;
-    _pinTarget = null; _pinBuffer = "";
-    cb();
-  } else {
-    document.getElementById("pin-error").textContent = "❌ PIN incorrecto, intenta de nuevo";
-    _pinBuffer = ""; updatePinDots();
-  }
-}
-function cancelPin() {
-  document.getElementById("pin-overlay").classList.remove("open");
-  _pinTarget = null; _pinBuffer = "";
-}
-
 // ── HOME ──
 function buildHome() {
   const grid = document.getElementById("home-cards");
@@ -1147,22 +606,12 @@ function buildHome() {
     const c = document.createElement("div");
     c.className = "person-card";
     c.innerHTML = `<div class="card-emoji">${p.emoji}</div><div class="card-name">${p.person}</div><div class="card-role">${p.role}</div><div class="card-sched">${p.schedule}</div>`;
-    c.onclick = () => {
-      if (isUnlocked(p.key)) { doOpenPerson(p); }
-      else { openPinOverlay(p, () => doOpenPerson(p)); }
-    };
+    c.onclick = () => openPerson(p);
     grid.appendChild(c);
   });
-  // Build filter buttons for general views
-  buildGeneralFilterBtns();
 }
 
-function openPerson(p) { // kept for compatibility
-  if (isUnlocked(p.key)) { doOpenPerson(p); }
-  else { openPinOverlay(p, () => doOpenPerson(p)); }
-}
-
-function doOpenPerson(p) {
+function openPerson(p) {
   currentPerson = p;
   activities = [];
   ideas = [];
@@ -1189,11 +638,12 @@ function doOpenPerson(p) {
   window._unsubActs = window._fbSubscribe(p.storage_key, data => {
     activities = data ? (data.activities || []) : [];
     activities.forEach(a => { if (!a.status) a.status = "pendiente"; });
-    renderCalendar(); renderRegistro();
+    renderCalendar(); renderRegistro(); renderKanban();
   });
 
   window._unsubIdeas = window._fbSubscribe(p.storage_key + "_ideas", data => {
     ideas = data ? (data.ideas || []) : [];
+    renderIdeas();
   });
   PERSONS_DATA.forEach(pd => subscribeAvatar(pd.key));
   setTimeout(updateHeaderAvatar, 300);
@@ -1250,6 +700,8 @@ function showView(v) {
   if(mbar)mbar.style.display=v==="calendar"?"flex":"none";
   if(v==="calendar")renderCalendar();
   if(v==="registro")renderRegistro();
+  if(v==="kanban"){loadOtherPersonsForKanban();renderKanban();}
+  if(v==="ideas")renderIdeas();
 }
 
 // ── STATUS ──
@@ -1274,19 +726,17 @@ function saveActivity() {
   const end=document.getElementById("f-end").value;
   if(!name||!date||!start){showToast("⚠️ Nombre, fecha y hora inicio son requeridos");return;}
   if(!isEditableDate(date)){showToast("🔒 Esa semana está bloqueada.","#c0392b");return;}
-  const d=parseLocalDate(date);
-  const dow=d.getDay(); // 0=Dom, 6=Sáb
-  if(dow===0||dow===6){showToast("⚠️ No se pueden agregar actividades en Sábado o Domingo.","#c0392b");return;}
-  if(dow===5)showToast("🎪 Viernes · Día de Eventos — actividad registrada.","#0e6b6b");
+  const d=new Date(date+"T12:00:00"),dow=d.getDay();
+  if(dow===5||dow===6||dow===0)showToast("🎪 Día de Eventos (Vie/Sáb/Dom).","#e08030");
   if(editingId!==null){
     const idx=activities.findIndex(a=>a.id===editingId);
     if(idx!==-1) activities[idx]={...activities[idx],name,desc,date,start,end,status:currentStatus};
     showToast("✏️ Actividad actualizada"); editingId=null;
   } else {
     activities.push({id:Date.now(),name,desc,person:currentPerson.person,date,start,end,status:currentStatus});
-    if(dow!==5)showToast("✅ Actividad agregada");
+    showToast("✅ Actividad agregada");
   }
-  save();renderCalendar();renderRegistro();clearForm();
+  save();renderCalendar();renderRegistro();renderKanban();clearForm();
   const [y,m]=date.split("-").map(Number);
   document.getElementById("month-select").value=`${y}-${m}`;
   showView("calendar");
@@ -1304,30 +754,9 @@ function clearForm() {
 }
 
 // ── WEEK UTILS ──
-// Parse a YYYY-MM-DD string as a LOCAL midnight date (avoid UTC shift bugs)
-function parseLocalDate(dateStr){
-  const [y,m,d]=dateStr.split("-").map(Number);
-  const dt=new Date(y,m-1,d);dt.setHours(0,0,0,0);return dt;
-}
-function weekMonday(d){
-  const dt=new Date(d);dt.setHours(0,0,0,0);
-  const dow=dt.getDay(); // 0=Sun,1=Mon,...,6=Sat
-  const diff=(dow===0)?-6:(1-dow); // shift so Monday=0
-  dt.setDate(dt.getDate()+diff);
-  return dt;
-}
-function getAllowedWeeks(){
-  const today=new Date();today.setHours(0,0,0,0);
-  const curMon=weekMonday(today);
-  const nextMon=new Date(curMon);nextMon.setDate(nextMon.getDate()+7);
-  return{curMon,nextMon};
-}
-function isEditableDate(dateStr){
-  const d=parseLocalDate(dateStr);
-  const mon=weekMonday(d);
-  const{curMon,nextMon}=getAllowedWeeks();
-  return mon.getTime()===curMon.getTime()||mon.getTime()===nextMon.getTime();
-}
+function weekMonday(d){const dt=new Date(d);dt.setHours(0,0,0,0);dt.setDate(dt.getDate()-((dt.getDay()+6)%7));return dt;}
+function getAllowedWeeks(){const today=new Date();today.setHours(0,0,0,0);const curMon=weekMonday(today);const nextMon=new Date(curMon);nextMon.setDate(nextMon.getDate()+7);return{curMon,nextMon};}
+function isEditableDate(dateStr){const d=new Date(dateStr+"T12:00:00"),mon=weekMonday(d),{curMon,nextMon}=getAllowedWeeks();return mon.getTime()===curMon.getTime()||mon.getTime()===nextMon.getTime();}
 
 // ── CALENDAR ──
 // Returns hour index in HOURS array, or -1
@@ -1375,10 +804,9 @@ function renderCalendar() {
     const hRow=document.createElement("tr");
     const thHour=document.createElement("th");thHour.className="cal-th cal-th-hour";thHour.textContent="HORA";hRow.appendChild(thHour);
     weekDates.forEach((d,i)=>{
-      const isWeekend=i>=5; // Sábado(5) y Domingo(6)
-      const inMonth=d.getMonth()+1===month;
-      const th=document.createElement("th");th.className="cal-th"+(isWeekend?" event-day":"");
-      th.innerHTML=`${DAYS_FULL[i]}<span class="day-date">${inMonth?d.getDate():"·"}</span>${isWeekend?'<br><span style="font-size:8px;opacity:.6">🎪</span>':""}`;
+      const isEvent=i>=4,inMonth=d.getMonth()+1===month;
+      const th=document.createElement("th");th.className="cal-th"+(isEvent?" event-day":"");
+      th.innerHTML=`${DAYS_FULL[i]}<span class="day-date">${inMonth?d.getDate():"·"}</span>${isEvent?'<br><span style="font-size:8px;opacity:.6">🎪</span>':""}`;
       hRow.appendChild(th);
     });
     thead.appendChild(hRow);
@@ -1432,29 +860,21 @@ function renderCalendar() {
     });
 
     // ── Hour rows ──
-    // activeRowSpans[colIndex] = remaining rows to skip (because a rowspan cell above is covering this cell)
-    const activeRowSpans = weekDates.map(()=>0);
-
     HOURS.forEach((h,hi)=>{
       const tr=document.createElement("tr");
       const tdHour=document.createElement("td");tdHour.className="cal-cell hour-label";tdHour.textContent=HOUR_LABELS[hi];
+      // style the hour td as a th-like cell
       tdHour.style.cssText="background:var(--teal-800);color:var(--teal-400);font-weight:700;font-size:10px;text-align:center;border-right:2px solid var(--teal-600);border-bottom:1px solid var(--teal-100);height:46px;vertical-align:middle;padding:2px";
       tr.appendChild(tdHour);
 
       weekDates.forEach((d,di)=>{
-        // If a rowspan from a previous row is still covering this cell, skip it
-        if(activeRowSpans[di]>0){ activeRowSpans[di]--; return; }
-
-        const isWorkday=di<5; // Mon-Fri are work days (index 0-4); Sat=5, Sun=6
-        const isWeekend=di>=5;
-        const inMonth=d.getMonth()+1===month;
+        const isEvent=di>=4,inMonth=d.getMonth()+1===month;
         const td=document.createElement("td");
         const dateStr=toDateStr(d);
 
-        if(isWeekend){
-          // Sáb/Dom = día de eventos, no editable
+        if(isEvent){
           td.className="cal-td event-day";
-          if(hi===0)td.innerHTML=`<span style="font-size:8px;font-weight:700;color:var(--teal-700);opacity:.65">🎪 ${di===5?"Sábado":"Domingo"}</span>`;
+          if(hi===0)td.innerHTML=`<span style="font-size:8px;font-weight:700;color:var(--teal-700);opacity:.65">🎪 Día de Eventos</span>`;
         } else if(!inMonth){
           td.className="cal-td out-month";
         } else if(isLocked){
@@ -1463,42 +883,48 @@ function renderCalendar() {
         } else {
           td.className="cal-td editable";
           td.style.background=hi%2===0?"var(--teal-50)":"var(--white)";
+          // Drop events
           td.addEventListener("dragover",e=>{e.preventDefault();td.classList.add("drag-over");});
           td.addEventListener("dragleave",()=>td.classList.remove("drag-over"));
           td.addEventListener("drop",e=>{
             e.preventDefault();td.classList.remove("drag-over");
             const id=parseInt(e.dataTransfer.getData("text/plain"));
             const act=activities.find(a=>a.id===id);
-            if(act&&isEditableDate(dateStr)){act.date=dateStr;act.start=h;save();renderCalendar();renderRegistro();showToast("📅 Actividad movida");}
+            if(act&&isEditableDate(dateStr)){act.date=dateStr;act.start=h;save();renderCalendar();renderRegistro();renderKanban();showToast("📅 Actividad movida");}
           });
           td.addEventListener("touchend",e=>{
             if(window._draggingId!==undefined){
               const act=activities.find(a=>a.id===window._draggingId);
-              if(act&&isEditableDate(dateStr)){act.date=dateStr;act.start=h;save();renderCalendar();renderRegistro();showToast("📅 Actividad movida");}
+              if(act&&isEditableDate(dateStr)){act.date=dateStr;act.start=h;save();renderCalendar();renderRegistro();renderKanban();showToast("📅 Actividad movida");}
               window._draggingId=undefined;
             }
           });
         }
 
         // ── Render pills ──
+        // Actividades simples en esta hora (sin span, sin todo-el-dia)
         const spanActIds=spanMap[dateStr]&&spanMap[dateStr][h]?spanMap[dateStr][h].map(e=>e.act.id):[];
+        const occupiedIds=(occupied[dateStr]&&occupied[dateStr][h])||[];
         const cellActs=activities.filter(a=>a.date===dateStr&&a.start===h&&a.start!=="todo-el-dia"&&!spanActIds.includes(a.id));
 
+        // Si esta celda tiene spans iniciando aquí, necesita rowSpan
+        // Usamos la estrategia: la primera span toma el rowSpan, las demás se renderizan como pills normales
         if(spanMap[dateStr]&&spanMap[dateStr][h]&&spanMap[dateStr][h].length>0){
           const spans=spanMap[dateStr][h];
+          // La primera span define el rowSpan de la celda
           const mainSpan=spans[0];
           td.rowSpan=mainSpan.span;
-          // Register how many rows this span will cover for the columns tracker
-          activeRowSpans[di]=mainSpan.span-1;
           td.style.verticalAlign="top";
           td.style.position="relative";
           td.style.height="auto";
           td.style.overflow="visible";
+          // Flex column para apilar múltiples pills dentro del span
           td.style.display="flex";
           td.style.flexDirection="column";
           td.style.gap="2px";
           td.style.padding="3px";
 
+          // Renderizar todas las spans como pills en esta celda
           spans.forEach(({act:sAct,span:sSpan,isAllday})=>{
             const pill=document.createElement("div");
             pill.className="pill-span";
@@ -1515,8 +941,10 @@ function renderCalendar() {
             pill.addEventListener("click",e=>{if(e.target.classList.contains("pill-del"))return;openDetailModal(sAct.id);});
             td.appendChild(pill);
           });
+          // Actividades normales en el mismo horario también se apilan
           cellActs.forEach(act=>addNormalPill(td,act,0,isLocked,colorMap));
         } else {
+          // Sin spans: apilar todas las actividades de esta hora
           cellActs.forEach((act)=>addNormalPill(td,act,0,isLocked,colorMap));
         }
 
@@ -1626,366 +1054,100 @@ function renderRegistro(){
 }
 
 // ── KANBAN ──
-function renderKanban(){ /* Moved to general screen */ }
-function loadOtherPersonsForKanban(){ /* Moved to general screen */ }
+function renderKanban(){
+  const cols=["pendiente","en-progreso","completada","bloqueada"];
+  // Build a combined list: current person's activities + all others from Firestore cache
+  const allActs = window._allKanbanActs || [];
+  // Merge: own activities override any cached version
+  const ownIds = new Set(activities.map(a=>a.id));
+  const merged = [...activities, ...allActs.filter(a=>a._personKey!==currentPerson.key&&!ownIds.has(a.id))];
 
-// ── IDEAS (per-person, legacy kept for save/load) ──
-function addIdea(){
-  const title=document.getElementById("idea-title")?.value?.trim(),body=document.getElementById("idea-body")?.value?.trim();
-  if(!title){showToast("⚠️ Escribe un título");return;}
-  ideas.push({id:Date.now(),title,body,date:new Date().toISOString().slice(0,10)});
-  saveIdeas();
-  if(document.getElementById("idea-title")) document.getElementById("idea-title").value="";
-  if(document.getElementById("idea-body")) document.getElementById("idea-body").value="";
-  showToast("💡 Idea guardada");
-}
-function deleteIdea(id){ideas=ideas.filter(i=>i.id!==id);saveIdeas();showToast("🗑 Idea eliminada");}
-function renderIdeas(){}  // no-op; ideas now in general screen
-
-// ── GENERAL SCREEN ──
-
-function buildGeneralFilterBtns() {
-  // Kanban filter buttons
-  const kb = document.getElementById("kanban-filter-btns");
-  if (!kb) return;
-  kb.innerHTML = `<button class="gtab active" data-filter="all" onclick="setKanbanFilter('all',this)">👥 Todos</button>`;
-  PERSONS_DATA.forEach(p => {
-    const b = document.createElement("button");
-    b.className = "gtab";
-    b.dataset.filter = p.key;
-    b.onclick = function(){ setKanbanFilter(p.key, this); };
-    b.innerHTML = `${p.emoji} ${p.person.split(" ")[0]}`;
-    kb.appendChild(b);
-  });
-  // Ideas filter buttons
-  const ib = document.getElementById("ideas-filter-btns");
-  if (!ib) return;
-  ib.innerHTML = `<button class="gtab active" data-filter="all" onclick="setIdeasFilter('all',this)">👥 Todos</button>`;
-  PERSONS_DATA.forEach(p => {
-    const b = document.createElement("button");
-    b.className = "gtab";
-    b.dataset.filter = p.key;
-    b.onclick = function(){ setIdeasFilter(p.key, this); };
-    b.innerHTML = `${p.emoji} ${p.person.split(" ")[0]}`;
-    ib.appendChild(b);
-  });
-  // Ideas person select
-  const sel = document.getElementById("g-idea-person");
-  if (sel) {
-    sel.innerHTML = "";
-    PERSONS_DATA.forEach(p => {
-      const o = document.createElement("option");
-      o.value = p.key; o.textContent = `${p.emoji} ${p.person}`;
-      sel.appendChild(o);
+  cols.forEach(s=>{
+    const col=document.getElementById("kcol-"+s),count=document.getElementById("kcount-"+s);
+    col.innerHTML="";
+    col.addEventListener("dragover",e=>{e.preventDefault();col.classList.add("kanbandrop");});
+    col.addEventListener("dragleave",e=>{if(!col.contains(e.relatedTarget))col.classList.remove("kanbandrop");});
+    col.addEventListener("drop",e=>{
+      e.preventDefault();col.classList.remove("kanbandrop");
+      const id=parseInt(e.dataTransfer.getData("kanban-id"));
+      if(!isNaN(id)){
+        const act=activities.find(a=>a.id===id);
+        if(act){act.status=s;save();renderKanban();renderRegistro();renderCalendar();showToast("🗂 Estado actualizado");}
+        else{showToast("ℹ️ Solo puedes mover tus propias actividades");}
+      }
     });
-  }
-}
-
-function setKanbanFilter(key, btn) {
-  _generalKanbanFilter = key;
-  document.querySelectorAll("#kanban-filter-btns .gtab").forEach(b => b.classList.remove("active"));
-  btn.classList.add("active");
-  renderGeneralKanban();
-}
-function setIdeasFilter(key, btn) {
-  _generalIdeasFilter = key;
-  document.querySelectorAll("#ideas-filter-btns .gtab").forEach(b => b.classList.remove("active"));
-  btn.classList.add("active");
-  renderGeneralIdeas();
-}
-
-function openGeneral(tab) {
-  document.getElementById("screen-home").classList.remove("active");
-  document.getElementById("screen-general").classList.add("active");
-  showGView(tab);
-  startGeneralSubscriptions();
-}
-function closeGeneral() {
-  document.getElementById("screen-general").classList.remove("active");
-  document.getElementById("screen-home").classList.add("active");
-  stopGeneralSubscriptions();
-}
-function showGView(v) {
-  document.querySelectorAll(".gview").forEach(el => el.classList.remove("active"));
-  document.querySelectorAll(".gtab[id^='gtab-']").forEach(el => el.classList.remove("active"));
-  document.getElementById("gview-" + v).classList.add("active");
-  const t = document.getElementById("gtab-" + v); if (t) t.classList.add("active");
-}
-
-function startGeneralSubscriptions() {
-  if (!window._fbSubscribe) return;
-  stopGeneralSubscriptions();
-  // Subscribe all persons for kanban
-  PERSONS_DATA.forEach(p => {
-    const unsub = window._fbSubscribe(p.storage_key, data => {
-      _generalKanbanActs[p.key] = (data ? (data.activities || []) : []).map(a => ({...a, _personKey: p.key}));
-      renderGeneralKanban();
+    col.addEventListener("touchend",e=>{
+      if(window._kanbanDragId!==undefined){
+        const act=activities.find(a=>a.id===window._kanbanDragId);
+        if(act){act.status=s;save();renderKanban();renderRegistro();renderCalendar();showToast("🗂 Estado actualizado");}
+        else{showToast("ℹ️ Solo puedes mover tus propias actividades");}
+        window._kanbanDragId=undefined;
+      }
     });
-    _generalKanbanUnsubs.push(unsub);
-  });
-  // Subscribe shared ideas
-  _generalIdeasUnsub = window._fbSubscribeShared ? window._fbSubscribeShared("valkibah_general_ideas", data => {
-    _generalIdeas = data ? (data.ideas || []) : [];
-    renderGeneralIdeas();
-  }) : null;
-  // Subscribe eventos
-  startEventosSubscription();
-  // Init calendar display
-  _evCalYear = new Date().getFullYear(); _evCalMonth = new Date().getMonth();
-  setTimeout(()=>{ renderEvCal(); renderEvUpcoming(); }, 200);
-}
-function stopGeneralSubscriptions() {
-  _generalKanbanUnsubs.forEach(u => u());
-  _generalKanbanUnsubs = [];
-  if (_generalIdeasUnsub) { _generalIdeasUnsub(); _generalIdeasUnsub = null; }
-  if (_evUnsub) { _evUnsub(); _evUnsub = null; }
-}
-
-function renderGeneralKanban() {
-  const cols = ["pendiente","en-progreso","completada","bloqueada"];
-  let allActs = Object.values(_generalKanbanActs).flat();
-  if (_generalKanbanFilter !== "all") allActs = allActs.filter(a => a._personKey === _generalKanbanFilter);
-  cols.forEach(s => {
-    const col = document.getElementById("gkcol-" + s);
-    const count = document.getElementById("gkcount-" + s);
-    if (!col) return;
-    col.innerHTML = "";
-    const filtered = allActs.filter(a => (a.status || "pendiente") === s);
-    count.textContent = filtered.length;
-    filtered.sort((a,b) => a.date.localeCompare(b.date)).forEach(act => {
-      const p = PERSONS_DATA.find(pd => pd.key === act._personKey) || PERSONS_DATA[0];
-      const card = document.createElement("div"); card.className = "kanban-card";
-      card.style.borderLeft = `3px solid ${p.person_main}`;
-      const h = act.start === "todo-el-dia" ? "☀️ Todo el día" : act.start;
-      const avUrl = avatarCache && avatarCache[p.key];
-      const avEl = avUrl ? `<img src="${avUrl}" style="width:16px;height:16px;border-radius:50%;object-fit:cover;vertical-align:middle">` : p.emoji;
-      card.innerHTML = `
+    const filtered=merged.filter(a=>(a.status||"pendiente")===s);
+    count.textContent=filtered.length;
+    filtered.sort((a,b)=>a.date.localeCompare(b.date)).forEach(act=>{
+      const isOwn=!act._personKey||act._personKey===currentPerson.key;
+      const p=PERSONS_DATA.find(p=>p.key===act._personKey)||currentPerson;
+      const card=document.createElement("div");card.className="kanban-card";
+      card.draggable=isOwn;
+      card.style.borderLeft=`3px solid ${p.person_main}`;
+      const h=act.start==="todo-el-dia"?"☀️ Todo el día":act.start;
+      const avUrl=avatarCache&&avatarCache[p.key];
+      const avEl=avUrl?`<img src="${avUrl}" style="width:16px;height:16px;border-radius:50%;object-fit:cover;vertical-align:middle">`:p.emoji;
+      card.innerHTML=`
         <div class="kc-name">${act.name}</div>
         <div class="kc-date">📅 ${formatDisplayDate(act.date)} · ${h}</div>
         <div style="margin-top:5px;display:inline-flex;align-items:center;gap:4px;background:${p.person_light||"#eee"};border-radius:10px;padding:2px 8px;font-size:10px;font-weight:700;color:${p.person_main}">${avEl} ${p.person}</div>`;
+      if(isOwn){
+        card.addEventListener("dragstart",e=>{e.dataTransfer.setData("kanban-id",""+act.id);card.classList.add("dragging");});
+        card.addEventListener("dragend",()=>card.classList.remove("dragging"));
+        card.addEventListener("touchstart",()=>{window._kanbanDragId=act.id;},{passive:true});
+      }
+      card.addEventListener("click",()=>isOwn?openDetailModal(act.id):showToast(`${p.emoji} ${p.person} · ${act.name}`));
       col.appendChild(card);
     });
-    if (filtered.length === 0) { const e = document.createElement("div"); e.style.cssText="text-align:center;color:rgba(255,255,255,.25);font-size:12px;padding:16px 0"; e.textContent="Sin actividades"; col.appendChild(e); }
+    if(filtered.length===0){const e=document.createElement("div");e.style.cssText="text-align:center;color:#ccc;font-size:12px;padding:16px 0";e.textContent="Sin actividades";col.appendChild(e);}
   });
 }
 
-// ── GENERAL IDEAS ──
-function addGIdea() {
-  const personKey = document.getElementById("g-idea-person").value;
-  const title = document.getElementById("g-idea-title").value.trim();
-  const body = document.getElementById("g-idea-body").value.trim();
-  if (!title) { showToast("⚠️ Escribe un título"); return; }
-  const idea = { id: Date.now(), title, body, date: new Date().toISOString().slice(0,10), personKey };
-  _generalIdeas.push(idea);
-  saveGeneralIdeas();
-  document.getElementById("g-idea-title").value = "";
-  document.getElementById("g-idea-body").value = "";
+// Load other persons' activities for Kanban display (read-only)
+function loadOtherPersonsForKanban(){
+  if(!currentPerson||!window._fbSubscribe)return;
+  window._allKanbanActs=[];
+  window._kanbanUnsubs=window._kanbanUnsubs||[];
+  window._kanbanUnsubs.forEach(u=>u());
+  window._kanbanUnsubs=[];
+  PERSONS_DATA.filter(p=>p.key!==currentPerson.key).forEach(p=>{
+    const unsub=window._fbSubscribe(p.storage_key, data=>{
+      const acts=(data?data.activities||[]:[]).map(a=>({...a,_personKey:p.key}));
+      window._allKanbanActs=window._allKanbanActs.filter(a=>a._personKey!==p.key).concat(acts);
+      renderKanban();
+    });
+    window._kanbanUnsubs.push(unsub);
+  });
+}
+
+// ── IDEAS ──
+function addIdea(){
+  const title=document.getElementById("idea-title").value.trim(),body=document.getElementById("idea-body").value.trim();
+  if(!title){showToast("⚠️ Escribe un título");return;}
+  ideas.push({id:Date.now(),title,body,date:new Date().toISOString().slice(0,10)});
+  saveIdeas();renderIdeas();
+  document.getElementById("idea-title").value="";document.getElementById("idea-body").value="";
   showToast("💡 Idea guardada");
 }
-function deleteGIdea(id) {
-  _generalIdeas = _generalIdeas.filter(i => i.id !== id);
-  saveGeneralIdeas();
-  showToast("🗑 Idea eliminada");
-}
-async function saveGeneralIdeas() {
-  if (window._fbSaveShared) await window._fbSaveShared("valkibah_general_ideas", { ideas: _generalIdeas });
-  renderGeneralIdeas();
-}
-function renderGeneralIdeas() {
-  const grid = document.getElementById("g-ideas-grid");
-  const empty = document.getElementById("g-ideas-empty");
-  if (!grid) return;
-  grid.innerHTML = "";
-  let list = _generalIdeas.slice();
-  if (_generalIdeasFilter !== "all") list = list.filter(i => i.personKey === _generalIdeasFilter);
-  if (list.length === 0) { grid.appendChild(empty); empty.style.display = "block"; return; }
-  list.slice().reverse().forEach(idea => {
-    const p = PERSONS_DATA.find(pd => pd.key === idea.personKey) || PERSONS_DATA[0];
-    const c = document.createElement("div"); c.className = "idea-card";
-    c.style.borderTop = `3px solid ${p.person_main}`;
-    c.innerHTML = `<button class="idea-del" onclick="deleteGIdea(${idea.id})">✕</button>
-      <div style="display:flex;align-items:center;gap:6px;margin-bottom:6px">
-        <span style="font-size:14px">${p.emoji}</span>
-        <span style="font-size:10px;font-weight:700;color:${p.person_main};text-transform:uppercase;letter-spacing:.06em">${p.person}</span>
-      </div>
-      <div class="idea-title">${idea.title}</div>
-      <div class="idea-body">${idea.body||""}</div>
-      <div class="idea-date">📅 ${formatDisplayDate(idea.date)}</div>`;
+function deleteIdea(id){ideas=ideas.filter(i=>i.id!==id);saveIdeas();renderIdeas();showToast("🗑 Idea eliminada");}
+function renderIdeas(){
+  const grid=document.getElementById("ideas-grid"),empty=document.getElementById("ideas-empty");
+  grid.innerHTML="";
+  if(ideas.length===0){grid.appendChild(empty);empty.style.display="block";return;}
+  ideas.slice().reverse().forEach(idea=>{
+    const c=document.createElement("div");c.className="idea-card";
+    c.innerHTML=`<button class="idea-del" onclick="deleteIdea(${idea.id})">✕</button><div class="idea-title">${idea.title}</div><div class="idea-body">${idea.body||""}</div><div class="idea-date">📅 ${formatDisplayDate(idea.date)}</div>`;
     grid.appendChild(c);
   });
 }
-
-// ── PRESUPUESTADOR ──
-
-function setExtraType(which, type, btn) {
-  if (which === "mdo") {
-    mdoType = type;
-    document.getElementById("mdo-pct-btn").classList.toggle("active", type==="pct");
-    document.getElementById("mdo-fixed-btn").classList.toggle("active", type==="fixed");
-  } else {
-    ganType = type;
-    document.getElementById("gan-pct-btn").classList.toggle("active", type==="pct");
-    document.getElementById("gan-fixed-btn").classList.toggle("active", type==="fixed");
-  }
-  updateTotals();
-}
-
-function addPresupItem() {
-  const nameEl = document.getElementById("item-name");
-  const qtyEl = document.getElementById("item-qty") || document.getElementById("item-qty-m");
-  const priceEl = document.getElementById("item-price");
-  const name = nameEl.value.trim();
-  const qty = parseFloat(document.getElementById("item-qty").value) || parseFloat(document.getElementById("item-qty-m")?.value) || 1;
-  const price = parseFloat(priceEl.value) || 0;
-  if (!name) { showToast("⚠️ Escribe el nombre del artículo"); return; }
-  presupItems.push({ id: Date.now(), name, qty, price });
-  nameEl.value = ""; document.getElementById("item-price").value = "";
-  document.getElementById("item-qty").value = 1;
-  if (document.getElementById("item-qty-m")) document.getElementById("item-qty-m").value = 1;
-  renderPresupItems();
-  updateTotals();
-}
-
-function deletePresupItem(id) {
-  presupItems = presupItems.filter(i => i.id !== id);
-  renderPresupItems(); updateTotals();
-}
-
-function renderPresupItems() {
-  const tbody = document.getElementById("presup-items-body");
-  const empty = document.getElementById("presup-items-empty");
-  const wrap = document.getElementById("presup-items-wrap");
-  if (!tbody) return;
-  tbody.innerHTML = "";
-  if (presupItems.length === 0) { wrap.style.display="none"; empty.style.display="block"; return; }
-  wrap.style.display=""; empty.style.display="none";
-  presupItems.forEach(item => {
-    const sub = (item.qty * item.price).toFixed(2);
-    const tr = document.createElement("tr");
-    tr.innerHTML = `<td style="font-weight:600">${item.name}</td><td style="text-align:center">${item.qty}</td><td>$${item.price.toFixed(2)}</td><td style="font-weight:700;color:var(--teal-700)">$${sub}</td><td><button class="del-item-btn" onclick="deletePresupItem(${item.id})">🗑</button></td>`;
-    tbody.appendChild(tr);
-  });
-}
-
-function updateTotals() {
-  const matTotal = presupItems.reduce((sum, i) => sum + i.qty * i.price, 0);
-  const horas = parseFloat(document.getElementById("tiempo-horas")?.value) || 0;
-  const costoHr = parseFloat(document.getElementById("costo-hora")?.value) || 0;
-  const tiempoAmt = horas * costoHr;
-  const mdoVal = parseFloat(document.getElementById("mdo-val")?.value) || 0;
-  const ganVal = parseFloat(document.getElementById("gan-val")?.value) || 0;
-  const mdoAmt = mdoType === "pct" ? matTotal * mdoVal / 100 : mdoVal;
-  const ganBase = matTotal + tiempoAmt + mdoAmt;
-  const ganAmt = ganType === "pct" ? ganBase * ganVal / 100 : ganVal;
-  const final = matTotal + tiempoAmt + mdoAmt + ganAmt;
-  const fmt = n => "$" + n.toFixed(2);
-  if(document.getElementById("subtotal-mats")) document.getElementById("subtotal-mats").textContent=fmt(matTotal);
-  if(document.getElementById("tot-mats")) document.getElementById("tot-mats").textContent=fmt(matTotal);
-  if(document.getElementById("tot-tiempo")) document.getElementById("tot-tiempo").textContent=fmt(tiempoAmt);
-  if(document.getElementById("tot-mdo")) document.getElementById("tot-mdo").textContent=fmt(mdoAmt);
-  if(document.getElementById("tot-gan")) document.getElementById("tot-gan").textContent=fmt(ganAmt);
-  if(document.getElementById("tot-final")) document.getElementById("tot-final").textContent=fmt(final);
-  if(document.getElementById("mdo-preview")) document.getElementById("mdo-preview").textContent=`= ${fmt(mdoAmt)}`;
-  if(document.getElementById("gan-preview")) document.getElementById("gan-preview").textContent=`= ${fmt(ganAmt)}`;
-  if(document.getElementById("tiempo-preview")) document.getElementById("tiempo-preview").textContent=`= ${fmt(tiempoAmt)} en mano de obra`;
-  return { matTotal, tiempoAmt, mdoAmt, ganAmt, final };
-}
-
-async function savePresup() {
-  const name = document.getElementById("presup-name").value.trim();
-  if (!name) { showToast("⚠️ Ponle un nombre al proyecto"); return; }
-  const totals = updateTotals();
-  const record = {
-    id: presupCurrentId || Date.now(),
-    name,
-    items: JSON.parse(JSON.stringify(presupItems)),
-    mdoType, ganType,
-    mdoVal: parseFloat(document.getElementById("mdo-val").value)||0,
-    ganVal: parseFloat(document.getElementById("gan-val").value)||0,
-    tiempoHoras: parseFloat(document.getElementById("tiempo-horas").value)||0,
-    costoHora: parseFloat(document.getElementById("costo-hora").value)||0,
-    ...totals,
-    date: new Date().toISOString().slice(0,10)
-  };
-  presupCurrentId = record.id;
-  const idx = presupSaved.findIndex(p => p.id === record.id);
-  if (idx >= 0) presupSaved[idx] = record; else presupSaved.push(record);
-  if (window._fbSaveShared) await window._fbSaveShared("valkibah_presupuestos", { presupuestos: presupSaved });
-  renderPresupSaved();
-  showToast("💾 Presupuesto guardado");
-}
-
-function loadPresup(id) {
-  const rec = presupSaved.find(p => p.id === id);
-  if (!rec) return;
-  presupCurrentId = rec.id;
-  document.getElementById("presup-name").value = rec.name;
-  presupItems = JSON.parse(JSON.stringify(rec.items));
-  mdoType = rec.mdoType || "pct";
-  ganType = rec.ganType || "pct";
-  document.getElementById("mdo-val").value = rec.mdoVal || 0;
-  document.getElementById("gan-val").value = rec.ganVal || 0;
-  document.getElementById("tiempo-horas").value = rec.tiempoHoras || 0;
-  document.getElementById("costo-hora").value = rec.costoHora || 0;
-  setExtraType("mdo", mdoType, null);
-  setExtraType("gan", ganType, null);
-  renderPresupItems(); updateTotals();
-  showGView("presup");
-  showToast("📂 Presupuesto cargado");
-}
-
-function deletePresupSaved(id, e) {
-  e.stopPropagation();
-  presupSaved = presupSaved.filter(p => p.id !== id);
-  if (window._fbSaveShared) window._fbSaveShared("valkibah_presupuestos", { presupuestos: presupSaved });
-  if (presupCurrentId === id) newPresup();
-  renderPresupSaved();
-  showToast("🗑 Presupuesto eliminado");
-}
-
-function newPresup() {
-  presupCurrentId = null;
-  presupItems = [];
-  document.getElementById("presup-name").value = "";
-  document.getElementById("mdo-val").value = "";
-  document.getElementById("gan-val").value = "";
-  document.getElementById("tiempo-horas").value = "";
-  document.getElementById("costo-hora").value = "";
-  mdoType="pct"; ganType="pct";
-  setExtraType("mdo","pct",null); setExtraType("gan","pct",null);
-  renderPresupItems(); updateTotals();
-}
-
-function renderPresupSaved() {
-  const list = document.getElementById("presup-saved-list");
-  if (!list) return;
-  list.innerHTML = "";
-  if (presupSaved.length === 0) return;
-  presupSaved.slice().reverse().forEach(rec => {
-    const div = document.createElement("div");
-    div.className = "presup-saved-item";
-    div.onclick = () => loadPresup(rec.id);
-    div.innerHTML = `
-      <div>
-        <div class="presup-saved-name">${rec.name}</div>
-        <div class="presup-saved-meta">📅 ${formatDisplayDate(rec.date)} · ${rec.items.length} artículo(s)</div>
-      </div>
-      <div style="display:flex;align-items:center;gap:10px">
-        <span class="presup-saved-total">$${rec.final.toFixed(2)}</span>
-        <button onclick="deletePresupSaved(${rec.id},event)" style="background:none;border:none;cursor:pointer;color:#e05555;font-size:14px">🗑</button>
-      </div>`;
-    list.appendChild(div);
-  });
-}
-
-function initPresupSubscription() {
-  if (!window._fbSubscribeShared) return;
-  window._fbSubscribeShared("valkibah_presupuestos", data => {
-    presupSaved = data ? (data.presupuestos || []) : [];
-    renderPresupSaved();
-  });
-}
-
 
 // ── HELPERS ──
 function deleteActivity(id,e){
@@ -2005,7 +1167,7 @@ async function saveIdeas() {
 }
 function toDateStr(d){return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;}
 function fmtDate(d){return `${d.getDate()} ${Object.values(MONTH_NAMES)[d.getMonth()].slice(0,3)}`;}
-function formatDisplayDate(str){if(!str)return "";const[y,m,d]=str.split("-");return `${d}/${m}/${y}`;}
+function formatDisplayDate(str){const[y,m,d]=str.split("-");return `${d}/${m}/${y}`;}
 function exportPDF(){showView("calendar");setTimeout(()=>window.print(),250);}
 function showToast(msg,bg){
   const t=document.getElementById("toast");t.textContent=msg;t.style.background=bg||"";
@@ -2095,271 +1257,7 @@ function closeProfileModal(){
 function openDrawer(){document.getElementById("drawer").classList.add("open");document.getElementById("drawer-overlay").classList.add("open");}
 function closeDrawer(){document.getElementById("drawer").classList.remove("open");document.getElementById("drawer-overlay").classList.remove("open");}
 
-// ── CALENDARIO DE EVENTOS ──
-
-const EV_STATUS_LABELS = {
-  'primer-contacto':    '🤝 1ra Visita / Primer Contacto',
-  'propuesta-enviada':  '📨 Propuesta Enviada',
-  'propuesta-revisada': '🔄 Propuesta en Revisión',
-  'cotizacion-aprobada':'✅ Cotización Aprobada',
-  'produccion':         '🔨 En Producción',
-  'listo-entregar':     '📦 Listo para Entregar',
-  'evento-finalizado':  '🎊 Evento Finalizado',
-  'sin-respuesta':      '🔕 Sin Respuesta'
-};
-const EV_STATUS_SHOW_ELEMENTS = ['cotizacion-aprobada','produccion','listo-entregar','evento-finalizado'];
-const CAT_LABELS = { decoracion:'🌸 Decoración', centro:'🌺 Centro de Mesa', mobiliario:'🪑 Mobiliario', servicio:'⚙️ Servicio' };
-const CAT_CLASS  = { decoracion:'cat-decoracion', centro:'cat-centro', mobiliario:'cat-mobiliario', servicio:'cat-servicio' };
-
-function startEventosSubscription() {
-  if (_evUnsub) { _evUnsub(); _evUnsub = null; }
-  if (!window._fbSubscribeShared) return;
-  _evUnsub = window._fbSubscribeShared('valkibah_eventos', data => {
-    _eventos = data ? (data.eventos || []) : [];
-    renderEvCal(); renderEvUpcoming();
-    if (_evDetailId) renderEvDetail(_evDetailId);
-  });
-}
-
-// ── CALENDAR RENDER ──
-function evCalNav(dir) {
-  _evCalMonth += dir;
-  if (_evCalMonth > 11) { _evCalMonth = 0; _evCalYear++; }
-  if (_evCalMonth < 0)  { _evCalMonth = 11; _evCalYear--; }
-  renderEvCal();
-}
-
-function renderEvCal() {
-  const title = document.getElementById('ev-cal-title');
-  const grid  = document.getElementById('ev-month-grid');
-  if (!title || !grid) return;
-  const mNames = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
-  title.textContent = `${mNames[_evCalMonth]} ${_evCalYear}`;
-  grid.innerHTML = '';
-  // Day headers Mon-Sun
-  ['Lu','Ma','Mi','Ju','Vi','Sá','Do'].forEach(d => {
-    const h = document.createElement('div'); h.className = 'ev-day-header'; h.textContent = d; grid.appendChild(h);
-  });
-  const firstDay = new Date(_evCalYear, _evCalMonth, 1);
-  const lastDay  = new Date(_evCalYear, _evCalMonth+1, 0);
-  const today    = new Date(); today.setHours(0,0,0,0);
-  // Day of week of first: 0=Sun → need Mon-first offset
-  let startOffset = firstDay.getDay() - 1; if (startOffset < 0) startOffset = 6;
-  // Fill blanks from prev month
-  for (let i = 0; i < startOffset; i++) {
-    const blank = document.createElement('div'); blank.className = 'ev-day other-month';
-    const pd = new Date(_evCalYear, _evCalMonth, -startOffset + 1 + i);
-    blank.innerHTML = `<span class="ev-day-num">${pd.getDate()}</span>`; grid.appendChild(blank);
-  }
-  // Days
-  const evDates = new Set(_eventos.map(e => e.fecha));
-  for (let d = 1; d <= lastDay.getDate(); d++) {
-    const dt  = new Date(_evCalYear, _evCalMonth, d);
-    const dStr = toDateStr(dt);
-    const cell = document.createElement('div');
-    cell.className = 'ev-day' + (dt.getTime() === today.getTime() ? ' today' : '') + (evDates.has(dStr) ? ' has-event' : '') + (_evSelectedDate === dStr ? ' selected' : '');
-    cell.innerHTML = `<span class="ev-day-num">${d}</span>`;
-    cell.onclick = () => { _evSelectedDate = dStr; renderEvCal(); renderEvDayEvents(dStr); };
-    grid.appendChild(cell);
-  }
-  // Fill remaining
-  const total = startOffset + lastDay.getDate();
-  const remainder = total % 7 === 0 ? 0 : 7 - (total % 7);
-  for (let i = 1; i <= remainder; i++) {
-    const blank = document.createElement('div'); blank.className = 'ev-day other-month';
-    blank.innerHTML = `<span class="ev-day-num">${i}</span>`; grid.appendChild(blank);
-  }
-}
-
-function renderEvDayEvents(dateStr) {
-  const container = document.getElementById('ev-day-events'); if (!container) return;
-  const dayEvs = _eventos.filter(e => e.fecha === dateStr);
-  if (dayEvs.length === 0) { container.innerHTML = ''; return; }
-  const [y,m,d] = dateStr.split('-'); const dateLabel = `${d}/${m}/${y}`;
-  container.innerHTML = `<div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--teal-600);margin-bottom:8px">Eventos · ${dateLabel}</div>`;
-  dayEvs.forEach(ev => container.appendChild(buildEvCard(ev)));
-}
-
-function renderEvUpcoming() {
-  const list = document.getElementById('ev-upcoming-list'); if (!list) return;
-  const today = toDateStr(new Date());
-  const upcoming = _eventos.filter(e => e.fecha >= today && e.estatus !== 'evento-finalizado')
-    .sort((a,b) => a.fecha.localeCompare(b.fecha));
-  const finished = _eventos.filter(e => e.estatus === 'evento-finalizado' || e.fecha < today)
-    .sort((a,b) => b.fecha.localeCompare(a.fecha)).slice(0,5);
-  if (_eventos.length === 0) { list.innerHTML = '<div style="color:rgba(255,255,255,.3);font-size:13px;text-align:center;padding:20px 0">Sin eventos registrados</div>'; return; }
-  list.innerHTML = '';
-  if (upcoming.length > 0) {
-    const label = document.createElement('div'); label.style.cssText='font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--teal-600);margin-bottom:8px'; label.textContent='Próximos'; list.appendChild(label);
-    upcoming.forEach(ev => list.appendChild(buildEvCard(ev)));
-  }
-  if (finished.length > 0) {
-    const label = document.createElement('div'); label.style.cssText='font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--teal-600);margin:14px 0 8px'; label.textContent='Recientes / Finalizados'; list.appendChild(label);
-    finished.forEach(ev => list.appendChild(buildEvCard(ev)));
-  }
-}
-
-function buildEvCard(ev) {
-  const card = document.createElement('div'); card.className = 'ev-card';
-  const [y,m,d] = ev.fecha.split('-');
-  const statusLabel = EV_STATUS_LABELS[ev.estatus] || ev.estatus;
-  const statusClass = 'evs-' + ev.estatus;
-  card.innerHTML = `
-    <button class="ev-del-btn" onclick="deleteEvento(${ev.id},event)">✕</button>
-    <div class="ev-card-date">📅 ${d}/${m}/${y}</div>
-    <div class="ev-card-name">${ev.nombre}</div>
-    <div class="ev-card-tipo">${ev.tipo}</div>
-    <div class="ev-card-cliente">👤 ${ev.cliente}</div>
-    <span class="ev-status-badge ${statusClass}">${statusLabel}</span>`;
-  card.onclick = e => { if (e.target.classList.contains('ev-del-btn')) return; openEvDetail(ev.id); };
-  return card;
-}
-
-// ── FORM ──
-function openEvForm(id) {
-  _evEditId = id || null;
-  const overlay = document.getElementById('ev-form-overlay'); overlay.classList.add('open');
-  document.getElementById('ev-form-title').textContent = id ? 'Editar Evento' : 'Nuevo Evento';
-  if (id) {
-    const ev = _eventos.find(e => e.id === id); if (!ev) return;
-    document.getElementById('ev-nombre').value  = ev.nombre  || '';
-    document.getElementById('ev-cliente').value = ev.cliente || '';
-    document.getElementById('ev-tipo').value    = ev.tipo    || '';
-    document.getElementById('ev-fecha').value   = ev.fecha   || '';
-    document.getElementById('ev-estatus').value = ev.estatus || 'primer-contacto';
-    document.getElementById('ev-obs').value     = ev.obs     || '';
-  } else {
-    ['ev-nombre','ev-cliente','ev-obs'].forEach(id => document.getElementById(id).value = '');
-    document.getElementById('ev-tipo').value    = '';
-    document.getElementById('ev-fecha').value   = '';
-    document.getElementById('ev-estatus').value = 'primer-contacto';
-  }
-  if (id) closeEvDetail();
-}
-function closeEvForm() { document.getElementById('ev-form-overlay').classList.remove('open'); _evEditId = null; }
-
-async function saveEvento() {
-  const nombre  = document.getElementById('ev-nombre').value.trim();
-  const cliente = document.getElementById('ev-cliente').value.trim();
-  const tipo    = document.getElementById('ev-tipo').value;
-  const fecha   = document.getElementById('ev-fecha').value;
-  const estatus = document.getElementById('ev-estatus').value;
-  const obs     = document.getElementById('ev-obs').value.trim();
-  if (!nombre || !cliente || !tipo || !fecha) { showToast('⚠️ Completa los campos requeridos'); return; }
-  if (_evEditId) {
-    const idx = _eventos.findIndex(e => e.id === _evEditId);
-    if (idx >= 0) _eventos[idx] = { ..._eventos[idx], nombre, cliente, tipo, fecha, estatus, obs };
-  } else {
-    _eventos.push({ id: Date.now(), nombre, cliente, tipo, fecha, estatus, obs, elementos: [] });
-  }
-  await saveEventos();
-  closeEvForm();
-  showToast(_evEditId ? '✏️ Evento actualizado' : '🎉 Evento guardado');
-  // Jump calendar to event month
-  const [y,m] = fecha.split('-').map(Number);
-  _evCalYear = y; _evCalMonth = m - 1; renderEvCal(); renderEvUpcoming();
-}
-
-async function deleteEvento(id, e) {
-  if (e) e.stopPropagation();
-  _eventos = _eventos.filter(ev => ev.id !== id);
-  await saveEventos(); showToast('🗑 Evento eliminado');
-}
-
-async function saveEventos() {
-  if (window._fbSaveShared) await window._fbSaveShared('valkibah_eventos', { eventos: _eventos });
-}
-
-// ── DETAIL ──
-function openEvDetail(id) {
-  _evDetailId = id; window._evDetailId = id;
-  document.getElementById('ev-detail-overlay').classList.add('open');
-  renderEvDetail(id);
-}
-function closeEvDetail() { document.getElementById('ev-detail-overlay').classList.remove('open'); _evDetailId = null; window._evDetailId = null; }
-
-function renderEvDetail(id) {
-  const ev = _eventos.find(e => e.id === id); if (!ev) return;
-  document.getElementById('evd-nombre').textContent  = ev.nombre;
-  document.getElementById('evd-cliente').textContent = `👤 ${ev.cliente}`;
-  document.getElementById('evd-status-sel').value    = ev.estatus || 'primer-contacto';
-  document.getElementById('evd-obs').textContent     = ev.obs ? `💬 ${ev.obs}` : '';
-  // Meta chips
-  const [y,m,d] = ev.fecha.split('-');
-  const meta = document.getElementById('evd-meta'); meta.innerHTML = '';
-  [`📅 ${d}/${m}/${y}`, `🎊 ${ev.tipo}`, EV_STATUS_LABELS[ev.estatus]||ev.estatus].forEach(txt => {
-    const chip = document.createElement('span'); chip.className = 'ev-det-chip'; chip.textContent = txt; meta.appendChild(chip);
-  });
-  // Show/hide elementos section
-  const showElem = EV_STATUS_SHOW_ELEMENTS.includes(ev.estatus);
-  document.getElementById('evd-elementos-section').style.display = showElem ? '' : 'none';
-  if (showElem) renderEvElems(ev);
-}
-
-function renderEvElems(ev) {
-  const list  = document.getElementById('evd-elem-list');
-  const empty = document.getElementById('evd-elem-empty');
-  list.innerHTML = '';
-  const elems = ev.elementos || [];
-  if (elems.length === 0) { list.appendChild(empty); empty.style.display = 'block'; return; }
-  empty.style.display = 'none';
-  elems.forEach((el, idx) => {
-    const item = document.createElement('div'); item.className = 'ev-elem-item';
-    item.innerHTML = `
-      <span class="ev-elem-cat ${CAT_CLASS[el.cat]||''}">${CAT_LABELS[el.cat]||el.cat}</span>
-      <span class="ev-elem-name">${el.name}</span>
-      <button onclick="deleteEvElem(${idx})" style="background:none;border:none;cursor:pointer;color:rgba(255,255,255,.3);font-size:14px;flex-shrink:0">🗑</button>`;
-    list.appendChild(item);
-  });
-}
-
-async function addEvElem() {
-  const name = document.getElementById('ev-elem-name').value.trim();
-  const cat  = document.getElementById('ev-elem-cat').value;
-  if (!name) { showToast('⚠️ Escribe el nombre del elemento'); return; }
-  if (!_evDetailId) return;
-  const ev = _eventos.find(e => e.id === _evDetailId); if (!ev) return;
-  if (!ev.elementos) ev.elementos = [];
-  ev.elementos.push({ name, cat });
-  document.getElementById('ev-elem-name').value = '';
-  await saveEventos();
-  renderEvElems(ev);
-  showToast('✅ Elemento agregado');
-}
-
-async function deleteEvElem(idx) {
-  const ev = _eventos.find(e => e.id === _evDetailId); if (!ev||!ev.elementos) return;
-  ev.elementos.splice(idx, 1);
-  await saveEventos(); renderEvElems(ev);
-  showToast('🗑 Elemento eliminado');
-}
-
-async function changeEvStatus(newStatus) {
-  const ev = _eventos.find(e => e.id === _evDetailId); if (!ev) return;
-  ev.estatus = newStatus;
-  await saveEventos();
-  renderEvDetail(_evDetailId);
-  renderEvUpcoming();
-  showToast('✅ Estatus actualizado');
-}
-
-// Wait for Firebase module to be ready before initializing
-// But always start within 3 seconds regardless
-let _initDone = false;
-function _init() {
-  if (_initDone) return;
-  _initDone = true;
-  buildHome();
-  setTimeout(initPresupSubscription, 300);
-}
-// If Firebase loads fast, start immediately
-if (window._fbReady) {
-  _init();
-} else {
-  window._onFbReady = _init;
-  // Fallback: start anyway after 3s even if Firebase didn't load
-  setTimeout(_init, 3000);
-}
+buildHome();
 </script>
 </body>
 </html>
