@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' 'unsafe-eval' https: data: blob:;">
 <title>Grupo Valkibah · Planeador</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
 <style>
@@ -1016,6 +1017,25 @@ window._fbSubscribeAvatar = (personKey, callback) => {
     callback(snap.exists() ? snap.data().url : null);
   });
 };
+// Signal that Firebase is ready
+window._fbReady = true;
+if (window._onFbReady) window._onFbReady();
+</script>
+
+<script>
+// Stub Firebase functions in case module failed to load
+// (will be overwritten if Firebase loaded successfully)
+if (!window._fbSave) {
+  console.warn('Firebase no cargó — modo sin conexión');
+  window._fbSave = async () => {};
+  window._fbSubscribe = () => () => {};
+  window._fbSaveShared = async () => {};
+  window._fbSubscribeShared = () => () => {};
+  window._fbUploadAvatar = async () => { throw new Error('Sin Firebase'); };
+  window._fbSubscribeAvatar = () => () => {};
+  window._fbReady = true;
+  if (window._onFbReady) window._onFbReady();
+}
 </script>
 
 <script>
@@ -1038,6 +1058,30 @@ let activities    = [];
 let ideas         = [];
 let editingId     = null;
 let currentStatus = "pendiente";
+
+// Eventos variables — declared here to avoid ReferenceError
+let _eventos = [];
+let _evCalYear = new Date().getFullYear();
+let _evCalMonth = new Date().getMonth();
+let _evSelectedDate = null;
+let _evDetailId = null;
+let _evEditId = null;
+let _evUnsub = null;
+
+// General screen variables
+let _generalKanbanActs = {};
+let _generalKanbanUnsubs = [];
+let _generalIdeas = [];
+let _generalIdeasUnsub = null;
+let _generalKanbanFilter = "all";
+let _generalIdeasFilter = "all";
+
+// Presupuestador variables
+let presupItems = [];
+let presupSaved = [];
+let presupCurrentId = null;
+let mdoType = "pct";
+let ganType = "pct";
 
 // ── PIN SYSTEM ──
 let _pinTarget = null;
@@ -1597,12 +1641,6 @@ function deleteIdea(id){ideas=ideas.filter(i=>i.id!==id);saveIdeas();showToast("
 function renderIdeas(){}  // no-op; ideas now in general screen
 
 // ── GENERAL SCREEN ──
-let _generalKanbanActs = {};
-let _generalKanbanUnsubs = [];
-let _generalIdeas = [];
-let _generalIdeasUnsub = null;
-let _generalKanbanFilter = "all";
-let _generalIdeasFilter = "all";
 
 function buildGeneralFilterBtns() {
   // Kanban filter buttons
@@ -1776,11 +1814,6 @@ function renderGeneralIdeas() {
 }
 
 // ── PRESUPUESTADOR ──
-let presupItems = [];
-let presupSaved = [];
-let presupCurrentId = null;
-let mdoType = "pct";
-let ganType = "pct";
 
 function setExtraType(which, type, btn) {
   if (which === "mdo") {
@@ -2061,13 +2094,6 @@ function openDrawer(){document.getElementById("drawer").classList.add("open");do
 function closeDrawer(){document.getElementById("drawer").classList.remove("open");document.getElementById("drawer-overlay").classList.remove("open");}
 
 // ── CALENDARIO DE EVENTOS ──
-let _eventos = [];
-let _evCalYear = new Date().getFullYear();
-let _evCalMonth = new Date().getMonth(); // 0-indexed
-let _evSelectedDate = null;
-let _evDetailId = null;
-let _evEditId = null;
-let _evUnsub = null;
 
 const EV_STATUS_LABELS = {
   'primer-contacto':    '🤝 1ra Visita / Primer Contacto',
@@ -2315,9 +2341,23 @@ async function changeEvStatus(newStatus) {
   showToast('✅ Estatus actualizado');
 }
 
-buildHome();
-// Init presup subscription after firebase is ready
-setTimeout(initPresupSubscription, 800);
+// Wait for Firebase module to be ready before initializing
+// But always start within 3 seconds regardless
+let _initDone = false;
+function _init() {
+  if (_initDone) return;
+  _initDone = true;
+  buildHome();
+  setTimeout(initPresupSubscription, 300);
+}
+// If Firebase loads fast, start immediately
+if (window._fbReady) {
+  _init();
+} else {
+  window._onFbReady = _init;
+  // Fallback: start anyway after 3s even if Firebase didn't load
+  setTimeout(_init, 3000);
+}
 </script>
 </body>
 </html>
