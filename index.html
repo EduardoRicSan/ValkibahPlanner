@@ -34,7 +34,7 @@ align-items:center;justify-content:flex-start;padding:0}
 .home-kicker{font-size:11px;color:var(--mint);letter-spacing:.28em;text-transform:uppercase;margin-bottom:8px}
 .home-title{font-family:'DM Serif Display',serif;font-size:34px;color:#fff;margin-bottom:8px;letter-spacing:.02em}
 .home-sub{font-size:14px;color:var(--teal-200);max-width:520px;margin:0 auto;line-height:1.6}
-.home-actions{width:100%;max-width:560px;margin:0 auto;padding:0 16px 8px;display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.home-actions{width:100%;max-width:560px;margin:0 auto;padding:0 16px 8px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
 .home-cards{width:100%;max-width:560px;margin:0 auto;padding:18px 16px 40px;display:grid;grid-template-columns:1fr 1fr;gap:14px}
 .person-card{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:18px;padding:22px 16px;cursor:pointer;transition:all .2s;text-align:center;-webkit-tap-highlight-color:transparent}
 .person-card:hover,.person-card:active{transform:translateY(-3px);border-color:var(--teal-400);background:rgba(64,217,192,.12)}
@@ -267,7 +267,98 @@ align-items:center;justify-content:flex-start;padding:0}
 .toast{position:fixed;bottom:26px;right:26px;background:var(--teal-700);color:#fff;padding:12px 18px;border-radius:9px;font-size:13px;font-weight:500;box-shadow:0 8px 28px rgba(0,0,0,.28);transform:translateY(70px);opacity:0;transition:all .28s ease;z-index:9999;max-width:calc(100vw - 32px)}
 .toast.show{transform:translateY(0);opacity:1}
 
-/* MOBILE */
+/* CLIENTES */
+.cl-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px;margin-top:6px}
+.cl-card{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:16px;cursor:pointer;position:relative;transition:border-color .15s}
+.cl-card:hover{border-color:var(--teal-400)}
+.cl-card-name{font-family:'DM Serif Display',serif;font-size:15px;color:#fff;margin-bottom:3px}
+.cl-card-tipo{font-size:11px;color:var(--teal-400);margin-bottom:6px;font-weight:600}
+.cl-card-meta{font-size:11px;color:var(--teal-200);line-height:1.6}
+.cl-del-btn{position:absolute;top:10px;right:10px;background:none;border:none;cursor:pointer;color:rgba(255,255,255,.2);font-size:13px}
+.cl-del-btn:hover{color:#e05555}
+.cl-status-badge{display:inline-block;padding:3px 10px;border-radius:9px;font-size:10px;font-weight:700;margin-top:8px}
+.cls-prospecto{background:#e3f2fd;color:#1565c0}
+.cls-primera-visita{background:#fff8e1;color:#e65100}
+.cls-cotizacion-proceso{background:#f3e5f5;color:#6a1b9a}
+.cls-cotizacion-enviada{background:#e8f5e9;color:#2e7d32}
+.cls-seguimiento{background:#fff3cd;color:#856404}
+.cls-cliente-activo{background:#d1fae5;color:#065f46}
+.cls-sin-respuesta{background:#fee2e2;color:#991b1b}
+.cls-cerrado{background:#eceff1;color:#546e7a}
+.cl-form-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:2000;align-items:center;justify-content:center;padding:16px}
+.cl-form-overlay.open{display:flex}
+.cl-form-box{background:#0f3535;border:1px solid var(--teal-700);border-radius:18px;padding:26px;width:100%;max-width:500px;max-height:90vh;overflow-y:auto;position:relative}
+.cl-form-box h2{font-family:'DM Serif Display',serif;font-size:19px;color:var(--teal-400);margin-bottom:6px}
+.cl-form-subtitle{font-size:12px;color:rgba(168,240,232,.5);margin-bottom:18px}
+.cl-fg{display:flex;flex-direction:column;gap:4px;margin-bottom:12px}
+.cl-fg label{font-size:10px;font-weight:700;text-transform:uppercase;color:var(--teal-600)}
+.cl-fg input,.cl-fg select,.cl-fg textarea{background:rgba(255,255,255,.07);border:1.5px solid rgba(255,255,255,.15);border-radius:8px;padding:9px 11px;font-family:'DM Sans',sans-serif;font-size:13px;color:#fff;outline:none}
+.cl-fg input:focus,.cl-fg select:focus,.cl-fg textarea:focus{border-color:var(--teal-400)}
+.cl-fg select option{background:#0f3535}
+.cl-fg input::placeholder,.cl-fg textarea::placeholder{color:rgba(255,255,255,.3)}
+.cl-fg textarea{resize:vertical;min-height:60px}
+.cl-filter-bar{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:14px}
+.cl-filter-btn{padding:5px 13px;border-radius:16px;border:1.5px solid rgba(255,255,255,.18);background:transparent;color:var(--teal-200);font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;cursor:pointer;transition:all .14s}
+.cl-filter-btn.active{background:var(--teal-700);border-color:var(--teal-400);color:#fff}
+/* ALIANZAS */
+.al-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:14px;margin-top:4px}
+.al-card{background:rgba(255,255,255,.05);border:1.5px solid rgba(245,200,66,.18);border-radius:14px;padding:16px;cursor:pointer;position:relative;transition:border-color .15s}
+.al-card:hover{border-color:#f5c842}
+.al-card-name{font-family:'DM Serif Display',serif;font-size:15px;color:#fff;margin-bottom:1px}
+.al-card-negocio{font-size:12px;color:#f5c842;font-weight:700;margin-bottom:4px}
+.al-card-cat{display:inline-block;font-size:10px;font-weight:700;padding:2px 9px;border-radius:8px;margin-bottom:6px}
+.al-card-meta{font-size:11px;color:var(--teal-200);line-height:1.7}
+.al-del-btn{position:absolute;top:10px;right:10px;background:none;border:none;cursor:pointer;color:rgba(255,255,255,.2);font-size:13px}
+.al-del-btn:hover{color:#e05555}
+.al-status-badge{display:inline-block;padding:3px 10px;border-radius:9px;font-size:10px;font-weight:700;margin-top:8px}
+/* estatus colors */
+.als-primer-contacto{background:#e3f2fd;color:#1565c0}
+.als-info-solicitada{background:#e8eaf6;color:#283593}
+.als-reunion-agendada{background:#fff8e1;color:#e65100}
+.als-reunion-realizada{background:#f3e5f5;color:#6a1b9a}
+.als-propuesta-enviada{background:#e0f7fa;color:#006064}
+.als-alianza-confirmada{background:#fff9c4;color:#f57f17}
+.als-alianza-activa{background:#d1fae5;color:#065f46}
+.als-pausada{background:#eceff1;color:#546e7a}
+.als-descartada{background:#fee2e2;color:#991b1b}
+/* cat colors */
+.alcat-restaurante{background:#fff3e0;color:#e65100}
+.alcat-salon{background:#e8eaf6;color:#283593}
+.alcat-decorador{background:#fce4ec;color:#c62828}
+.alcat-agencia{background:#e3f2fd;color:#1565c0}
+.alcat-artesano{background:#f3e5f5;color:#6a1b9a}
+.alcat-musico{background:#e8f5e9;color:#2e7d32}
+.alcat-fotografo{background:#fff8e1;color:#e65100}
+.alcat-catering{background:#fce4ec;color:#880e4f}
+.alcat-otro{background:#eceff1;color:#546e7a}
+.al-filter-bar{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+.al-filter-btn{padding:4px 12px;border-radius:16px;border:1.5px solid rgba(245,200,66,.3);background:transparent;color:rgba(245,200,66,.7);font-family:'DM Sans',sans-serif;font-size:11px;font-weight:600;cursor:pointer;transition:all .14s}
+.al-filter-btn.active{background:rgba(245,200,66,.2);border-color:#f5c842;color:#f5c842}
+.al-cat-btn{padding:4px 11px;border-radius:16px;border:1.5px solid rgba(255,255,255,.15);background:transparent;color:rgba(255,255,255,.5);font-family:'DM Sans',sans-serif;font-size:11px;font-weight:600;cursor:pointer;transition:all .14s}
+.al-cat-btn.active{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.4);color:#fff}
+.al-form-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:2100;align-items:center;justify-content:center;padding:16px}
+.al-form-overlay.open{display:flex}
+.al-form-box{background:#1a1a0a;border:1.5px solid #b8922a;border-radius:18px;padding:26px;width:100%;max-width:520px;max-height:92vh;overflow-y:auto;position:relative}
+.al-form-box h2{font-family:'DM Serif Display',serif;font-size:19px;color:#f5c842;margin-bottom:4px}
+.al-form-sub{font-size:12px;color:rgba(245,200,66,.45);margin-bottom:16px}
+.al-fg{display:flex;flex-direction:column;gap:4px;margin-bottom:11px}
+.al-fg label{font-size:10px;font-weight:700;text-transform:uppercase;color:#b8922a;letter-spacing:.4px}
+.al-fg input,.al-fg select,.al-fg textarea{background:rgba(255,255,255,.06);border:1.5px solid rgba(245,200,66,.2);border-radius:8px;padding:9px 11px;font-family:'DM Sans',sans-serif;font-size:13px;color:#fff;outline:none}
+.al-fg input:focus,.al-fg select:focus,.al-fg textarea:focus{border-color:#f5c842}
+.al-fg select option{background:#1a1a0a}
+.al-fg input::placeholder,.al-fg textarea::placeholder{color:rgba(255,255,255,.3)}
+.al-fg textarea{resize:vertical;min-height:58px}
+.al-row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.wa-popup-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:3500;align-items:center;justify-content:center;padding:16px}
+.wa-popup-overlay.open{display:flex}
+.wa-popup-box{background:#0f3535;border:1.5px solid var(--teal-600);border-radius:20px;padding:26px;width:100%;max-width:420px;position:relative}
+.wa-popup-box h3{font-family:'DM Serif Display',serif;font-size:18px;color:var(--teal-400);margin-bottom:4px}
+.wa-popup-sub{font-size:12px;color:rgba(168,240,232,.55);margin-bottom:14px}
+.wa-msg-box{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:10px;padding:14px;font-size:13px;color:var(--teal-100);line-height:1.7;white-space:pre-wrap;margin-bottom:16px;max-height:220px;overflow-y:auto}
+.wa-btn-row{display:flex;gap:9px;flex-wrap:wrap}
+.wa-btn-copy{background:var(--teal-700);border:none;border-radius:9px;color:#fff;padding:10px 18px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:700;cursor:pointer;flex:1}
+.wa-btn-wa{background:#25D366;border:none;border-radius:9px;color:#fff;padding:10px 18px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:700;cursor:pointer;flex:1;display:flex;align-items:center;justify-content:center;gap:6px}
+.wa-btn-close{background:rgba(255,255,255,.08);border:none;border-radius:9px;color:var(--teal-200);padding:10px 14px;font-family:'DM Sans',sans-serif;font-size:13px;cursor:pointer}
 .mobile-tabbar{display:none;position:fixed;bottom:0;left:0;right:0;background:var(--black);border-top:2px solid var(--teal-700);z-index:200;padding:env(safe-area-inset-bottom,0) 0 0}
 .mobile-tabbar-inner{display:grid;grid-template-columns:repeat(3,1fr);height:58px}
 .mtab{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;background:none;border:none;color:var(--teal-400);font-family:'DM Sans',sans-serif;font-size:9px;font-weight:600;cursor:pointer;padding:5px 0;transition:color .15s,background .15s;-webkit-tap-highlight-color:transparent}
@@ -437,12 +528,52 @@ align-items:center;justify-content:flex-start;padding:0}
 .ev-elem-item{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.09);border-radius:9px;padding:9px 12px;display:flex;align-items:center;gap:9px;margin-bottom:6px}
 .ev-elem-cat{font-size:10px;font-weight:700;text-transform:uppercase;padding:2px 7px;border-radius:9px;white-space:nowrap}
 .cat-decoracion{background:#fce4ec;color:#c62828}
-.cat-centro{background:#e3f2fd;color:#1565c0}
+.cat-invitaciones{background:#f3e5f5;color:#6a1b9a}
 .cat-mobiliario{background:#fff8e1;color:#e65100}
 .cat-servicio{background:#e8f5e9;color:#2e7d32}
 .ev-elem-name{font-size:12px;font-weight:600;color:#fff;flex:1}
-@media(max-width:900px){.ev-layout{grid-template-columns:1fr}.presup-extras{grid-template-columns:1fr}}
-@media(max-width:600px){.ev-form-grid{grid-template-columns:1fr}}
+
+/* CURSOS */
+.cursos-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px;margin-top:6px}
+.curso-card{background:rgba(255,255,255,.06);border:1.5px solid rgba(64,217,192,.2);border-radius:14px;padding:16px;cursor:pointer;position:relative;transition:all .18s}
+.curso-card:hover{border-color:var(--teal-400);transform:translateY(-2px)}
+.curso-card-cat{display:inline-block;font-size:9px;font-weight:700;padding:2px 8px;border-radius:8px;background:rgba(64,217,192,.15);color:var(--teal-400);margin-bottom:7px;text-transform:uppercase;letter-spacing:.5px}
+.curso-card-title{font-family:'DM Serif Display',serif;font-size:15px;color:#fff;margin-bottom:4px;line-height:1.3}
+.curso-card-dur{font-size:11px;color:var(--teal-600);margin-bottom:6px}
+.curso-card-desc{font-size:11px;color:rgba(255,255,255,.45);line-height:1.5;margin-bottom:10px}
+.curso-card-footer{display:flex;align-items:center;justify-content:space-between}
+.curso-cert-badge{font-size:10px;background:rgba(64,217,192,.12);color:var(--teal-400);border:1px solid rgba(64,217,192,.25);border-radius:7px;padding:3px 8px;font-weight:700}
+.curso-cat-section{margin-bottom:20px}
+.curso-cat-title{font-family:'DM Serif Display',serif;font-size:16px;color:var(--teal-400);margin-bottom:10px;padding-bottom:4px;border-bottom:1px solid rgba(64,217,192,.2)}
+.curso-del-btn{position:absolute;top:10px;right:10px;background:none;border:none;cursor:pointer;color:rgba(255,255,255,.2);font-size:13px}
+.curso-del-btn:hover{color:#e05555}
+/* Curso form */
+.curso-form-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:2200;align-items:center;justify-content:center;padding:16px}
+.curso-form-overlay.open{display:flex}
+.curso-form-box{background:var(--teal-900,#071a1a);border:1.5px solid var(--teal-600);border-radius:18px;padding:24px;width:100%;max-width:500px;max-height:92vh;overflow-y:auto;position:relative}
+.curso-fg{display:flex;flex-direction:column;gap:4px;margin-bottom:11px}
+.curso-fg label{font-size:10px;font-weight:700;text-transform:uppercase;color:var(--teal-600);letter-spacing:.4px}
+.curso-fg input,.curso-fg select,.curso-fg textarea{background:rgba(255,255,255,.07);border:1.5px solid rgba(64,217,192,.2);border-radius:8px;padding:9px 11px;font-family:'DM Sans',sans-serif;font-size:13px;color:#fff;outline:none}
+.curso-fg input:focus,.curso-fg select:focus,.curso-fg textarea:focus{border-color:var(--teal-400)}
+.curso-fg select option{background:#071a1a}
+.curso-fg input::placeholder,.curso-fg textarea::placeholder{color:rgba(255,255,255,.25)}
+/* Certificado form */
+.cert-form-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:2300;align-items:center;justify-content:center;padding:16px}
+.cert-form-overlay.open{display:flex}
+.cert-form-box{background:#071a1a;border:1.5px solid var(--teal-400);border-radius:18px;padding:24px;width:100%;max-width:520px;max-height:92vh;overflow-y:auto;position:relative}
+.cert-fg{display:flex;flex-direction:column;gap:4px;margin-bottom:11px}
+.cert-fg label{font-size:10px;font-weight:700;text-transform:uppercase;color:var(--teal-400);letter-spacing:.4px}
+.cert-fg input,.cert-fg textarea{background:rgba(255,255,255,.07);border:1.5px solid rgba(64,217,192,.2);border-radius:8px;padding:9px 11px;font-family:'DM Sans',sans-serif;font-size:13px;color:#fff;outline:none}
+.cert-fg input:focus,.cert-fg textarea:focus{border-color:var(--teal-400)}
+.cert-fg input::placeholder,.cert-fg textarea::placeholder{color:rgba(255,255,255,.25)}
+.cert-readonly{opacity:.65;cursor:not-allowed}
+.cert-request-card{background:rgba(64,217,192,.07);border:1.5px solid rgba(64,217,192,.2);border-radius:12px;padding:14px;margin-bottom:10px}
+.cert-req-name{font-weight:700;font-size:13px;color:#fff;margin-bottom:2px}
+.cert-req-meta{font-size:11px;color:var(--teal-600)}
+.cert-req-status{display:inline-block;font-size:10px;font-weight:700;padding:2px 8px;border-radius:7px;margin-top:6px}
+.cert-req-pending{background:rgba(255,193,7,.15);color:#ffc107}
+.cert-req-approved{background:rgba(64,217,192,.15);color:var(--teal-400)}
+
 </style>
 </head>
 <body>
@@ -457,6 +588,8 @@ align-items:center;justify-content:flex-start;padding:0}
       <button class="pin-key" onclick="pinKey('4')">4</button><button class="pin-key" onclick="pinKey('5')">5</button><button class="pin-key" onclick="pinKey('6')">6</button>
       <button class="pin-key" onclick="pinKey('7')">7</button><button class="pin-key" onclick="pinKey('8')">8</button><button class="pin-key" onclick="pinKey('9')">9</button>
       <button class="pin-key" onclick="pinDel()">⌫</button><button class="pin-key" onclick="pinKey('0')">0</button><button class="pin-key ok-key" onclick="pinOk()">OK</button>
+    </div>
+    <button id="btn-change-pin" onclick="openChangePin()" style="display:none;margin-top:12px;background:none;border:none;color:rgba(168,240,232,.4);font-family:'DM Sans',sans-serif;font-size:12px;cursor:pointer;text-decoration:underline">🔑 Cambiar PIN</button>
     </div>
     <div class="pin-error" id="pin-error"></div>
     <button class="pin-cancel" onclick="cancelPin()">Cancelar</button>
@@ -474,6 +607,9 @@ align-items:center;justify-content:flex-start;padding:0}
     <button onclick="openGeneral('ideas')" style="background:rgba(64,217,192,.13);border:1.5px solid var(--teal-400);border-radius:12px;color:var(--teal-200);padding:11px 10px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:700;cursor:pointer">💡 Ideas</button>
     <button onclick="openGeneral('presup')" style="background:rgba(64,217,192,.13);border:1.5px solid var(--teal-400);border-radius:12px;color:var(--teal-200);padding:11px 10px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:700;cursor:pointer">💰 Presupuesto</button>
     <button onclick="openGeneral('eventos')" style="background:rgba(127,255,212,.15);border:1.5px solid var(--mint);border-radius:12px;color:var(--mint);padding:11px 10px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:700;cursor:pointer">🎉 Eventos</button>
+    <button onclick="openGeneral('clientes')" style="background:rgba(127,255,212,.15);border:1.5px solid var(--mint);border-radius:12px;color:var(--mint);padding:11px 10px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:700;cursor:pointer">🌸 Clientes</button>
+    <button onclick="openGeneral('alianzas')" style="background:rgba(64,217,192,.13);border:1.5px solid var(--teal-400);border-radius:12px;color:var(--teal-200);padding:11px 10px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:700;cursor:pointer">🤝 Alianzas</button>
+    <button onclick="openGeneral('cursos')" style="background:rgba(64,217,192,.13);border:1.5px solid var(--teal-400);border-radius:12px;color:var(--teal-200);padding:11px 10px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:700;cursor:pointer">🎓 Cursos</button>
   </div>
   <div class="home-note">Selecciona un perfil para continuar.</div>
   <div class="home-cards" id="home-cards"></div>
@@ -491,6 +627,9 @@ align-items:center;justify-content:flex-start;padding:0}
       <button class="gtab" id="gtab-ideas" onclick="showGView('ideas')">💡 Ideas</button>
       <button class="gtab" id="gtab-presup" onclick="showGView('presup')">💰 Presupuestador</button>
       <button class="gtab" id="gtab-eventos" onclick="showGView('eventos')">🎉 Eventos</button>
+      <button class="gtab" id="gtab-clientes" onclick="showGView('clientes')">🌸 Clientes</button>
+      <button class="gtab" id="gtab-alianzas" onclick="showGView('alianzas')">🤝 Alianzas</button>
+      <button class="gtab" id="gtab-cursos" onclick="showGView('cursos')">🎓 Cursos</button>
     </div>
 
     <!-- KANBAN -->
@@ -520,23 +659,26 @@ align-items:center;justify-content:flex-start;padding:0}
 
     <!-- PRESUPUESTADOR -->
     <div class="gview" id="gview-presup">
-      <div style="font-family:'DM Serif Display',serif;font-size:20px;color:var(--teal-400);margin-bottom:14px">💰 Presupuestador</div>
+      <div style="font-family:'DM Serif Display',serif;font-size:20px;color:var(--teal-400);margin-bottom:6px">💰 Presupuestador de Proyectos</div>
+      <div style="font-size:12px;color:rgba(168,240,232,.6);margin-bottom:16px">Registra materiales, tiempo y ganancia para calcular el precio final de tu proyecto.</div>
       <div class="presup-section">
-        <div class="presup-title">📁 Proyecto</div>
+        <div class="presup-title">📁 Nombre del Proyecto</div>
+        <div style="font-size:12px;color:rgba(168,240,232,.55);margin-bottom:10px">Dale un nombre para identificarlo después, por ejemplo: "Boda González" o "XV Rosa".</div>
         <div class="presup-project-row">
-          <input type="text" id="presup-name" placeholder="Nombre del proyecto">
-          <button class="btn btn-primary" onclick="savePresup()">💾 Guardar</button>
+          <input type="text" id="presup-name" placeholder="Ej: Boda González, XV Azul, Cumpleaños…">
+          <button class="btn btn-primary" onclick="savePresup()">💾 Guardar Proyecto</button>
           <button class="btn btn-secondary" onclick="newPresup()">➕ Nuevo</button>
         </div>
         <div id="presup-saved-list" class="presup-saved-list"></div>
       </div>
       <div class="presup-section">
-        <div class="presup-title">📦 Materiales</div>
+        <div class="presup-title">📦 Lista de Materiales</div>
+        <div style="font-size:12px;color:rgba(168,240,232,.55);margin-bottom:10px">Agrega cada material que necesitas: flores, ramas, listones, velas, etc. con su cantidad y precio unitario.</div>
         <div class="presup-input-row">
-          <input type="text" id="item-name" placeholder="Artículo (ej: Ramas, Pampas…)" style="flex:2">
+          <input type="text" id="item-name" placeholder="Material (ej: Rosas rojas, Pampas, Velas…)" style="flex:2">
           <input type="number" id="item-qty" placeholder="Cant." min="1" step="1" value="1" style="flex:0;width:70px">
-          <input type="number" id="item-price" placeholder="$ Precio" min="0" step="0.01" style="flex:0;width:100px">
-          <button class="btn-add-item" id="presup-item-btn" onclick="addPresupItem()">+</button>
+          <input type="number" id="item-price" placeholder="$ c/u" min="0" step="0.01" style="flex:0;width:100px">
+          <button class="btn-add-item" id="presup-item-btn" onclick="addPresupItem()" title="Agregar material">+</button>
           <button class="btn btn-secondary" id="presup-item-cancel" onclick="cancelPresupItemEdit()" style="display:none;padding:8px 12px">Cancelar</button>
         </div>
         <div id="presup-items-wrap" style="overflow-x:auto;display:none">
@@ -547,7 +689,8 @@ align-items:center;justify-content:flex-start;padding:0}
       </div>
       <div class="presup-extras">
         <div class="extra-box">
-          <label class="label-with-tip">⏱ Tiempo de elaboración <span class="tip-wrap" tabindex="0">i<span class="tip-bubble">Horas reales dedicadas a fabricar, preparar o montar el proyecto. Se multiplica por el costo por hora.</span></span></label>
+          <label class="label-with-tip">⏱ Tu tiempo de trabajo <span class="tip-wrap" tabindex="0">i<span class="tip-bubble">¿Cuántas horas tardas en preparar este proyecto? Multiplícalo por lo que cobras por hora para saber el costo de tu tiempo.</span></span></label>
+          <div style="font-size:10px;color:rgba(168,240,232,.5);margin-bottom:6px">Horas que dedicarás × precio por hora</div>
           <div style="display:flex;gap:7px;align-items:center;margin-bottom:6px">
             <input type="number" class="extra-input" id="tiempo-horas" placeholder="Horas" min="0" step="0.5" oninput="updateTotals()" style="width:70px">
             <span style="color:var(--teal-400);font-size:11px">hrs ×</span>
@@ -556,19 +699,21 @@ align-items:center;justify-content:flex-start;padding:0}
           <div style="font-size:11px;color:var(--teal-400)" id="tiempo-preview">= $0.00</div>
         </div>
         <div class="extra-box">
-          <label class="label-with-tip">🔨 Mano de Obra adicional <span class="tip-wrap" tabindex="0">i<span class="tip-bubble">Costo extra por apoyo, instalación, transporte, montaje o personal externo. Puede ser porcentaje o monto fijo.</span></span></label>
+          <label class="label-with-tip">🔨 Mano de obra / Apoyo extra <span class="tip-wrap" tabindex="0">i<span class="tip-bubble">¿Pagarás a alguien más para ayudarte? Puede ser un ayudante, transportista, instalador… Ponlo como % del total o como monto fijo.</span></span></label>
+          <div style="font-size:10px;color:rgba(168,240,232,.5);margin-bottom:6px">Elige % o monto fijo</div>
           <div class="extra-type-toggle">
-            <button class="etype-btn active" id="mdo-pct-btn" onclick="setExtraType('mdo','pct')">%</button>
-            <button class="etype-btn" id="mdo-fixed-btn" onclick="setExtraType('mdo','fixed')">$ Fijo</button>
+            <button class="etype-btn active" id="mdo-pct-btn" onclick="setExtraType('mdo','pct')">% Porcentaje</button>
+            <button class="etype-btn" id="mdo-fixed-btn" onclick="setExtraType('mdo','fixed')">$ Monto fijo</button>
           </div>
           <input type="number" class="extra-input" id="mdo-val" placeholder="0" min="0" step="0.01" oninput="updateTotals()">
           <div style="font-size:11px;color:var(--teal-400);margin-top:5px" id="mdo-preview">= $0.00</div>
         </div>
         <div class="extra-box">
-          <label class="label-with-tip">📈 Ganancia <span class="tip-wrap" tabindex="0">i<span class="tip-bubble">Margen final que se suma al costo del proyecto para definir el precio de venta. Puede ser porcentaje o monto fijo.</span></span></label>
+          <label class="label-with-tip">📈 Tu ganancia <span class="tip-wrap" tabindex="0">i<span class="tip-bubble">¿Cuánto quieres ganar encima de todos los costos? Es lo que te quedas tú al final. Puede ser porcentaje o monto fijo.</span></span></label>
+          <div style="font-size:10px;color:rgba(168,240,232,.5);margin-bottom:6px">Elige % o monto fijo</div>
           <div class="extra-type-toggle">
-            <button class="etype-btn active" id="gan-pct-btn" onclick="setExtraType('gan','pct')">%</button>
-            <button class="etype-btn" id="gan-fixed-btn" onclick="setExtraType('gan','fixed')">$ Fijo</button>
+            <button class="etype-btn active" id="gan-pct-btn" onclick="setExtraType('gan','pct')">% Porcentaje</button>
+            <button class="etype-btn" id="gan-fixed-btn" onclick="setExtraType('gan','fixed')">$ Monto fijo</button>
           </div>
           <input type="number" class="extra-input" id="gan-val" placeholder="0" min="0" step="0.01" oninput="updateTotals()">
           <div style="font-size:11px;color:var(--teal-400);margin-top:5px" id="gan-preview">= $0.00</div>
@@ -585,9 +730,12 @@ align-items:center;justify-content:flex-start;padding:0}
 
     <!-- EVENTOS -->
     <div class="gview" id="gview-eventos">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:10px">
-        <div style="font-family:'DM Serif Display',serif;font-size:20px;color:var(--teal-400)">🎉 Calendario de Eventos</div>
-        <button class="btn btn-primary" onclick="openEvForm(null)" style="background:var(--teal-600);border:none">+ Nuevo Evento</button>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;flex-wrap:wrap;gap:10px">
+        <div>
+          <div style="font-family:'DM Serif Display',serif;font-size:20px;color:var(--teal-400)">🎉 Calendario de Eventos</div>
+          <div style="font-size:12px;color:rgba(168,240,232,.55);margin-top:2px">Toca cualquier día del calendario para agendar o ver un evento.</div>
+        </div>
+        <button class="btn btn-primary" onclick="openEvForm(null)" style="background:var(--teal-600);border:none;white-space:nowrap">+ Agregar Evento</button>
       </div>
       <div class="ev-layout">
         <div>
@@ -607,46 +755,302 @@ align-items:center;justify-content:flex-start;padding:0}
         </div>
       </div>
     </div>
+    <!-- CLIENTES -->
+    <div class="gview" id="gview-clientes">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;flex-wrap:wrap;gap:10px">
+        <div>
+          <div style="font-family:'DM Serif Display',serif;font-size:20px;color:var(--teal-400)">🌸 Clientes & Prospectos</div>
+          <div style="font-size:12px;color:rgba(168,240,232,.55);margin-top:2px">Registra cada cliente y lleva el seguimiento de su proceso.</div>
+        </div>
+        <button class="btn btn-primary" onclick="openClForm(null)" style="background:var(--teal-600);border:none;white-space:nowrap">+ Nuevo Cliente</button>
+      </div>
+      <div class="cl-filter-bar" id="cl-filter-bar">
+        <button class="cl-filter-btn active" onclick="setClFilter('all',this)">✨ Todos</button>
+        <button class="cl-filter-btn" onclick="setClFilter('prospecto',this)">🔍 Prospecto</button>
+        <button class="cl-filter-btn" onclick="setClFilter('primera-visita',this)">🤝 1ra Visita</button>
+        <button class="cl-filter-btn" onclick="setClFilter('cotizacion-proceso',this)">📝 Cotizando</button>
+        <button class="cl-filter-btn" onclick="setClFilter('cotizacion-enviada',this)">📨 Cotización Enviada</button>
+        <button class="cl-filter-btn" onclick="setClFilter('seguimiento',this)">🔔 Seguimiento</button>
+        <button class="cl-filter-btn" onclick="setClFilter('cliente-activo',this)">⭐ Cliente Activo</button>
+        <button class="cl-filter-btn" onclick="setClFilter('sin-respuesta',this)">🔕 Sin Respuesta</button>
+        <button class="cl-filter-btn" onclick="setClFilter('cerrado',this)">🏁 Cerrado</button>
+      </div>
+      <div class="cl-grid" id="cl-grid">
+        <div style="color:rgba(255,255,255,.3);font-size:13px;text-align:center;padding:30px 0;grid-column:1/-1" id="cl-empty">🌱 Aún no hay clientes registrados</div>
+      </div>
+    </div>
+
+    <!-- ALIANZAS -->
+    <div class="gview" id="gview-alianzas">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;flex-wrap:wrap;gap:10px">
+        <div>
+          <div style="font-family:'DM Serif Display',serif;font-size:20px;color:#f5c842">🤝 Red de Alianzas</div>
+          <div style="font-size:12px;color:rgba(245,200,66,.5);margin-top:2px">Restaurantes, salones, decoradores, artesanos y más — construye tu red.</div>
+        </div>
+        <button class="btn" onclick="openAlForm(null)" style="background:#b8922a;border:none;white-space:nowrap;color:#fff;padding:9px 14px;border-radius:10px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:700;cursor:pointer">+ Nueva Alianza</button>
+      </div>
+      <div class="al-filter-bar" id="al-filter-bar">
+        <button class="al-filter-btn active" onclick="setAlFilter('all',this)">✨ Todas</button>
+        <button class="al-filter-btn" onclick="setAlFilter('primer-contacto',this)">📞 1er Contacto</button>
+        <button class="al-filter-btn" onclick="setAlFilter('info-solicitada',this)">📋 Info Solicitada</button>
+        <button class="al-filter-btn" onclick="setAlFilter('reunion-agendada',this)">📅 Reunión Agendada</button>
+        <button class="al-filter-btn" onclick="setAlFilter('reunion-realizada',this)">🗣 Reunión Realizada</button>
+        <button class="al-filter-btn" onclick="setAlFilter('propuesta-enviada',this)">📨 Propuesta Enviada</button>
+        <button class="al-filter-btn" onclick="setAlFilter('alianza-confirmada',this)">⭐ Alianza Confirmada</button>
+        <button class="al-filter-btn" onclick="setAlFilter('alianza-activa',this)">🚀 Alianza Activa</button>
+        <button class="al-filter-btn" onclick="setAlFilter('pausada',this)">⏸ Pausada</button>
+        <button class="al-filter-btn" onclick="setAlFilter('descartada',this)">❌ Descartada</button>
+      </div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px" id="al-cat-bar">
+        <button class="al-cat-btn active" onclick="setAlCat('all',this)">🏷 Todas</button>
+        <button class="al-cat-btn" onclick="setAlCat('restaurante',this)">🍽 Restaurante</button>
+        <button class="al-cat-btn" onclick="setAlCat('salon',this)">🏛 Salón</button>
+        <button class="al-cat-btn" onclick="setAlCat('decorador',this)">🌸 Decorador/a</button>
+        <button class="al-cat-btn" onclick="setAlCat('agencia',this)">🏢 Agencia</button>
+        <button class="al-cat-btn" onclick="setAlCat('artesano',this)">🎨 Artesano/a</button>
+        <button class="al-cat-btn" onclick="setAlCat('musico',this)">🎵 Músico/DJ</button>
+        <button class="al-cat-btn" onclick="setAlCat('fotografo',this)">📸 Fotógrafo/a</button>
+        <button class="al-cat-btn" onclick="setAlCat('catering',this)">🍰 Catering/Pastelería</button>
+        <button class="al-cat-btn" onclick="setAlCat('otro',this)">📌 Otro</button>
+      </div>
+      <div class="al-grid" id="al-grid">
+        <div style="color:rgba(255,255,255,.3);font-size:13px;text-align:center;padding:30px 0;grid-column:1/-1" id="al-empty">🤝 Aún no hay alianzas registradas</div>
+      </div>
+    </div>
+
+    <!-- CURSOS -->
+    <div class="gview" id="gview-cursos">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;flex-wrap:wrap;gap:10px">
+        <div>
+          <div style="font-family:'DM Serif Display',serif;font-size:20px;color:var(--teal-400)">🎓 Cursos & Capacitación</div>
+          <div style="font-size:12px;color:rgba(168,240,232,.55);margin-top:2px">Aprende, crece y obtén tu certificado al completar cada curso.</div>
+        </div>
+        <button id="btn-add-curso" onclick="openCursoForm(null)" style="display:none;background:var(--teal-600);border:none;border-radius:10px;color:#fff;padding:9px 16px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap">+ Agregar Curso</button>
+      </div>
+      <!-- Filter bar -->
+      <div id="cursos-filter-bar" style="display:flex;gap:7px;flex-wrap:wrap;margin-bottom:14px"></div>
+      <!-- Solicitudes de certificado (solo Eduardo) -->
+      <div id="cert-requests-section" style="display:none;margin-bottom:20px">
+        <div style="font-family:'DM Serif Display',serif;font-size:16px;color:var(--teal-400);margin-bottom:10px;padding-bottom:4px;border-bottom:1px solid rgba(64,217,192,.2)">📬 Solicitudes de Certificado</div>
+        <div id="cert-requests-list" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:10px"></div>
+      </div>
+      <!-- Cursos grid -->
+      <div id="cursos-content"></div>
+    </div>
+
   </div>
 </div>
 
-<!-- EVENT FORM -->
+<!-- DOCUMENTOS GVIEW -->
+<!-- CURSO FORM (solo Eduardo) -->
+<div class="curso-form-overlay" id="curso-form-overlay">
+  <div class="curso-form-box">
+    <button onclick="closeCursoForm()" style="position:absolute;top:12px;right:12px;background:rgba(255,255,255,.1);border:none;border-radius:50%;width:28px;height:28px;color:#fff;font-size:15px;cursor:pointer">✕</button>
+    <div style="font-family:'DM Serif Display',serif;font-size:18px;color:var(--teal-400);margin-bottom:4px" id="curso-form-title">🎓 Nuevo Curso</div>
+    <div style="font-size:12px;color:rgba(168,240,232,.45);margin-bottom:16px">Agrega un curso para que todos los colaboradores puedan acceder.</div>
+    <div class="curso-fg"><label>📚 Nombre del curso *</label><input type="text" id="cf-nombre" placeholder="Ej: Introducción a Jetpack Compose"></div>
+    <div class="curso-fg"><label>🔗 Link del curso *</label><input type="url" id="cf-link" placeholder="https://youtube.com/... o cualquier plataforma"></div>
+    <div class="curso-fg"><label>⏱ Duración</label><input type="text" id="cf-duracion" placeholder="Ej: 2 horas, 45 min, 6 semanas…"></div>
+    <div class="curso-fg"><label>🏷 Categoría *</label>
+      <div style="display:flex;gap:6px">
+        <select id="cf-categoria" style="flex:1;background:rgba(255,255,255,.07);border:1.5px solid rgba(64,217,192,.2);border-radius:8px;padding:9px 11px;font-family:'DM Sans',sans-serif;font-size:13px;color:#fff;outline:none">
+          <option value="">-- Selecciona o crea nueva --</option>
+        </select>
+        <button onclick="addCursoCategoria()" style="background:rgba(64,217,192,.15);border:1.5px solid rgba(64,217,192,.3);border-radius:8px;color:var(--teal-400);padding:0 12px;cursor:pointer;font-size:16px;flex-shrink:0" title="Nueva categoría">+</button>
+      </div>
+      <input type="text" id="cf-cat-nueva" placeholder="Escribe nombre de nueva categoría y presiona +" style="margin-top:6px;display:none;background:rgba(255,255,255,.07);border:1.5px solid rgba(64,217,192,.2);border-radius:8px;padding:9px 11px;font-family:'DM Sans',sans-serif;font-size:13px;color:#fff;outline:none">
+    </div>
+    <div class="curso-fg"><label>📝 Descripción</label><textarea id="cf-descripcion" rows="3" placeholder="¿De qué trata el curso? ¿Qué aprenderán…"></textarea></div>
+    <div style="display:flex;gap:8px;margin-top:6px">
+      <button onclick="saveCurso()" style="flex:1;background:var(--teal-600);border:none;border-radius:10px;color:#fff;padding:11px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:700;cursor:pointer">💾 Guardar Curso</button>
+      <button onclick="closeCursoForm()" style="background:rgba(255,255,255,.08);border:none;border-radius:10px;color:var(--teal-200);padding:11px 16px;font-family:'DM Sans',sans-serif;font-size:13px;cursor:pointer">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<!-- CERTIFICADO FORM -->
+<div class="cert-form-overlay" id="cert-form-overlay">
+  <div class="cert-form-box">
+    <button onclick="closeCertForm()" style="position:absolute;top:12px;right:12px;background:rgba(255,255,255,.1);border:none;border-radius:50%;width:28px;height:28px;color:#fff;font-size:15px;cursor:pointer">✕</button>
+    <div style="font-family:'DM Serif Display',serif;font-size:18px;color:var(--teal-400);margin-bottom:4px">🏅 Solicitar Certificado</div>
+    <div style="font-size:12px;color:rgba(168,240,232,.45);margin-bottom:16px">Completa el formulario tras terminar el curso. Eduardo revisará tu solicitud.</div>
+    <div class="cert-fg"><label>📚 Nombre del curso</label><input type="text" id="cert-curso-nombre" readonly class="cert-readonly"></div>
+    <div class="cert-fg"><label>🏷 Categoría</label><input type="text" id="cert-curso-cat" readonly class="cert-readonly"></div>
+    <div class="cert-fg"><label>👤 Colaborador</label><input type="text" id="cert-colaborador" readonly class="cert-readonly"></div>
+    <div class="cert-fg"><label>📅 Fecha de finalización</label><input type="date" id="cert-fecha"></div>
+    <div class="cert-fg"><label>🔑 ¿Cuáles son los puntos clave del curso?</label>
+      <textarea id="cert-puntos" rows="3" placeholder="Describe los 3–5 conceptos más importantes que aprendiste…"></textarea></div>
+    <div class="cert-fg"><label>💡 ¿Cómo puedes implementar lo aprendido en tus actividades?</label>
+      <textarea id="cert-implementacion" rows="3" placeholder="¿Cómo aplicarás esto en tu trabajo diario dentro del equipo?"></textarea></div>
+    <div class="cert-fg"><label>⭐ ¿Qué fue lo más valioso del curso para ti?</label>
+      <textarea id="cert-valioso" rows="2" placeholder="Lo que más impacto tuvo en tu aprendizaje…"></textarea></div>
+    <div style="display:flex;gap:8px;margin-top:6px">
+      <button onclick="submitCertRequest()" style="flex:1;background:var(--teal-600);border:none;border-radius:10px;color:#fff;padding:11px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:700;cursor:pointer">📨 Enviar Solicitud</button>
+      <button onclick="closeCertForm()" style="background:rgba(255,255,255,.08);border:none;border-radius:10px;color:var(--teal-200);padding:11px 16px;font-family:'DM Sans',sans-serif;font-size:13px;cursor:pointer">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<!-- CHANGE PIN OVERLAY -->
+<div class="pin-overlay" id="change-pin-overlay" style="z-index:3100">
+  <div class="pin-box" style="gap:10px;max-width:300px">
+    <div class="pin-box-title">🔑 Cambiar PIN</div>
+    <div style="width:100%">
+      <label style="font-size:10px;color:var(--teal-400);font-weight:700;display:block;margin-bottom:4px">Nuevo PIN (4 dígitos)</label>
+      <input type="password" inputmode="numeric" maxlength="4" id="cp-input" placeholder="••••"
+        style="background:rgba(255,255,255,.08);border:1.5px solid var(--teal-600);border-radius:8px;padding:10px;color:#fff;font-size:20px;text-align:center;letter-spacing:8px;font-family:monospace;outline:none;width:100%;box-sizing:border-box">
+    </div>
+    <div style="width:100%">
+      <label style="font-size:10px;color:var(--teal-400);font-weight:700;display:block;margin-bottom:4px">Confirmar nuevo PIN</label>
+      <input type="password" inputmode="numeric" maxlength="4" id="cp-confirm" placeholder="••••"
+        style="background:rgba(255,255,255,.08);border:1.5px solid var(--teal-600);border-radius:8px;padding:10px;color:#fff;font-size:20px;text-align:center;letter-spacing:8px;font-family:monospace;outline:none;width:100%;box-sizing:border-box">
+    </div>
+    <div id="cp-error" style="font-size:12px;color:#e05555;min-height:16px;text-align:center"></div>
+    <div style="display:flex;gap:8px;width:100%">
+      <button onclick="saveNewPin()" style="flex:1;background:var(--teal-600);border:none;border-radius:10px;color:#fff;padding:11px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:700;cursor:pointer">✅ Guardar</button>
+      <button onclick="closeChangePin()" style="flex:1;background:rgba(255,255,255,.08);border:none;border-radius:10px;color:var(--teal-200);padding:11px;font-family:'DM Sans',sans-serif;font-size:13px;cursor:pointer">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<div class="al-form-overlay" id="al-form-overlay">
+  <div class="al-form-box">
+    <button onclick="closeAlForm()" style="position:absolute;top:14px;right:14px;background:rgba(255,255,255,.1);border:none;border-radius:50%;width:28px;height:28px;color:#fff;font-size:15px;cursor:pointer">✕</button>
+    <h2 id="al-form-title">🤝 Nueva Alianza</h2>
+    <div class="al-form-sub">Registra los datos del aliado o socio potencial.</div>
+    <div class="al-row2">
+      <div class="al-fg"><label>👤 Nombre del contacto *</label><input type="text" id="al-nombre" placeholder="Nombre de quien atiende"></div>
+      <div class="al-fg"><label>🏷 Categoría *</label>
+        <select id="al-categoria">
+          <option value="">-- Tipo de aliado --</option>
+          <option value="restaurante">🍽 Restaurante</option>
+          <option value="salon">🏛 Salón de Eventos</option>
+          <option value="decorador">🌸 Decorador/a</option>
+          <option value="agencia">🏢 Agencia</option>
+          <option value="artesano">🎨 Artesano/a</option>
+          <option value="musico">🎵 Músico / DJ</option>
+          <option value="fotografo">📸 Fotógrafo/a</option>
+          <option value="catering">🍰 Catering / Pastelería</option>
+          <option value="otro">📌 Otro</option>
+        </select>
+      </div>
+    </div>
+    <div class="al-fg"><label>🏢 Nombre del negocio</label><input type="text" id="al-negocio" placeholder="Ej: Salón Jardines del Lago, Dulcería Rosy…"></div>
+    <div class="al-row2">
+      <div class="al-fg"><label>📱 Teléfono / WhatsApp *</label><input type="tel" id="al-telefono" placeholder="Ej: 418 100 2233"></div>
+      <div class="al-fg"><label>📧 Correo electrónico</label><input type="email" id="al-correo" placeholder="correo@negocio.com"></div>
+    </div>
+    <div class="al-fg"><label>📍 Ubicación / Ciudad</label><input type="text" id="al-ubicacion" placeholder="Ej: Centro Histórico, SMA · Guanajuato"></div>
+    <div class="al-row2">
+      <div class="al-fg"><label>🌐 Redes / Página web</label><input type="text" id="al-redes" placeholder="@instagram o www.sitio.com"></div>
+      <div class="al-fg"><label>💰 Comisión / Beneficio acordado</label><input type="text" id="al-comision" placeholder="Ej: 10% por referido, descuento mutual…"></div>
+    </div>
+    <div class="al-fg"><label>📅 Fecha de primer contacto</label><input type="date" id="al-fecha"></div>
+    <div class="al-fg"><label>🚦 Estatus de la alianza</label>
+      <select id="al-estatus">
+        <option value="primer-contacto">📞 1er Contacto — apenas iniciando</option>
+        <option value="info-solicitada">📋 Info Solicitada — pedimos información</option>
+        <option value="reunion-agendada">📅 Reunión Agendada — cita programada</option>
+        <option value="reunion-realizada">🗣 Reunión Realizada — ya platicamos</option>
+        <option value="propuesta-enviada">📨 Propuesta Enviada — esperando respuesta</option>
+        <option value="alianza-confirmada">⭐ Alianza Confirmada — ¡acordado!</option>
+        <option value="alianza-activa">🚀 Alianza Activa — trabajando juntos</option>
+        <option value="pausada">⏸ Pausada — en espera</option>
+        <option value="descartada">❌ Descartada — no prosperó</option>
+      </select>
+    </div>
+    <div class="al-fg"><label>📝 Servicios que ofrece</label><textarea id="al-servicios" placeholder="¿Qué ofrece este aliado? Ej: Renta de sillas y mesas, catering para 50–300 personas, decoración floral…"></textarea></div>
+    <div class="al-fg"><label>💬 Notas adicionales</label><textarea id="al-notas" placeholder="Condiciones de la alianza, referencias, próximos pasos, detalles importantes…"></textarea></div>
+    <div style="display:flex;gap:9px;margin-top:8px;flex-wrap:wrap">
+      <button class="btn btn-primary" onclick="saveAl()" style="background:#b8922a;border:none">💾 Guardar Alianza</button>
+      <button class="btn btn-secondary" onclick="closeAlForm()">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<!-- CLIENT FORM -->
+<div class="cl-form-overlay" id="cl-form-overlay">
+  <div class="cl-form-box">
+    <button onclick="closeClForm()" style="position:absolute;top:14px;right:14px;background:rgba(255,255,255,.1);border:none;border-radius:50%;width:28px;height:28px;color:#fff;font-size:15px;cursor:pointer">✕</button>
+    <h2 id="cl-form-title">🌸 Nuevo Cliente</h2>
+    <div class="cl-form-subtitle">Registra los datos del cliente o prospecto.</div>
+    <div class="cl-fg"><label>👤 Nombre completo *</label><input type="text" id="cl-nombre" placeholder="Ej: Ana González López"></div>
+    <div class="cl-fg"><label>📱 Teléfono / WhatsApp</label><input type="tel" id="cl-telefono" placeholder="Ej: 418 123 4567"></div>
+    <div class="cl-fg"><label>🎊 Tipo de evento que busca</label>
+      <select id="cl-tipo"><option value="">-- Selecciona --</option><option>Boda</option><option>XV Años</option><option>Bautizo</option><option>Baby Shower</option><option>Graduación</option><option>Cumpleaños</option><option>Corporativo</option><option>Propuesta</option><option>Invitación Digital</option><option>Otro</option></select>
+    </div>
+    <div class="cl-fg"><label>📅 Fecha tentativa del evento</label><input type="date" id="cl-fecha"></div>
+    <div class="cl-fg"><label>🚦 Estatus del cliente</label>
+      <select id="cl-estatus">
+        <option value="prospecto">🔍 Prospecto — apenas conocido</option>
+        <option value="primera-visita">🤝 1ra Visita — ya nos contactó</option>
+        <option value="cotizacion-proceso">📝 Cotización en Proceso — trabajando en ello</option>
+        <option value="cotizacion-enviada">📨 Cotización Enviada — esperando respuesta</option>
+        <option value="seguimiento">🔔 En Seguimiento — dando seguimiento</option>
+        <option value="cliente-activo">⭐ Cliente Activo — ¡confirmado!</option>
+        <option value="sin-respuesta">🔕 Sin Respuesta — no contesta</option>
+        <option value="cerrado">🏁 Cerrado — proceso terminado</option>
+      </select>
+    </div>
+    <div class="cl-fg"><label>💬 Notas</label><textarea id="cl-notas" placeholder="Detalles del cliente, preferencias, presupuesto estimado…"></textarea></div>
+    <div style="display:flex;gap:9px;margin-top:6px;flex-wrap:wrap">
+      <button class="btn btn-primary" onclick="saveCl()" style="background:var(--teal-600)">💾 Guardar Cliente</button>
+      <button class="btn btn-secondary" onclick="closeClForm()">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<!-- WHATSAPP POPUP -->
+<div class="wa-popup-overlay" id="wa-popup-overlay">
+  <div class="wa-popup-box">
+    <button onclick="closeWaPopup()" style="position:absolute;top:14px;right:14px;background:rgba(255,255,255,.1);border:none;border-radius:50%;width:28px;height:28px;color:#fff;font-size:15px;cursor:pointer">✕</button>
+    <h3 id="wa-popup-title">✨ Cliente actualizado</h3>
+    <div class="wa-popup-sub">Puedes copiar este mensaje y enviarlo a tu grupo de WhatsApp 💬</div>
+    <div class="wa-msg-box" id="wa-msg-box"></div>
+    <div class="wa-btn-row">
+      <button class="wa-btn-copy" onclick="copyWaMsg()">📋 Copiar mensaje</button>
+      <button class="wa-btn-wa" onclick="sendToWa()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        Enviar a WhatsApp
+      </button>
+      <button class="wa-btn-close" onclick="closeWaPopup()">Cerrar</button>
+    </div>
+  </div>
+</div>
+
 <div class="ev-form-overlay" id="ev-form-overlay">
   <div class="ev-form-box">
     <button onclick="closeEvForm()" style="position:absolute;top:14px;right:14px;background:rgba(255,255,255,.1);border:none;border-radius:50%;width:28px;height:28px;color:#fff;font-size:15px;cursor:pointer">✕</button>
-    <h2 id="ev-form-title">Nuevo Evento</h2>
+    <h2 id="ev-form-title">✨ Nuevo Evento</h2>
+    <div style="font-size:12px;color:rgba(168,240,232,.5);margin-bottom:14px">Completa los datos del evento. Los campos con * son obligatorios.</div>
     <div class="ev-form-grid">
-      <div class="ev-fg full"><label>Nombre del Evento *</label><input type="text" id="ev-nombre" placeholder="Ej: Boda García-López"></div>
-      <div class="ev-fg full"><label>Cliente *</label><input type="text" id="ev-cliente" placeholder="Nombre del cliente"></div>
-      <div class="ev-fg"><label>Tipo *</label>
-        <select id="ev-tipo"><option value="">-- Selecciona --</option><option>Boda</option><option>XV Años</option><option>Bautizo</option><option>Baby Shower</option><option>Graduación</option><option>Cumpleaños</option><option>Corporativo</option><option>Invitación Digital</option><option>Otro</option></select>
+      <div class="ev-fg full"><label>📝 Nombre del Evento *</label><input type="text" id="ev-nombre" placeholder="Ej: Boda García-López, XV Rosa Martínez…"></div>
+      <div class="ev-fg full"><label>👤 Nombre del Cliente *</label><input type="text" id="ev-cliente" placeholder="¿Cómo se llama la persona que contrató?"></div>
+      <div class="ev-fg"><label>🎊 Tipo de Evento *</label>
+        <select id="ev-tipo"><option value="">-- ¿Qué tipo de evento es? --</option><option>Boda</option><option>XV Años</option><option>Bautizo</option><option>Baby Shower</option><option>Graduación</option><option>Cumpleaños</option><option>Corporativo</option><option>Propuesta</option><option>Invitación Digital</option><option>Otro</option></select>
       </div>
-      <div class="ev-fg"><label>Fecha *</label><input type="date" id="ev-fecha"></div>
-      <div class="ev-fg full"><label>Estatus</label>
+      <div class="ev-fg"><label>📅 Fecha del Evento *</label><input type="date" id="ev-fecha"></div>
+      <div class="ev-fg full"><label>🚦 ¿En qué paso va este evento?</label>
         <select id="ev-estatus">
-          <option value="primer-contacto">🤝 1ra Visita / Primer Contacto</option>
-          <option value="propuesta-enviada">📨 Propuesta Enviada</option>
-          <option value="propuesta-revisada">🔄 Propuesta en Revisión</option>
-          <option value="cotizacion-aprobada">✅ Cotización Aprobada</option>
-          <option value="produccion">🔨 En Producción</option>
-          <option value="listo-entregar">📦 Listo para Entregar</option>
-          <option value="evento-finalizado">🎊 Evento Finalizado</option>
-          <option value="sin-respuesta">🔕 Sin Respuesta</option>
+          <option value="cotizacion-aprobada">✅ Cotización Aprobada — ¡confirmado!</option>
+          <option value="produccion">🔨 En Producción — trabajando en ello</option>
+          <option value="listo-entregar">📦 Listo para Entregar — ya terminado</option>
+          <option value="evento-finalizado">🎊 Evento Finalizado — ¡éxito!</option>
         </select>
       </div>
-      <div class="ev-fg full"><label>Observaciones</label><textarea id="ev-obs" placeholder="Notas del cliente…"></textarea></div>
+      <div class="ev-fg full"><label>💬 Notas adicionales</label><textarea id="ev-obs" placeholder="Cualquier detalle importante: preferencias del cliente, colores, restricciones…"></textarea></div>
       <div class="ev-fg full">
-        <label>📦 Elementos que contempla el cliente</label>
+        <label>📦 ¿Qué incluye este evento? <span style="font-size:10px;color:rgba(168,240,232,.5);text-transform:none;font-weight:400">(decoración, mobiliario, etc.)</span></label>
         <div class="ev-elem-add-row">
-          <input type="text" id="ev-form-elem-name" placeholder="Ej: Árbol decorativo, centros de mesa, mobiliario...">
-          <select id="ev-form-elem-cat"><option value="decoracion">🌸 Decoración</option><option value="centro">🌺 Centro de Mesa</option><option value="mobiliario">🪑 Mobiliario</option><option value="servicio">⚙️ Servicio</option></select>
-          <button class="btn-add-item" type="button" onclick="addEvFormElem()">+</button>
+          <input type="text" id="ev-form-elem-name" placeholder="Ej: Arco de flores, sillas chiavari, centros de mesa…">
+          <select id="ev-form-elem-cat"><option value="decoracion">🌸 Decoración</option><option value="invitaciones">💌 Invitación Digital</option><option value="mobiliario">🪑 Mobiliario</option><option value="servicio">⚙️ Servicio</option></select>
+          <button class="btn-add-item" type="button" onclick="addEvFormElem()" title="Agregar elemento">+</button>
         </div>
-        <div id="ev-form-elem-list" style="margin-top:10px"><div id="ev-form-elem-empty" style="color:rgba(255,255,255,.3);font-size:13px;text-align:center;padding:10px 0">Sin elementos aún</div></div>
+        <div id="ev-form-elem-list" style="margin-top:10px"><div id="ev-form-elem-empty" style="color:rgba(255,255,255,.3);font-size:13px;text-align:center;padding:10px 0">Aún no has agregado elementos</div></div>
       </div>
     </div>
     <div style="display:flex;gap:9px;margin-top:18px;flex-wrap:wrap">
-      <button class="btn btn-primary" onclick="saveEvento()" style="background:var(--teal-600)">💾 Guardar</button>
+      <button class="btn btn-primary" onclick="saveEvento()" style="background:var(--teal-600)">💾 Guardar Evento</button>
       <button class="btn btn-secondary" onclick="closeEvForm()">Cancelar</button>
     </div>
   </div>
@@ -677,7 +1081,7 @@ align-items:center;justify-content:flex-start;padding:0}
         <div style="font-size:12px;font-weight:700;text-transform:uppercase;color:var(--teal-600);margin-bottom:10px">📦 Elementos del Evento</div>
         <div class="ev-elem-add-row">
           <input type="text" id="ev-elem-name" placeholder="Ej: Arco de flores…">
-          <select id="ev-elem-cat"><option value="decoracion">🌸 Decoración</option><option value="centro">🌺 Centro de Mesa</option><option value="mobiliario">🪑 Mobiliario</option><option value="servicio">⚙️ Servicio</option></select>
+          <select id="ev-elem-cat"><option value="decoracion">🌸 Decoración</option><option value="invitaciones">💌 Invitación Digital</option><option value="mobiliario">🪑 Mobiliario</option><option value="servicio">⚙️ Servicio</option></select>
           <button class="btn-add-item" onclick="addEvElem()">+</button>
         </div>
         <div id="evd-elem-list"><div id="evd-elem-empty" style="color:rgba(255,255,255,.3);font-size:13px;text-align:center;padding:14px 0">Sin elementos aún</div></div>
@@ -721,10 +1125,11 @@ align-items:center;justify-content:flex-start;padding:0}
         <button class="nav-tab active" onclick="showView('form')" id="tab-form">➕ Nueva Actividad</button>
         <button class="nav-tab" onclick="showView('registro')" id="tab-registro">📋 Registro</button>
         <button class="nav-tab" onclick="showView('calendar')" id="tab-calendar">📅 Calendario</button>
+        <button class="nav-tab" id="tab-cursos-profile" onclick="openGeneral('cursos')" style="display:none">🎓 Cursos</button>
       </nav>
       <div class="month-selector">
         <label>Mes del Calendario</label>
-        <select id="month-select" onchange="renderCalendar();syncDesktopToMobile(this.value)"></select>
+        <select id="month-select" onchange="onMonthSelectChange(this)"></select>
       </div>
       <div>
         <div style="font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:var(--teal-400);margin-bottom:6px">Actividades base</div>
@@ -733,7 +1138,7 @@ align-items:center;justify-content:flex-start;padding:0}
       <div style="margin-top:auto;font-size:11px;color:var(--teal-400);line-height:1.9">
         <div style="font-weight:600;margin-bottom:3px">Leyenda</div>
         <div>🟢 Verde = Día de Eventos</div>
-        <div>🔒 Gris = Semana bloqueada</div>
+        <div>📅 Lunes-Viernes editables</div>
         <div>✏️ Semana actual + próxima editables</div>
       </div>
     </aside>
@@ -794,9 +1199,6 @@ align-items:center;justify-content:flex-start;padding:0}
                 <span class="status-opt s-bloqueada" data-val="bloqueada" onclick="selectStatus(this)">🚫 Bloqueada</span>
               </div>
             </div>
-          </div>
-          <div id="date-warning" style="display:none;margin-top:12px;padding:9px 13px;background:#fff3cd;border-radius:8px;font-size:13px;color:#856404;border:1px solid #ffc107">
-            ⚠️ Esa fecha pertenece a una semana bloqueada.
           </div>
           <div class="btn-row">
             <button class="btn btn-primary" id="form-save-btn" onclick="saveActivity()">➕ Agregar al Calendario</button>
@@ -1056,12 +1458,15 @@ function openPerson(p) {
   buildActivityLists(p.base_activities);
   renderCollaboratorOptions();
   document.getElementById("f-date").onchange = function() {
-    const w = document.getElementById("date-warning");
-    w.style.display = (this.value && !isEditableDate(this.value))?"block":"none";
+    
+    w.style.display = "none";
   };
   document.getElementById("screen-home").classList.remove("active");
   document.getElementById("screen-app").classList.add("active");
   clearForm(); showView("form");
+  // Show cursos tab only for Eduardo
+  const cursosTab = document.getElementById("tab-cursos-profile");
+  if (cursosTab) cursosTab.style.display = p.key === ADMIN_KEY ? "block" : "none";
 
   // Subscribe to live Firestore updates
   if (window._unsubActs) window._unsubActs();
@@ -1103,7 +1508,28 @@ function buildMonthSelects() {
   });
 }
 function syncDesktopToMobile(val) { const m=document.getElementById("month-select-m"); if(m) m.value=val; }
-function syncMonthSelect(val)    { const d=document.getElementById("month-select"); if(d) d.value=val; renderCalendar(); }
+function syncMonthSelect(val)    { const d=document.getElementById("month-select"); if(d) d.value=val; onMonthSelectChange(d); }
+
+function onMonthSelectChange(selectEl) {
+  const val = selectEl.value; // "2026-5"
+  const [y, m] = val.split("-").map(Number);
+  const today = new Date();
+  const diffMonths = (y - today.getFullYear()) * 12 + (m - (today.getMonth() + 1));
+  if (diffMonths > MAX_MONTHS_AHEAD) {
+    // Revertir al mes anterior permitido
+    const maxMonth = today.getMonth() + 1 + MAX_MONTHS_AHEAD;
+    const maxYear  = today.getFullYear() + Math.floor((maxMonth - 1) / 12);
+    const maxMon   = ((maxMonth - 1) % 12) + 1;
+    const safeVal  = `${maxYear}-${maxMon}`;
+    selectEl.value = safeVal;
+    syncDesktopToMobile(safeVal);
+    showFutureMonthPopup(m - 1, y);
+    renderCalendar();
+    return;
+  }
+  syncDesktopToMobile(val);
+  renderCalendar();
+}
 
 // ── ACTIVITY CHIPS ──
 function buildActivityLists(baseActs) {
@@ -1192,7 +1618,6 @@ function saveActivity() {
   const end=document.getElementById("f-end").value;
   const collaborators=getSelectedCollaborators();
   if(!name||!date||!start){showToast("⚠️ Nombre, fecha y hora inicio son requeridos");return;}
-  if(!isEditableDate(date)){showToast("🔒 Esa semana está bloqueada.","#c0392b");return;}
   const d=parseLocalDate(date),dow=d.getDay();
   if(dow===0||dow===6){showToast("⚠️ No se pueden agregar actividades en Sábado o Domingo.","#c0392b");return;}
   if(dow===5)showToast("🎪 Viernes · Día de Eventos — guardado.","#0e6b6b");
@@ -1216,7 +1641,7 @@ function clearForm() {
   document.getElementById("form-save-btn").textContent="➕ Agregar al Calendario";
   ["f-name","f-desc","f-date"].forEach(id=>document.getElementById(id).value="");
   ["f-start","f-end"].forEach(id=>document.getElementById(id).selectedIndex=0);
-  document.getElementById("date-warning").style.display="none";
+  
   const eg=document.getElementById("f-end-group");if(eg)eg.style.display="";
   renderCollaboratorOptions();
   setStatusUI("pendiente");
@@ -1225,21 +1650,31 @@ function clearForm() {
 // ── WEEK UTILS ──
 function parseLocalDate(s){const[y,m,d]=s.split("-").map(Number);return new Date(y,m-1,d);}
 function weekMonday(d){const dt=new Date(d.getTime?d.getTime():d);dt.setHours(0,0,0,0);const dow=dt.getDay();dt.setDate(dt.getDate()+(dow===0?-6:1-dow));return dt;}
-function getAllowedWeeks(){
-  const today=new Date();today.setHours(0,0,0,0);
-  const curMon=weekMonday(today);
-  const weeks=[];
-  const totalWeeks=2+Math.min(_calendarExtraWeeks,MAX_EXTRA_WEEKS);
-  for(let i=0;i<totalWeeks;i++){
-    const wMon=new Date(curMon);
-    wMon.setDate(wMon.getDate()+(i*7));
-    weeks.push(wMon);
+function canShowMoreWeeks(){return _calendarExtraWeeks<MAX_EXTRA_WEEKS;}
+function showNextCalendarWeek(){if(!canShowMoreWeeks())return;_calendarExtraWeeks++;renderCalendar();}
+
+// Devuelve true si la fecha está dentro del rango editable (mes actual + 4 meses adelante)
+function isEditableDate(dateStr){
+  // Lunes a viernes siempre son editables — sin restricciones de fechas pasadas
+  const d = parseLocalDate(dateStr);
+  const dow = d.getDay(); // 0=dom, 6=sab
+  return dow !== 0 && dow !== 6; // solo bloquear fines de semana (que ya se marcan como event-day)
+}
+
+// Devuelve todas las semanas (lunes) del mes seleccionado
+function getWeeksOfMonth(year, month) {
+  const firstDay  = new Date(year, month - 1, 1);
+  const lastDay   = new Date(year, month, 0);  // último día del mes
+  const lastTime  = lastDay.getTime();
+  const startMon  = weekMonday(firstDay);
+  const weeks     = [];
+  const cur       = new Date(startMon.getTime());
+  while (cur.getTime() <= lastTime) {
+    weeks.push(new Date(cur.getTime()));
+    cur.setDate(cur.getDate() + 7);
   }
   return weeks;
 }
-function canShowMoreWeeks(){return _calendarExtraWeeks<MAX_EXTRA_WEEKS;}
-function showNextCalendarWeek(){if(!canShowMoreWeeks())return;_calendarExtraWeeks++;renderCalendar();}
-function isEditableDate(dateStr){const mon=weekMonday(parseLocalDate(dateStr));return getAllowedWeeks().some(w=>w.getTime()===mon.getTime());}
 
 // ── CALENDAR ──
 // Returns hour index in HOURS array, or -1
@@ -1254,23 +1689,36 @@ function renderCalendar() {
 
   const body=document.getElementById("calendar-body");
   body.innerHTML="";
-  const allowedWeeks=getAllowedWeeks();
-  const weeksToRender=allowedWeeks.map((wMon,idx)=>({wMon:new Date(wMon),isCurrent:idx===0,isNext:idx===1,weekIndex:idx}));
-  let weekNum=0;
 
-  weeksToRender.forEach(({wMon,isCurrent,isNext,weekIndex})=>{
+  // Todas las semanas del mes seleccionado
+  const weeksToRender = getWeeksOfMonth(year, month);
+
+  const today = new Date(); today.setHours(0,0,0,0);
+  const currentMonthStart = new Date(today.getFullYear(), today.getMonth(), 1);
+
+  let weekNum=0;
+  weeksToRender.forEach((wMon)=>{
     weekNum++;
     const weekEnd=new Date(wMon);weekEnd.setDate(weekEnd.getDate()+6);
     const weekDates=Array.from({length:7},(_,i)=>{const d=new Date(wMon);d.setDate(d.getDate()+i);return d;});
-    const isLocked=false; // ambas semanas son editables
     const weekDateStrs=weekDates.map(toDateStr);
+
+    // Determinar badge de la semana
+    const wMonTime = wMon.getTime();
+    const thisWeekMon = weekMonday(today).getTime();
+    const isCurrent = wMonTime === thisWeekMon;
+    const isNext    = wMonTime === thisWeekMon + 7*24*3600*1000;
 
     const weekBlock=document.createElement("div");
     weekBlock.className="week-block";
     if(isCurrent) weekBlock.id="current-week-block";
 
     const wLabel=document.createElement("div");wLabel.className="week-label";
-    let badge=isCurrent?`<span class="week-current-badge">✏️ Semana actual</span>`:isNext?`<span class="week-next-badge">➡️ Próxima semana</span>`:`<span class="week-next-badge">📆 Semana extra ${weekIndex-1}</span>`;
+    let badge = isCurrent
+      ? `<span class="week-current-badge">✏️ Semana actual</span>`
+      : isNext
+        ? `<span class="week-next-badge">➡️ Próxima semana</span>`
+        : `<span class="week-next-badge">📆 Semana ${weekNum}</span>`;
     wLabel.innerHTML=`Semana ${weekNum} · ${fmtDate(wMon)} – ${fmtDate(weekEnd)} ${badge}`;
     weekBlock.appendChild(wLabel);
 
@@ -1285,19 +1733,16 @@ function renderCalendar() {
     const hRow=document.createElement("tr");
     const thHour=document.createElement("th");thHour.className="cal-th cal-th-hour";thHour.textContent="HORA";hRow.appendChild(thHour);
     weekDates.forEach((d,i)=>{
-      const isEvent=i>=5,inMonth=d.getMonth()+1===month;
+      const isEvent=i>=5;
       const th=document.createElement("th");th.className="cal-th"+(isEvent?" event-day":"");
-      th.innerHTML=`${DAYS_FULL[i]}<span class="day-date">${inMonth?d.getDate():"·"}</span>${isEvent?'<br><span style="font-size:8px;opacity:.6">🎪</span>':""}`;
+      th.innerHTML=`${DAYS_FULL[i]}<span class="day-date">${d.getDate()}</span>${isEvent?'<br><span style="font-size:8px;opacity:.6">🎪</span>':""}`;
       hRow.appendChild(th);
     });
     thead.appendChild(hRow);
 
     // ── Build span map ──
-    // spanMap[dateStr][hourStr] = [{act, span}, ...] — array para soportar múltiples spans
-    // occupied[dateStr][hourStr] = [actId, ...] — ids que ya ocupan esa fila
     const spanMap={}, occupied={};
 
-    // Primero: actividades con rango de horas (start -> end)
     activities.filter(a=>weekDateStrs.includes(a.date)&&a.start!=="todo-el-dia"&&a.end&&a.end!=="").forEach(act=>{
       const si=hIdx(act.start),ei=hIdx(act.end);
       if(si<0||ei<=si)return;
@@ -1313,7 +1758,6 @@ function renderCalendar() {
       }
     });
 
-    // Segundo: actividades "todo el dia" — span desde day_start hasta day_end del colaborador
     const dayStartH=currentPerson.day_start||HOURS[0];
     const dayEndH=currentPerson.day_end||HOURS[HOURS.length-1];
     const dsi=hIdx(dayStartH),dei=hIdx(dayEndH);
@@ -1333,7 +1777,6 @@ function renderCalendar() {
       }
     });
 
-    // ── Assign colors a todas las actividades de la semana ──
     const colorMap={};
     let colorIdx=0;
     activities.filter(a=>weekDateStrs.includes(a.date)).forEach(act=>{
@@ -1350,22 +1793,20 @@ function renderCalendar() {
 
       weekDates.forEach((d,di)=>{
         if(activeRowSpans[di]>0){activeRowSpans[di]--;return;}
-        const isEvent=di>=5,inMonth=d.getMonth()+1===month;
+        const isEvent=di>=5;
         const td=document.createElement("td");
         const dateStr=toDateStr(d);
+        const cellEditable = isEditableDate(dateStr) && !isEvent;
 
         if(isEvent){
           td.className="cal-td event-day";
           if(hi===0)td.innerHTML=`<span style="font-size:8px;font-weight:700;color:var(--teal-700);opacity:.65">🎪 Día de Eventos</span>`;
-        } else if(!inMonth){
-          td.className="cal-td out-month";
-        } else if(isLocked){
+        } else if(!cellEditable){
           td.className="cal-td locked";
           if(hi===0){const ov=document.createElement("div");ov.style.cssText="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none";ov.innerHTML=`<span style="font-size:10px;color:#bbb">🔒</span>`;td.appendChild(ov);}
         } else {
           td.className="cal-td editable";
           td.style.background=hi%2===0?"var(--teal-50)":"var(--white)";
-          // Drop events
           td.addEventListener("dragover",e=>{e.preventDefault();td.classList.add("drag-over");});
           td.addEventListener("dragleave",()=>td.classList.remove("drag-over"));
           td.addEventListener("drop",e=>{
@@ -1414,9 +1855,9 @@ function renderCalendar() {
             const label=isAllday?`${sAct.name}<br><span style="font-size:8px;opacity:.75">☀️ Todo el día</span>`:sAct.name;
             const timeLabel=isAllday?`${currentPerson.day_start} – ${currentPerson.day_end}`:`${sAct.start} – ${sAct.end}`;
             pill.style.cssText=`background:${bg};color:${fg};position:relative;flex:1;min-height:0`;
-            pill.innerHTML=`<span style="font-weight:700;font-size:10px;overflow:hidden;display:block">${label}</span><span class="pill-span-time">${timeLabel}</span>${!isLocked?`<button class="pill-del" onclick="deleteActivity(${sAct.id},event)" style="position:absolute;top:3px;right:3px">×</button>`:""}`;
+            pill.innerHTML=`<span style="font-weight:700;font-size:10px;overflow:hidden;display:block">${label}</span><span class="pill-span-time">${timeLabel}</span>${cellEditable?`<button class="pill-del" onclick="deleteActivity(${sAct.id},event)" style="position:absolute;top:3px;right:3px">×</button>`:""}`;
             pill.title=sAct.desc||sAct.name;
-            pill.draggable=!isLocked;
+            pill.draggable=cellEditable;
             pill.addEventListener("dragstart",e=>{e.dataTransfer.setData("text/plain",""+sAct.id);pill.style.opacity="0.5";});
             pill.addEventListener("dragend",()=>pill.style.opacity="");
             pill.addEventListener("touchstart",()=>{window._draggingId=sAct.id;},{passive:true});
@@ -1424,10 +1865,10 @@ function renderCalendar() {
             td.appendChild(pill);
           });
           // Actividades normales en el mismo horario también se apilan
-          cellActs.forEach(act=>addNormalPill(td,act,0,isLocked,colorMap));
+          cellActs.forEach(act=>addNormalPill(td,act,0,cellEditable,colorMap));
         } else {
           // Sin spans: apilar todas las actividades de esta hora
-          cellActs.forEach((act)=>addNormalPill(td,act,0,isLocked,colorMap));
+          cellActs.forEach((act)=>addNormalPill(td,act,0,cellEditable,colorMap));
         }
 
         tr.appendChild(td);
@@ -1456,7 +1897,7 @@ function renderCalendar() {
   },60);
 }
 
-function addNormalPill(td,act,slotIdx,isLocked,colorMap){
+function addNormalPill(td,act,slotIdx,editable,colorMap){
   const pill=document.createElement("div");
   pill.className="pill";
   const ci=colorMap[act.id]!==undefined?colorMap[act.id]:(act.id%PILL_COLORS.length);
@@ -1464,8 +1905,8 @@ function addNormalPill(td,act,slotIdx,isLocked,colorMap){
   pill.style.cssText=`background:${bg};color:${fg}`;
   pill.textContent=act.name;
   pill.title=act.desc||act.name;
-  pill.draggable=!isLocked;
-  if(!isLocked){
+  pill.draggable=editable;
+  if(editable){
     const del=document.createElement("button");del.className="pill-del";del.textContent="×";
     del.onclick=e=>deleteActivity(act.id,e);pill.appendChild(del);
   }
@@ -1474,14 +1915,13 @@ function addNormalPill(td,act,slotIdx,isLocked,colorMap){
   pill.addEventListener("touchstart",()=>{window._draggingId=act.id;},{passive:true});
   pill.addEventListener("click",e=>{if(e.target.classList.contains("pill-del"))return;openDetailModal(act.id);});
   td.appendChild(pill);
-  // Allow cell to grow if multiple pills
   if(td.children.length>1) td.style.height="auto";
 }
 
 // ── MODAL ──
 function openDetailModal(id){
   const act=activities.find(a=>a.id===id);if(!act)return;
-  const locked=!isEditableDate(act.date);
+  const locked=false; // all weekdays editable
   const sL={"pendiente":"⏳ Pendiente","en-progreso":"🔄 En Progreso","completada":"✅ Completada","bloqueada":"🚫 Bloqueada"};
   const horario=act.start==="todo-el-dia"?"☀️ Todo el día":act.start+(act.end?" – "+act.end:"");
   const collabTxt=renderCollaboratorText(act.collaborators);
@@ -1506,7 +1946,7 @@ function closeModalDirect(){document.getElementById("modal-overlay").classList.r
 
 function editActivity(id){
   const act=activities.find(a=>a.id===id);if(!act)return;
-  if(!isEditableDate(act.date)){showToast("🔒 Semana bloqueada.","#c0392b");return;}
+  // all weekdays editable
   editingId=id;
   document.getElementById("form-title-label").textContent="Editar Actividad";
   document.getElementById("form-save-btn").textContent="💾 Guardar Cambios";
@@ -1531,7 +1971,7 @@ function renderRegistro(){
   if(activities.length===0){empty.style.display="block";table.style.display="none";return;}
   empty.style.display="none";table.style.display="table";
   [...activities].sort((a,b)=>a.date.localeCompare(b.date)).forEach((act,i)=>{
-    const tr=document.createElement("tr"),locked=!isEditableDate(act.date);
+    const tr=document.createElement("tr"),locked=false;
     const horario=act.start==="todo-el-dia"?"☀️ Todo el día":act.start+(act.end?" – "+act.end:"");
     const collabTxt=renderCollaboratorText(act.collaborators);
     tr.innerHTML=`<td style="color:var(--teal-600);font-weight:700">${i+1}</td>
@@ -1649,7 +2089,7 @@ function renderIdeas(){
 function deleteActivity(id,e){
   if(e)e.stopPropagation();
   const act=activities.find(a=>a.id===id);
-  if(act&&!isEditableDate(act.date)){showToast("🔒 Semana bloqueada.","#c0392b");return;}
+  // all weekdays editable
   activities=activities.filter(a=>a.id!==id);
   save();renderCalendar();renderRegistro();renderKanban();showToast("🗑 Actividad eliminada");
 }
@@ -1761,6 +2201,16 @@ function closeDrawer(){document.getElementById("drawer").classList.remove("open"
 // ── PIN ──
 const SESSION_KEY='valkibah_sessions';
 let _pinTarget=null,_pinBuffer='';
+// ── Keyboard support for PIN ──
+document.addEventListener('keydown', function(e) {
+  const overlay = document.getElementById('pin-overlay');
+  if (!overlay || !overlay.classList.contains('open')) return;
+  // Change-PIN modal open? ignore
+  if (document.getElementById('change-pin-overlay')?.classList.contains('open')) return;
+  if (e.key >= '0' && e.key <= '9') { pinKey(e.key); e.preventDefault(); }
+  else if (e.key === 'Backspace') { pinDel(); e.preventDefault(); }
+  else if (e.key === 'Enter') { pinOk(); e.preventDefault(); }
+});
 function getUnlockedSessions(){try{return JSON.parse(sessionStorage.getItem(SESSION_KEY)||'{}');}catch{return{};}}
 function setUnlockedSession(key){const s=getUnlockedSessions();s[key]=true;sessionStorage.setItem(SESSION_KEY,JSON.stringify(s));}
 function isUnlocked(key){return!!getUnlockedSessions()[key];}
@@ -1770,11 +2220,30 @@ function openPinOverlay(person,onSuccess){
   document.getElementById('pin-error').textContent='';
   updatePinDots();
   document.getElementById('pin-overlay').classList.add('open');
+  // Show change-PIN button always so user can update their own PIN
+  document.getElementById('btn-change-pin').style.display='block';
 }
 function pinKey(k){if(_pinBuffer.length>=4)return;_pinBuffer+=k;updatePinDots();if(_pinBuffer.length===4)setTimeout(pinOk,200);}
 function pinDel(){_pinBuffer=_pinBuffer.slice(0,-1);updatePinDots();}
 function updatePinDots(){for(let i=0;i<4;i++)document.getElementById('pd'+i).classList.toggle('filled',i<_pinBuffer.length);}
-function pinOk(){
+function cancelPin(){document.getElementById('pin-overlay').classList.remove('open');_pinTarget=null;_pinBuffer='';document.getElementById('btn-change-pin').style.display='none';}
+function openChangePin(){
+  const chOverlay = document.getElementById('change-pin-overlay');
+  if(chOverlay) { chOverlay.classList.add('open'); document.getElementById('cp-step').textContent='Escribe tu nuevo PIN de 4 dígitos:'; document.getElementById('cp-input').value=''; document.getElementById('cp-confirm').value=''; document.getElementById('cp-error').textContent=''; }
+}
+function saveNewPin(){
+  const np = document.getElementById('cp-input').value.trim();
+  const nc = document.getElementById('cp-confirm').value.trim();
+  if(!/^\d{4}$/.test(np)){document.getElementById('cp-error').textContent='El PIN debe ser exactamente 4 números';return;}
+  if(np!==nc){document.getElementById('cp-error').textContent='Los PINs no coinciden';return;}
+  // Update in PERSONS_DATA
+  if(_pinTarget){
+    _pinTarget.person.pin = np;
+    showToast('✅ PIN actualizado correctamente');
+  }
+  closeChangePin();
+}
+function closeChangePin(){const el=document.getElementById('change-pin-overlay');if(el)el.classList.remove('open');}function pinOk(){
   if(!_pinTarget)return;
   if(_pinBuffer===_pinTarget.person.pin){
     setUnlockedSession(_pinTarget.person.key);
@@ -1785,8 +2254,6 @@ function pinOk(){
     _pinBuffer='';updatePinDots();
   }
 }
-function cancelPin(){document.getElementById('pin-overlay').classList.remove('open');_pinTarget=null;_pinBuffer='';}
-
 // ── PATCH buildHome to use PIN ──
 const _origBuildHome=buildHome;
 function buildHome(){
@@ -1810,11 +2277,12 @@ let _evs=[],_evCalY=new Date().getFullYear(),_evCalM=new Date().getMonth();
 let _evSelDate=null,_evDetailId=null,_evEditId=null,_evUnsub=null;
 let _evFormElems=[],_calendarExtraWeeks=0;
 const MAX_EXTRA_WEEKS=2;
+const MAX_MONTHS_AHEAD=4;
 
 const EV_LABELS={'primer-contacto':'🤝 1ra Visita','propuesta-enviada':'📨 Propuesta Enviada','propuesta-revisada':'🔄 En Revisión','cotizacion-aprobada':'✅ Cotización Aprobada','produccion':'🔨 En Producción','listo-entregar':'📦 Listo para Entregar','evento-finalizado':'🎊 Finalizado','sin-respuesta':'🔕 Sin Respuesta'};
 const EV_ELEM_STAGES=['cotizacion-aprobada','produccion','listo-entregar','evento-finalizado'];
-const CAT_L={decoracion:'🌸 Decoración',centro:'🌺 Centro de Mesa',mobiliario:'🪑 Mobiliario',servicio:'⚙️ Servicio'};
-const CAT_C={decoracion:'cat-decoracion',centro:'cat-centro',mobiliario:'cat-mobiliario',servicio:'cat-servicio'};
+const CAT_L={decoracion:'🌸 Decoración',invitaciones:'💌 Invitación Digital',mobiliario:'🪑 Mobiliario',servicio:'⚙️ Servicio'};
+const CAT_C={decoracion:'cat-decoracion',invitaciones:'cat-invitaciones',mobiliario:'cat-mobiliario',servicio:'cat-servicio'};
 
 function buildGeneralFilterBtns(){
   ['kanban-filter-btns','ideas-filter-btns'].forEach((id,idx)=>{
@@ -1850,6 +2318,10 @@ function showGView(v){
   document.querySelectorAll('#general-tabs .gtab').forEach(el=>el.classList.remove('active'));
   const vEl=document.getElementById('gview-'+v);if(vEl)vEl.classList.add('active');
   const tEl=document.getElementById('gtab-'+v);if(tEl)tEl.classList.add('active');
+  // Re-render sections that depend on currentPerson
+  if(v==='cursos') renderCursos();
+  if(v==='clientes') renderClientes();
+  if(v==='alianzas') renderAlianzas();
 }
 function startGSubs(){
   stopGSubs();
@@ -1865,6 +2337,17 @@ function startGSubs(){
     _gIdeasUnsub=window._fbSubscribeShared('valkibah_general_ideas',data=>{_gIdeas=data?data.ideas||[]:[]; renderGIdeas();});
     _evUnsub=window._fbSubscribeShared('valkibah_eventos',data=>{_evs=data?data.eventos||[]:[]; renderEvCal();renderEvUpcoming();if(_evDetailId)renderEvDetail(_evDetailId);});
     window._fbSubscribeShared('valkibah_presupuestos',data=>{presupSaved=data?data.presupuestos||[]:[]; renderPresupSaved();});
+    window._fbSubscribeShared('valkibah_clientes',data=>{_cls=data?data.clientes||[]:[]; renderClientes();});
+    window._fbSubscribeShared('valkibah_alianzas',data=>{_als=data?data.alianzas||[]:[]; renderAlianzas();});
+    window._fbSubscribeShared('valkibah_cursos',data=>{
+      _cursos=data?data.cursos||[]:[]; 
+      _cursosCats=data?data.cats||[]:[];
+      if(document.getElementById('gview-cursos')?.classList.contains('active')) renderCursos();
+    });
+    window._fbSubscribeShared('valkibah_cert_requests',data=>{
+      _certRequests=data?data.requests||[]:[]; 
+      if(document.getElementById('gview-cursos')?.classList.contains('active')) renderCursos();
+    });
   }
   _evCalY=new Date().getFullYear();_evCalM=new Date().getMonth();
   setTimeout(()=>{renderEvCal();renderEvUpcoming();},300);
@@ -2063,7 +2546,13 @@ async function savePresup(){
   const idx=presupSaved.findIndex(p=>p.id===rec.id);
   if(idx>=0)presupSaved[idx]=rec;else presupSaved.push(rec);
   if(window._fbSaveShared)await window._fbSaveShared('valkibah_presupuestos',{presupuestos:presupSaved});
-  renderPresupSaved();showToast('💾 Guardado');
+  renderPresupSaved();showToast('💾 Presupuesto guardado correctamente');
+  // Limpiar formulario después de guardar
+  presupCurrentId=null; presupItems=[];
+  presupEditingItemId=null;
+  ['presup-name','mdo-val','gan-val','tiempo-horas','costo-hora'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  mdoType='pct';ganType='pct';setExtraType('mdo','pct');setExtraType('gan','pct');
+  cancelPresupItemEdit();renderPresupItems();updateTotals();
 }
 function loadPresup(id){
   const r=presupSaved.find(p=>p.id===id);if(!r)return;
@@ -2101,15 +2590,39 @@ function renderPresupSaved(){
 }
 
 // Eventos
-function evCalNav(dir){_evCalM+=dir;if(_evCalM>11){_evCalM=0;_evCalY++;}if(_evCalM<0){_evCalM=11;_evCalY--;}renderEvCal();}
+function showFutureMonthPopup(m, y){
+  const MN=['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+  const old=document.getElementById('future-month-popup');if(old)old.remove();
+  const overlay=document.createElement('div');
+  overlay.id='future-month-popup';
+  overlay.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:3000;display:flex;align-items:center;justify-content:center;padding:16px';
+  overlay.innerHTML=`
+    <div style="background:#0f3535;border:1.5px solid var(--teal-600);border-radius:20px;padding:28px 26px;max-width:380px;width:100%;text-align:center;box-shadow:0 16px 60px rgba(0,0,0,.4)">
+      <div style="font-size:42px;margin-bottom:10px">😌</div>
+      <div style="font-family:'DM Serif Display',serif;font-size:19px;color:var(--teal-400);margin-bottom:10px">${MN[m]} ${y}</div>
+      <div style="font-size:14px;color:var(--teal-200);line-height:1.7;margin-bottom:20px">
+        ¡Relájense! Todavía falta mucho para ese mes. 🌿<br><br>
+        Solo pueden planear hasta <strong style="color:var(--mint)">${MAX_MONTHS_AHEAD} meses</strong> adelante. Conforme avance el tiempo se irán desbloqueando los siguientes meses.
+      </div>
+      <button onclick="document.getElementById('future-month-popup').remove()" style="background:var(--teal-700);border:none;border-radius:10px;color:#fff;padding:11px 28px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:700;cursor:pointer">Entendido ✓</button>
+    </div>`;
+  document.body.appendChild(overlay);
+  overlay.onclick=function(e){if(e.target===overlay)overlay.remove();};
+}
+function evCalNav(dir){
+  _evCalM+=dir;
+  if(_evCalM>11){_evCalM=0;_evCalY++;}
+  if(_evCalM<0){_evCalM=11;_evCalY--;}
+  renderEvCal();
+}
 function renderEvCal(){
   const title=document.getElementById('ev-cal-title'),grid=document.getElementById('ev-month-grid');
   if(!title||!grid)return;
   const MN=['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
   title.textContent=MN[_evCalM]+' '+_evCalY;grid.innerHTML='';
+  const today=new Date();today.setHours(0,0,0,0);
   ['Lu','Ma','Mi','Ju','Vi','Sá','Do'].forEach(d=>{const h=document.createElement('div');h.className='ev-day-header';h.textContent=d;grid.appendChild(h);});
   const first=new Date(_evCalY,_evCalM,1),last=new Date(_evCalY,_evCalM+1,0);
-  const today=new Date();today.setHours(0,0,0,0);
   let off=first.getDay()-1;if(off<0)off=6;
   for(let i=0;i<off;i++){const b=document.createElement('div');b.className='ev-day other-month';b.innerHTML='<span class="ev-day-num">'+(new Date(_evCalY,_evCalM,-off+1+i)).getDate()+'</span>';grid.appendChild(b);}
   const evDates=new Set(_evs.map(e=>e.fecha));
@@ -2149,9 +2662,25 @@ function renderEvFormElems(){
   _evFormElems.forEach((el,idx)=>{
     const item=document.createElement('div');
     item.className='ev-elem-item';
-    item.innerHTML='<span class="ev-elem-cat '+(CAT_C[el.cat]||'')+'">'+(CAT_L[el.cat]||el.cat)+'</span><span class="ev-elem-name">'+el.name+'</span><button onclick="removeEvFormElem('+idx+')" style="background:none;border:none;cursor:pointer;color:rgba(255,255,255,.3);font-size:14px">🗑</button>';
+    item.innerHTML=
+      '<span class="ev-elem-cat '+(CAT_C[el.cat]||'')+'">'+(CAT_L[el.cat]||el.cat)+'</span>'+
+      '<span class="ev-elem-name">'+el.name+'</span>'+
+      '<div style="display:flex;gap:4px;margin-left:auto">'+
+        '<button onclick="editEvFormElem('+idx+')" style="background:rgba(64,217,192,.15);border:1px solid rgba(64,217,192,.3);border-radius:6px;cursor:pointer;color:var(--teal-400);font-size:12px;padding:2px 7px" title="Editar">✏️</button>'+
+        '<button onclick="removeEvFormElem('+idx+')" style="background:none;border:none;cursor:pointer;color:rgba(255,255,255,.3);font-size:14px" title="Eliminar">🗑</button>'+
+      '</div>';
     list.appendChild(item);
   });
+}
+function editEvFormElem(idx){
+  const el=_evFormElems[idx];
+  if(!el)return;
+  document.getElementById('ev-form-elem-name').value=el.name;
+  document.getElementById('ev-form-elem-cat').value=el.cat;
+  _evFormElems.splice(idx,1);
+  renderEvFormElems();
+  document.getElementById('ev-form-elem-name').focus();
+  showToast('✏️ Edita el elemento y vuelve a agregarlo');
 }
 function addEvFormElem(){
   const name=document.getElementById('ev-form-elem-name').value.trim();
@@ -2226,7 +2755,28 @@ function renderEvElems(ev){
   list.innerHTML='';const elems=ev.elementos||[];
   if(elems.length===0){if(empty){list.appendChild(empty);empty.style.display='block';}return;}
   if(empty)empty.style.display='none';
-  elems.forEach((el,idx)=>{const item=document.createElement('div');item.className='ev-elem-item';item.innerHTML='<span class="ev-elem-cat '+(CAT_C[el.cat]||'')+'">'+(CAT_L[el.cat]||el.cat)+'</span><span class="ev-elem-name">'+el.name+'</span><button onclick="deleteEvElem('+idx+')" style="background:none;border:none;cursor:pointer;color:rgba(255,255,255,.3);font-size:14px">🗑</button>';list.appendChild(item);});
+  elems.forEach((el,idx)=>{
+    const item=document.createElement('div');item.className='ev-elem-item';
+    item.innerHTML=
+      '<span class="ev-elem-cat '+(CAT_C[el.cat]||'')+'">'+(CAT_L[el.cat]||el.cat)+'</span>'+
+      '<span class="ev-elem-name">'+el.name+'</span>'+
+      '<div style="display:flex;gap:4px;margin-left:auto">'+
+        '<button onclick="editEvElem('+idx+')" style="background:rgba(64,217,192,.15);border:1px solid rgba(64,217,192,.3);border-radius:6px;cursor:pointer;color:var(--teal-400);font-size:12px;padding:2px 7px" title="Editar">✏️</button>'+
+        '<button onclick="deleteEvElem('+idx+')" style="background:none;border:none;cursor:pointer;color:rgba(255,255,255,.3);font-size:14px">🗑</button>'+
+      '</div>';
+    list.appendChild(item);
+  });
+}
+function editEvElem(idx){
+  const ev=_evs.find(e=>e.id===_evDetailId);if(!ev||!ev.elementos)return;
+  const el=ev.elementos[idx];if(!el)return;
+  document.getElementById('ev-elem-name').value=el.name;
+  document.getElementById('ev-elem-cat').value=el.cat;
+  ev.elementos.splice(idx,1);
+  if(window._fbSaveShared)window._fbSaveShared('valkibah_eventos',{eventos:_evs});
+  renderEvElems(ev);
+  document.getElementById('ev-elem-name').focus();
+  showToast('✏️ Edita el elemento y agrégalo de nuevo');
 }
 async function addEvElem(){
   const name=document.getElementById('ev-elem-name').value.trim();const cat=document.getElementById('ev-elem-cat').value;
@@ -2240,6 +2790,539 @@ async function addEvElem(){
 }
 async function deleteEvElem(idx){const ev=_evs.find(e=>e.id===_evDetailId);if(!ev||!ev.elementos)return;ev.elementos.splice(idx,1);if(window._fbSaveShared)await window._fbSaveShared('valkibah_eventos',{eventos:_evs});renderEvElems(ev);showToast('🗑 Eliminado');}
 async function changeEvStatus(v){const ev=_evs.find(e=>e.id===_evDetailId);if(!ev)return;ev.estatus=v;if(window._fbSaveShared)await window._fbSaveShared('valkibah_eventos',{eventos:_evs});renderEvDetail(_evDetailId);renderEvUpcoming();showToast('✅ Estatus actualizado');}
+
+// ── CLIENTES ──
+let _cls=[], _clUnsub=null, _clEditId=null, _clFilter='all';
+
+const CL_LABELS={
+  'prospecto':'🔍 Prospecto',
+  'primera-visita':'🤝 1ra Visita',
+  'cotizacion-proceso':'📝 Cotización en Proceso',
+  'cotizacion-enviada':'📨 Cotización Enviada',
+  'seguimiento':'🔔 En Seguimiento',
+  'cliente-activo':'⭐ Cliente Activo',
+  'sin-respuesta':'🔕 Sin Respuesta',
+  'cerrado':'🏁 Cerrado'
+};
+
+const CL_WA_MSG={
+  'prospecto':      (n,t)=>`🌿✨ *Nuevo prospecto registrado* ✨🌿\n\n👤 *Cliente:* ${n}\n🎊 *Interés:* ${t||'por definir'}\n\n¡Una nueva semillita que puede convertirse en algo hermoso! 🌱💚\n\n#Valkibah #Prospectos`,
+  'primera-visita': (n,t)=>`🌸🤝 *¡Primera visita registrada!* 🤝🌸\n\n👤 *Cliente:* ${n}\n🎊 *Evento:* ${t||'por definir'}\n\n¡Ya hicieron contacto con nosotras! Que empiece la magia ✨💫\n\n#Valkibah #NuevoContacto`,
+  'cotizacion-proceso':(n,t)=>`📝💐 *Cotización en proceso* 💐📝\n\n👤 *Cliente:* ${n}\n🎊 *Evento:* ${t||'por definir'}\n\n¡Estamos preparando algo increíble para este evento! 🌺🌟\n\n#Valkibah #Cotizando`,
+  'cotizacion-enviada':(n,t)=>`📨🌟 *¡Cotización enviada!* 🌟📨\n\n👤 *Cliente:* ${n}\n🎊 *Evento:* ${t||'por definir'}\n\nLa propuesta ya está en sus manos 💌 ¡Dedos cruzados! 🤞💚\n\n#Valkibah #Propuesta`,
+  'seguimiento':    (n,t)=>`🔔🌺 *En seguimiento activo* 🌺🔔\n\n👤 *Cliente:* ${n}\n🎊 *Evento:* ${t||'por definir'}\n\n¡Dando seguimiento con amor y dedicación! 💪🌸\n\n#Valkibah #Seguimiento`,
+  'cliente-activo': (n,t)=>`🎉⭐ *¡CLIENTE CONFIRMADO!* ⭐🎉\n\n👤 *Cliente:* ${n}\n🎊 *Evento:* ${t||'por definir'}\n\n¡¡Lo logramos!! Este evento va a ser ESPECTACULAR ✨🌸🌺💫\n¡A darle con todo el corazón! 💚\n\n#Valkibah #ClienteConfirmado #ALucirla`,
+  'sin-respuesta':  (n,t)=>`🔕 *Sin respuesta por el momento*\n\n👤 *Cliente:* ${n}\n🎊 *Evento:* ${t||'por definir'}\n\nPendiente de seguimiento 📋 A veces los tiempos del universo son distintos 🌙\n\n#Valkibah #Pendiente`,
+  'cerrado':        (n,t)=>`🏁 *Proceso cerrado*\n\n👤 *Cliente:* ${n}\n🎊 *Evento:* ${t||'por definir'}\n\nEste proceso llegó a su fin. ¡Gracias por el aprendizaje! 💚🌿\n\n#Valkibah`
+};
+
+function setClFilter(f,btn){
+  _clFilter=f;
+  document.querySelectorAll('.cl-filter-btn').forEach(b=>b.classList.remove('active'));
+  if(btn)btn.classList.add('active');
+  renderClientes();
+}
+function openClForm(id){
+  _clEditId=id||null;
+  document.getElementById('cl-form-overlay').classList.add('open');
+  document.getElementById('cl-form-title').textContent=id?'✏️ Editar Cliente':'🌸 Nuevo Cliente';
+  if(id){
+    const c=_cls.find(x=>x.id===id);if(!c)return;
+    document.getElementById('cl-nombre').value=c.nombre||'';
+    document.getElementById('cl-telefono').value=c.telefono||'';
+    document.getElementById('cl-tipo').value=c.tipo||'';
+    document.getElementById('cl-fecha').value=c.fecha||'';
+    document.getElementById('cl-estatus').value=c.estatus||'prospecto';
+    document.getElementById('cl-notas').value=c.notas||'';
+  } else {
+    ['cl-nombre','cl-telefono','cl-notas'].forEach(i=>document.getElementById(i).value='');
+    document.getElementById('cl-tipo').value='';
+    document.getElementById('cl-fecha').value='';
+    document.getElementById('cl-estatus').value='prospecto';
+  }
+}
+function closeClForm(){document.getElementById('cl-form-overlay').classList.remove('open');_clEditId=null;}
+async function saveCl(){
+  const nombre=document.getElementById('cl-nombre').value.trim();
+  const telefono=document.getElementById('cl-telefono').value.trim();
+  const tipo=document.getElementById('cl-tipo').value;
+  const fecha=document.getElementById('cl-fecha').value;
+  const estatus=document.getElementById('cl-estatus').value;
+  const notas=document.getElementById('cl-notas').value.trim();
+  if(!nombre){showToast('⚠️ El nombre es obligatorio');return;}
+  const isEdit=!!_clEditId;
+  if(isEdit){
+    const idx=_cls.findIndex(c=>c.id===_clEditId);
+    if(idx>=0)_cls[idx]={..._cls[idx],nombre,telefono,tipo,fecha,estatus,notas,updated:new Date().toISOString().slice(0,10)};
+  } else {
+    _cls.push({id:Date.now(),nombre,telefono,tipo,fecha,estatus,notas,created:new Date().toISOString().slice(0,10)});
+  }
+  if(window._fbSaveShared)await window._fbSaveShared('valkibah_clientes',{clientes:_cls});
+  closeClForm();
+  renderClientes();
+  showWaPopup(nombre,tipo,estatus,isEdit);
+}
+async function deleteCl(id,e){
+  if(e)e.stopPropagation();
+  _cls=_cls.filter(c=>c.id!==id);
+  if(window._fbSaveShared)await window._fbSaveShared('valkibah_clientes',{clientes:_cls});
+  renderClientes();showToast('🗑 Cliente eliminado');
+}
+function renderClientes(){
+  const grid=document.getElementById('cl-grid');if(!grid)return;
+  const empty=document.getElementById('cl-empty');
+  let list=_cls.slice();
+  if(_clFilter!=='all')list=list.filter(c=>c.estatus===_clFilter);
+  list.sort((a,b)=>(a.nombre||'').localeCompare(b.nombre||''));
+  grid.innerHTML='';
+  if(list.length===0){
+    const d=document.createElement('div');
+    d.style.cssText='color:rgba(255,255,255,.3);font-size:13px;text-align:center;padding:30px 0;grid-column:1/-1';
+    d.textContent=_clFilter==='all'?'🌱 Aún no hay clientes registrados':'🔍 Sin clientes con este estatus';
+    grid.appendChild(d);return;
+  }
+  list.forEach(c=>{
+    const card=document.createElement('div');card.className='cl-card';
+    const dateStr=c.fecha?`📅 ${c.fecha.split('-').reverse().join('/')}`:'' ;
+    const tel=c.telefono?`📱 ${c.telefono}`:'';
+    const nota=c.notas?`<div style="font-size:11px;color:rgba(255,255,255,.45);margin-top:5px;line-height:1.4">${c.notas.slice(0,80)}${c.notas.length>80?'…':''}</div>`:'';
+    card.innerHTML=
+      `<button class="cl-del-btn" onclick="deleteCl(${c.id},event)">✕</button>`+
+      `<div class="cl-card-name">${c.nombre}</div>`+
+      `<div class="cl-card-tipo">${c.tipo||'Tipo por definir'}</div>`+
+      `<div class="cl-card-meta">${[tel,dateStr].filter(Boolean).join(' · ')}</div>`+
+      nota+
+      `<span class="cl-status-badge cls-${c.estatus}">${CL_LABELS[c.estatus]||c.estatus}</span>`;
+    card.onclick=e=>{if(e.target.classList.contains('cl-del-btn'))return;openClForm(c.id);};
+    grid.appendChild(card);
+  });
+}
+
+// ── WA POPUP ──
+let _waMsgText='';
+function showWaPopup(nombre,tipo,estatus,isEdit){
+  const fn=CL_WA_MSG[estatus]||(()=>`✨ Cliente: ${nombre}\nEstatus: ${CL_LABELS[estatus]||estatus}`);
+  _waMsgText=fn(nombre,tipo);
+  document.getElementById('wa-popup-title').textContent=isEdit?'✏️ Cliente actualizado':'🌸 ¡Nuevo cliente registrado!';
+  document.getElementById('wa-msg-box').textContent=_waMsgText;
+  document.getElementById('wa-popup-overlay').classList.add('open');
+}
+function closeWaPopup(){document.getElementById('wa-popup-overlay').classList.remove('open');}
+function copyWaMsg(){
+  navigator.clipboard.writeText(_waMsgText).then(()=>showToast('📋 Mensaje copiado al portapapeles')).catch(()=>{
+    const ta=document.createElement('textarea');ta.value=_waMsgText;document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);showToast('📋 Mensaje copiado');
+  });
+}
+function sendToWa(){
+  const url='https://wa.me/?text='+encodeURIComponent(_waMsgText);
+  window.open(url,'_blank');
+}
+
+// ── ALIANZAS ──
+let _als=[], _alEditId=null, _alFilter='all', _alCat='all';
+
+const AL_LABELS={
+  'primer-contacto' :'📞 1er Contacto',
+  'info-solicitada' :'📋 Info Solicitada',
+  'reunion-agendada':'📅 Reunión Agendada',
+  'reunion-realizada':'🗣 Reunión Realizada',
+  'propuesta-enviada':'📨 Propuesta Enviada',
+  'alianza-confirmada':'⭐ Alianza Confirmada',
+  'alianza-activa'  :'🚀 Alianza Activa',
+  'pausada'         :'⏸ Pausada',
+  'descartada'      :'❌ Descartada'
+};
+const AL_CAT_L={
+  restaurante:'🍽 Restaurante', salon:'🏛 Salón de Eventos',
+  decorador:'🌸 Decorador/a', agencia:'🏢 Agencia',
+  artesano:'🎨 Artesano/a', musico:'🎵 Músico/DJ',
+  fotografo:'📸 Fotógrafo/a', catering:'🍰 Catering/Pastelería', otro:'📌 Otro'
+};
+const AL_WA_MSG={
+  'primer-contacto'  :(n,neg,cat)=>`✨📞 *Nueva alianza en proceso* 📞✨\n\n🤝 *Contacto:* ${n}${neg?'\n🏢 *Negocio:* '+neg:''}\n🏷 *Categoría:* ${AL_CAT_L[cat]||cat}\n\n¡Dando el primer paso para construir nuestra red! 🌱💛\n\n#Valkibah #Alianzas`,
+  'info-solicitada'  :(n,neg,cat)=>`📋✨ *Información solicitada* ✨📋\n\n🤝 *Contacto:* ${n}${neg?'\n🏢 *Negocio:* '+neg:''}\n\nYa pedimos info, ¡vamos con todo! 💪🌟\n\n#Valkibah #Alianzas`,
+  'reunion-agendada' :(n,neg,cat)=>`📅🌸 *¡Reunión agendada!* 🌸📅\n\n🤝 *Contacto:* ${n}${neg?'\n🏢 *Negocio:* '+neg:''}\n\n¡Ya tenemos cita! Preparémonos para brillar ✨💛\n\n#Valkibah #Alianzas`,
+  'reunion-realizada':(n,neg,cat)=>`🗣💐 *Reunión realizada* 💐🗣\n\n🤝 *Contacto:* ${n}${neg?'\n🏢 *Negocio:* '+neg:''}\n\n¡Ya platicamos! Un paso más cerca de algo increíble 🚀🌺\n\n#Valkibah #Alianzas`,
+  'propuesta-enviada':(n,neg,cat)=>`📨⭐ *Propuesta enviada* ⭐📨\n\n🤝 *Contacto:* ${n}${neg?'\n🏢 *Negocio:* '+neg:''}\n\nLa propuesta está en sus manos 💌 ¡Dedos cruzados! 🤞💛\n\n#Valkibah #Alianzas`,
+  'alianza-confirmada':(n,neg,cat)=>`🎉⭐ *¡ALIANZA CONFIRMADA!* ⭐🎉\n\n🤝 *Aliado:* ${n}${neg?'\n🏢 *Negocio:* '+neg:''}\n🏷 *${AL_CAT_L[cat]||cat}*\n\n¡¡Bienvenidos a la familia Valkibah!! 🌸✨💛\nJuntos vamos a crear eventos INCREÍBLES 🌺🔥\n\n#Valkibah #AlierzaConfirmada #JuntosSomosImparables`,
+  'alianza-activa'   :(n,neg,cat)=>`🚀🌟 *Alianza activa y trabajando* 🌟🚀\n\n🤝 *Aliado:* ${n}${neg?'\n🏢 *Negocio:* '+neg:''}\n\n¡Equipo en acción! Creando magia juntos 💛🌸✨\n\n#Valkibah #Alianzas`,
+  'pausada'          :(n,neg,cat)=>`⏸ *Alianza en pausa*\n\n🤝 *Contacto:* ${n}${neg?'\n🏢 '+neg:''}\n\nEn espera por el momento. Los tiempos del universo 🌙\n\n#Valkibah`,
+  'descartada'       :(n,neg,cat)=>`🏁 *Proceso cerrado*\n\n🤝 *Contacto:* ${n}${neg?'\n🏢 '+neg:''}\n\nEsta alianza no prosperó esta vez. ¡Gracias por el aprendizaje! 💚\n\n#Valkibah`
+};
+
+function setAlFilter(f,btn){
+  _alFilter=f;
+  document.querySelectorAll('.al-filter-btn').forEach(b=>b.classList.remove('active'));
+  if(btn)btn.classList.add('active');
+  renderAlianzas();
+}
+function setAlCat(c,btn){
+  _alCat=c;
+  document.querySelectorAll('.al-cat-btn').forEach(b=>b.classList.remove('active'));
+  if(btn)btn.classList.add('active');
+  renderAlianzas();
+}
+function openAlForm(id){
+  _alEditId=id||null;
+  document.getElementById('al-form-overlay').classList.add('open');
+  document.getElementById('al-form-title').textContent=id?'✏️ Editar Alianza':'🤝 Nueva Alianza';
+  const fields=['al-nombre','al-negocio','al-telefono','al-correo','al-ubicacion','al-redes','al-comision','al-servicios','al-notas'];
+  if(id){
+    const a=_als.find(x=>x.id===id);if(!a)return;
+    fields.forEach(f=>{const el=document.getElementById(f);if(el)el.value=a[f.replace('al-','')]||'';});
+    document.getElementById('al-categoria').value=a.categoria||'';
+    document.getElementById('al-fecha').value=a.fecha||'';
+    document.getElementById('al-estatus').value=a.estatus||'primer-contacto';
+  } else {
+    fields.forEach(f=>{const el=document.getElementById(f);if(el)el.value='';});
+    document.getElementById('al-categoria').value='';
+    document.getElementById('al-fecha').value=new Date().toISOString().slice(0,10);
+    document.getElementById('al-estatus').value='primer-contacto';
+  }
+}
+function closeAlForm(){document.getElementById('al-form-overlay').classList.remove('open');_alEditId=null;}
+async function saveAl(){
+  const g=id=>document.getElementById(id)?.value.trim()||'';
+  const nombre=g('al-nombre'),telefono=g('al-telefono'),categoria=g('al-categoria');
+  if(!nombre){showToast('⚠️ El nombre del contacto es obligatorio');return;}
+  if(!telefono){showToast('⚠️ El teléfono es obligatorio');return;}
+  const obj={
+    nombre,telefono,categoria,
+    negocio:g('al-negocio'), correo:g('al-correo'),
+    ubicacion:g('al-ubicacion'), redes:g('al-redes'),
+    comision:g('al-comision'), servicios:g('al-servicios'),
+    notas:g('al-notas'),
+    fecha:document.getElementById('al-fecha')?.value||'',
+    estatus:document.getElementById('al-estatus')?.value||'primer-contacto',
+    updated:new Date().toISOString().slice(0,10)
+  };
+  const isEdit=!!_alEditId;
+  if(isEdit){
+    const idx=_als.findIndex(a=>a.id===_alEditId);
+    if(idx>=0)_als[idx]={..._als[idx],...obj};
+  } else {
+    obj.id=Date.now();obj.created=obj.updated;
+    _als.push(obj);
+  }
+  if(window._fbSaveShared)await window._fbSaveShared('valkibah_alianzas',{alianzas:_als});
+  closeAlForm();
+  renderAlianzas();
+  // Mostrar WA popup
+  const fn=AL_WA_MSG[obj.estatus]||(()=>`🤝 Alianza: ${obj.nombre}`);
+  _waMsgText=fn(obj.nombre,obj.negocio,obj.categoria);
+  document.getElementById('wa-popup-title').textContent=isEdit?'✏️ Alianza actualizada':'🤝 ¡Nueva alianza registrada!';
+  document.getElementById('wa-msg-box').textContent=_waMsgText;
+  document.getElementById('wa-popup-overlay').classList.add('open');
+}
+async function deleteAl(id,e){
+  if(e)e.stopPropagation();
+  _als=_als.filter(a=>a.id!==id);
+  if(window._fbSaveShared)await window._fbSaveShared('valkibah_alianzas',{alianzas:_als});
+  renderAlianzas();showToast('🗑 Alianza eliminada');
+}
+function renderAlianzas(){
+  const grid=document.getElementById('al-grid');if(!grid)return;
+  let list=_als.slice();
+  if(_alFilter!=='all')list=list.filter(a=>a.estatus===_alFilter);
+  if(_alCat!=='all')list=list.filter(a=>a.categoria===_alCat);
+  list.sort((a,b)=>(a.nombre||'').localeCompare(b.nombre||''));
+  grid.innerHTML='';
+  if(!list.length){
+    const d=document.createElement('div');
+    d.style.cssText='color:rgba(255,255,255,.3);font-size:13px;text-align:center;padding:30px 0;grid-column:1/-1';
+    d.textContent=_alFilter==='all'&&_alCat==='all'?'🤝 Aún no hay alianzas registradas':'🔍 Sin alianzas con estos filtros';
+    grid.appendChild(d);return;
+  }
+  list.forEach(a=>{
+    const card=document.createElement('div');card.className='al-card';
+    const catLabel=AL_CAT_L[a.categoria]||a.categoria||'';
+    const catCls='alcat-'+(a.categoria||'otro');
+    const meta=[
+      a.telefono?`📱 ${a.telefono}`:'',
+      a.correo?`📧 ${a.correo}`:'',
+      a.ubicacion?`📍 ${a.ubicacion}`:'',
+      a.redes?`🔗 ${a.redes}`:'',
+      a.comision?`💰 ${a.comision}`:'',
+      a.fecha?`📅 Primer contacto: ${a.fecha.split('-').reverse().join('/')}`:'',
+    ].filter(Boolean).join('<br>');
+    const svc=a.servicios?`<div style="font-size:11px;color:rgba(255,255,255,.5);margin-top:5px;line-height:1.4;border-top:1px solid rgba(255,255,255,.07);padding-top:5px">🛠 ${a.servicios.slice(0,100)}${a.servicios.length>100?'…':''}</div>`:'';
+    const nota=a.notas?`<div style="font-size:10px;color:rgba(255,255,255,.35);margin-top:4px;line-height:1.4">💬 ${a.notas.slice(0,70)}${a.notas.length>70?'…':''}</div>`:'';
+    card.innerHTML=
+      `<button class="al-del-btn" onclick="deleteAl(${a.id},event)">✕</button>`+
+      `<div class="al-card-name">${a.nombre}</div>`+
+      (a.negocio?`<div class="al-card-negocio">${a.negocio}</div>`:'') +
+      `<span class="al-card-cat ${catCls}">${catLabel}</span>`+
+      `<div class="al-card-meta">${meta}</div>`+
+      svc+nota+
+      `<span class="al-status-badge als-${a.estatus}">${AL_LABELS[a.estatus]||a.estatus}</span>`;
+    card.onclick=e=>{if(e.target.classList.contains('al-del-btn'))return;openAlForm(a.id);};
+    grid.appendChild(card);
+  });
+}
+
+// ── CURSOS ─────────────────────────────────────────────────────────
+let _cursos = [], _cursosCats = [], _cursosFilter = 'all', _certEditCursoId = null;
+const ADMIN_KEY = 'eduardo'; // único que puede agregar cursos
+
+function isAdmin() { return currentPerson && currentPerson.key === ADMIN_KEY; }
+
+// ── CATEGORÍAS ──────────────────────────────────────────────────────
+function buildCatSelect() {
+  const sel = document.getElementById('cf-categoria');
+  if (!sel) return;
+  const prev = sel.value;
+  sel.innerHTML = '<option value="">-- Selecciona o crea nueva --</option>';
+  _cursosCats.forEach(cat => {
+    const o = document.createElement('option');
+    o.value = cat; o.textContent = cat;
+    sel.appendChild(o);
+  });
+  if (prev) sel.value = prev;
+}
+function addCursoCategoria() {
+  const inp = document.getElementById('cf-cat-nueva');
+  if (inp.style.display === 'none') { inp.style.display = 'block'; inp.focus(); return; }
+  const val = inp.value.trim();
+  if (!val) { inp.style.display = 'none'; return; }
+  if (!_cursosCats.includes(val)) {
+    _cursosCats.push(val);
+    if (window._fbSaveShared) window._fbSaveShared('valkibah_cursos_cats', { cats: _cursosCats });
+  }
+  buildCatSelect();
+  document.getElementById('cf-categoria').value = val;
+  inp.value = ''; inp.style.display = 'none';
+  showToast('✅ Categoría "' + val + '" agregada');
+}
+
+// ── CURSO FORM ──────────────────────────────────────────────────────
+function openCursoForm(id) {
+  if (!isAdmin()) return;
+  document.getElementById('cf-nombre').value = '';
+  document.getElementById('cf-link').value = '';
+  document.getElementById('cf-duracion').value = '';
+  document.getElementById('cf-descripcion').value = '';
+  document.getElementById('cf-cat-nueva').style.display = 'none';
+  buildCatSelect();
+  if (id) {
+    const cur = _cursos.find(c => c.id === id);
+    if (cur) {
+      document.getElementById('cf-nombre').value     = cur.nombre || '';
+      document.getElementById('cf-link').value       = cur.link   || '';
+      document.getElementById('cf-duracion').value   = cur.duracion || '';
+      document.getElementById('cf-descripcion').value= cur.descripcion || '';
+      document.getElementById('cf-categoria').value  = cur.categoria || '';
+      document.getElementById('curso-form-title').textContent = '✏️ Editar Curso';
+    }
+    document.getElementById('curso-form-overlay')._editId = id;
+  } else {
+    document.getElementById('curso-form-title').textContent = '🎓 Nuevo Curso';
+    document.getElementById('curso-form-overlay')._editId = null;
+  }
+  document.getElementById('curso-form-overlay').classList.add('open');
+}
+function closeCursoForm() { document.getElementById('curso-form-overlay').classList.remove('open'); }
+
+async function saveCurso() {
+  const nombre     = document.getElementById('cf-nombre').value.trim();
+  const link       = document.getElementById('cf-link').value.trim();
+  const duracion   = document.getElementById('cf-duracion').value.trim();
+  const categoria  = document.getElementById('cf-categoria').value;
+  const descripcion= document.getElementById('cf-descripcion').value.trim();
+  if (!nombre) { showToast('⚠️ El nombre del curso es obligatorio'); return; }
+  if (!link)   { showToast('⚠️ El link del curso es obligatorio'); return; }
+  if (!categoria){ showToast('⚠️ Selecciona o crea una categoría'); return; }
+  const editId = document.getElementById('curso-form-overlay')._editId;
+  if (editId) {
+    const idx = _cursos.findIndex(c => c.id === editId);
+    if (idx >= 0) _cursos[idx] = { ..._cursos[idx], nombre, link, duracion, categoria, descripcion };
+  } else {
+    _cursos.push({ id: Date.now(), nombre, link, duracion, categoria, descripcion, created: new Date().toISOString().slice(0,10) });
+  }
+  if (window._fbSaveShared) await window._fbSaveShared('valkibah_cursos', { cursos: _cursos, cats: _cursosCats });
+  closeCursoForm();
+  renderCursos();
+  showToast('✅ Curso guardado');
+}
+
+async function deleteCurso(id, e) {
+  if (e) e.stopPropagation();
+  if (!isAdmin()) return;
+  _cursos = _cursos.filter(c => c.id !== id);
+  if (window._fbSaveShared) await window._fbSaveShared('valkibah_cursos', { cursos: _cursos, cats: _cursosCats });
+  renderCursos();
+  showToast('🗑 Curso eliminado');
+}
+
+// ── RENDER CURSOS ────────────────────────────────────────────────────
+function renderCursos() {
+  const container = document.getElementById('cursos-content');
+  const addBtn    = document.getElementById('btn-add-curso');
+  const filterBar = document.getElementById('cursos-filter-bar');
+  const certSec   = document.getElementById('cert-requests-section');
+  if (!container) return;
+
+  // Admin button
+  if (addBtn) addBtn.style.display = isAdmin() ? 'block' : 'none';
+
+  // Cert requests section (solo admin)
+  if (certSec) certSec.style.display = isAdmin() ? 'block' : 'none';
+  if (isAdmin()) renderCertRequests();
+
+  // Filter bar
+  if (filterBar) {
+    filterBar.innerHTML = '';
+    const allBtn = document.createElement('button');
+    allBtn.className = 'al-filter-btn' + (_cursosFilter === 'all' ? ' active' : '');
+    allBtn.textContent = '✨ Todos';
+    allBtn.onclick = () => { _cursosFilter = 'all'; renderCursos(); };
+    filterBar.appendChild(allBtn);
+    [...new Set(_cursos.map(c => c.categoria))].filter(Boolean).forEach(cat => {
+      const b = document.createElement('button');
+      b.className = 'al-filter-btn' + (_cursosFilter === cat ? ' active' : '');
+      b.textContent = '🏷 ' + cat;
+      b.onclick = () => { _cursosFilter = cat; renderCursos(); };
+      filterBar.appendChild(b);
+    });
+  }
+
+  // Build content grouped by category
+  container.innerHTML = '';
+  let list = _cursos.filter(c => _cursosFilter === 'all' || c.categoria === _cursosFilter);
+
+  if (!list.length) {
+    container.innerHTML = '<div style="color:rgba(255,255,255,.3);font-size:13px;text-align:center;padding:30px 0">🎓 No hay cursos disponibles aún</div>';
+    return;
+  }
+
+  // Group by category
+  const bycat = {};
+  list.forEach(c => { if (!bycat[c.categoria]) bycat[c.categoria] = []; bycat[c.categoria].push(c); });
+
+  Object.entries(bycat).forEach(([cat, cursos]) => {
+    const sec = document.createElement('div');
+    sec.className = 'curso-cat-section';
+    sec.innerHTML = `<div class="curso-cat-title">🏷 ${cat}</div>`;
+    const grid = document.createElement('div');
+    grid.className = 'cursos-grid';
+    cursos.forEach(cur => {
+      // Check if current person has an approved cert for this course
+      const hasCert = _certRequests.some(r => r.cursoId === cur.id && r.personKey === currentPerson?.key && r.status === 'approved');
+      const hasPending = _certRequests.some(r => r.cursoId === cur.id && r.personKey === currentPerson?.key && r.status === 'pending');
+      const card = document.createElement('div');
+      card.className = 'curso-card';
+      card.innerHTML = `
+        ${isAdmin() ? `<button class="curso-del-btn" onclick="deleteCurso(${cur.id},event)">✕</button>` : ''}
+        <span class="curso-card-cat">${cur.categoria}</span>
+        <div class="curso-card-title">${cur.nombre}</div>
+        ${cur.duracion ? `<div class="curso-card-dur">⏱ ${cur.duracion}</div>` : ''}
+        <div class="curso-card-desc">${cur.descripcion ? cur.descripcion.slice(0,100) + (cur.descripcion.length>100?'…':'') : ''}</div>
+        <div class="curso-card-footer">
+          <a href="${cur.link}" target="_blank" onclick="event.stopPropagation()" style="background:var(--teal-600);color:#fff;padding:6px 14px;border-radius:8px;font-size:12px;font-weight:700;text-decoration:none">▶ Ver Curso</a>
+          ${hasCert
+            ? '<span class="curso-cert-badge">🏅 Certificado obtenido</span>'
+            : hasPending
+              ? '<span class="curso-cert-badge" style="color:#ffc107;border-color:rgba(255,193,7,.3)">⏳ Solicitud enviada</span>'
+              : `<button onclick="openCertForm(${cur.id})" style="background:rgba(64,217,192,.12);border:1.5px solid rgba(64,217,192,.25);border-radius:8px;color:var(--teal-400);padding:5px 12px;font-size:11px;font-weight:700;cursor:pointer">🏅 Obtener Certificado</button>`
+          }
+        </div>`;
+      if (isAdmin()) card.ondblclick = () => openCursoForm(cur.id);
+      grid.appendChild(card);
+    });
+    sec.appendChild(grid);
+    container.appendChild(sec);
+  });
+}
+
+// ── CERTIFICADO FORM ─────────────────────────────────────────────────
+let _certRequests = [];
+
+function openCertForm(cursoId) {
+  const cur = _cursos.find(c => c.id === cursoId);
+  if (!cur || !currentPerson) return;
+  _certEditCursoId = cursoId;
+  document.getElementById('cert-curso-nombre').value = cur.nombre;
+  document.getElementById('cert-curso-cat').value    = cur.categoria;
+  document.getElementById('cert-colaborador').value  = currentPerson.person;
+  document.getElementById('cert-fecha').value        = new Date().toISOString().slice(0,10);
+  document.getElementById('cert-puntos').value       = '';
+  document.getElementById('cert-implementacion').value = '';
+  document.getElementById('cert-valioso').value      = '';
+  document.getElementById('cert-form-overlay').classList.add('open');
+}
+function closeCertForm() { document.getElementById('cert-form-overlay').classList.remove('open'); _certEditCursoId = null; }
+
+async function submitCertRequest() {
+  const puntos   = document.getElementById('cert-puntos').value.trim();
+  const impl     = document.getElementById('cert-implementacion').value.trim();
+  const valioso  = document.getElementById('cert-valioso').value.trim();
+  const fecha    = document.getElementById('cert-fecha').value;
+  if (!puntos || !impl) { showToast('⚠️ Por favor responde las preguntas principales'); return; }
+  const req = {
+    id: Date.now(),
+    cursoId: _certEditCursoId,
+    cursoNombre: document.getElementById('cert-curso-nombre').value,
+    cursoCategoria: document.getElementById('cert-curso-cat').value,
+    personKey: currentPerson.key,
+    personNombre: currentPerson.person,
+    fechaFin: fecha,
+    puntos, implementacion: impl, valioso,
+    status: 'pending',
+    created: new Date().toISOString().slice(0,10)
+  };
+  _certRequests.push(req);
+  if (window._fbSaveShared) await window._fbSaveShared('valkibah_cert_requests', { requests: _certRequests });
+  closeCertForm();
+  renderCursos();
+  showToast('📨 Solicitud enviada — Eduardo revisará tu certificado');
+}
+
+// ── CERT REQUESTS (admin view) ───────────────────────────────────────
+function renderCertRequests() {
+  const list = document.getElementById('cert-requests-list');
+  if (!list) return;
+  const pending = _certRequests.filter(r => r.status === 'pending');
+  if (!pending.length) {
+    list.innerHTML = '<div style="color:rgba(255,255,255,.3);font-size:12px">Sin solicitudes pendientes ✅</div>';
+    return;
+  }
+  list.innerHTML = '';
+  pending.forEach(r => {
+    const card = document.createElement('div');
+    card.className = 'cert-request-card';
+    card.innerHTML = `
+      <div class="cert-req-name">👤 ${r.personNombre}</div>
+      <div class="cert-req-meta">📚 ${r.cursoNombre} · 🏷 ${r.cursoCategoria} · 📅 ${r.fechaFin}</div>
+      <div style="margin-top:8px">
+        <div style="font-size:11px;color:var(--teal-600);font-weight:700;margin-bottom:3px">🔑 Puntos clave:</div>
+        <div style="font-size:11px;color:rgba(255,255,255,.65);line-height:1.5">${r.puntos}</div>
+      </div>
+      <div style="margin-top:8px">
+        <div style="font-size:11px;color:var(--teal-600);font-weight:700;margin-bottom:3px">💡 Implementación:</div>
+        <div style="font-size:11px;color:rgba(255,255,255,.65);line-height:1.5">${r.implementacion}</div>
+      </div>
+      ${r.valioso ? `<div style="margin-top:8px"><div style="font-size:11px;color:var(--teal-600);font-weight:700;margin-bottom:3px">⭐ Lo más valioso:</div><div style="font-size:11px;color:rgba(255,255,255,.65);line-height:1.5">${r.valioso}</div></div>` : ''}
+      <div style="display:flex;gap:8px;margin-top:10px">
+        <button onclick="approveCert(${r.id})" style="flex:1;background:var(--teal-600);border:none;border-radius:8px;color:#fff;padding:8px;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:700;cursor:pointer">✅ Aprobar</button>
+        <button onclick="rejectCert(${r.id})" style="flex:1;background:rgba(224,85,85,.15);border:1px solid rgba(224,85,85,.3);border-radius:8px;color:#e05555;padding:8px;font-family:'DM Sans',sans-serif;font-size:12px;cursor:pointer">❌ Rechazar</button>
+      </div>`;
+    list.appendChild(card);
+  });
+}
+
+async function approveCert(reqId) {
+  const idx = _certRequests.findIndex(r => r.id === reqId);
+  if (idx >= 0) { _certRequests[idx].status = 'approved'; _certRequests[idx].approvedDate = new Date().toISOString().slice(0,10); }
+  if (window._fbSaveShared) await window._fbSaveShared('valkibah_cert_requests', { requests: _certRequests });
+  renderCursos();
+  showToast('🏅 Certificado aprobado');
+}
+async function rejectCert(reqId) {
+  const idx = _certRequests.findIndex(r => r.id === reqId);
+  if (idx >= 0) _certRequests[idx].status = 'rejected';
+  if (window._fbSaveShared) await window._fbSaveShared('valkibah_cert_requests', { requests: _certRequests });
+  renderCursos();
+  showToast('❌ Solicitud rechazada');
+}
 
 buildHome();
 </script>
