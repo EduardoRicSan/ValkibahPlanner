@@ -4424,6 +4424,7 @@ function switchCasaTab(tab) {
       <button class="casa-tab-btn active" data-tab="alma" onclick="switchCasaTab('alma')" style="background:rgba(255,255,255,.05);border:1.5px solid rgba(64,217,192,.2);border-radius:20px;color:rgba(168,240,232,.6);padding:7px 16px;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;transition:all .18s;letter-spacing:.04em">✨ El Alma</button>
       <button class="casa-tab-btn" data-tab="proposito" onclick="switchCasaTab('proposito')" style="background:rgba(255,255,255,.05);border:1.5px solid rgba(64,217,192,.2);border-radius:20px;color:rgba(168,240,232,.6);padding:7px 16px;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;transition:all .18s;letter-spacing:.04em">🎯 Propósito</button>
       <button class="casa-tab-btn" data-tab="codigo" onclick="switchCasaTab('codigo')" style="background:rgba(255,255,255,.05);border:1.5px solid rgba(64,217,192,.2);border-radius:20px;color:rgba(168,240,232,.6);padding:7px 16px;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;transition:all .18s;letter-spacing:.04em">📜 Código</button>
+      <button class="casa-tab-btn" data-tab="redes" onclick="switchCasaTab('redes')" style="background:rgba(255,255,255,.05);border:1.5px solid rgba(64,217,192,.2);border-radius:20px;color:rgba(168,240,232,.6);padding:7px 16px;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;transition:all .18s;letter-spacing:.04em">🌐 Redes</button>
     </div>
 
     <!-- Content area -->
@@ -4541,6 +4542,82 @@ function switchCasaTab(tab) {
         </div>
       </div>
 
+      <!-- ── PANEL: Redes ── -->
+      <div class="casa-panel" data-panel="redes" style="display:none">
+        <div style="text-align:center;margin-bottom:22px">
+          <span style="font-size:10px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--mint);border:1px solid rgba(127,255,212,.3);border-radius:20px;padding:4px 14px">NUESTRAS REDES</span>
+          <div style="font-family:'DM Serif Display',serif;font-size:22px;color:var(--teal-400);margin:10px 0 4px">Encuéntranos en línea</div>
+          <p style="font-size:12px;color:rgba(168,240,232,.5);margin:0">Escanea o comparte para conectar con cada marca.</p>
+        </div>
+
+        <!-- GRUPO VALKIBAH -->
+        <div style="margin-bottom:24px">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid rgba(64,217,192,.15)">
+            <div style="width:28px;height:28px;background:linear-gradient(135deg,var(--teal-700),var(--teal-400));border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:13px">🏠</div>
+            <span style="font-family:'DM Serif Display',serif;font-size:15px;color:var(--mint)">Grupo Valkibah</span>
+          </div>
+          <div class="qr-grid">
+            <div class="qr-card qr-fb">
+              <div class="qr-platform-badge"><svg width="14" height="14" viewBox="0 0 24 24" fill="#fff"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg> Facebook</div>
+              <div class="qr-box" id="qr-valkibah-fb"></div>
+              <div class="qr-label">Grupo Valkibah</div>
+              <a class="qr-link" href="https://www.facebook.com/profile.php?id=61584236672820" target="_blank">Abrir →</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- MOKINO -->
+        <div style="margin-bottom:24px">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid rgba(240,192,64,.2)">
+            <div style="width:28px;height:28px;background:linear-gradient(135deg,#8a6800,#f0c040);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:13px">✨</div>
+            <span style="font-family:'DM Serif Display',serif;font-size:15px;color:#f0c040">Mokino</span>
+          </div>
+          <div class="qr-grid">
+            <div class="qr-card qr-fb">
+              <div class="qr-platform-badge"><svg width="14" height="14" viewBox="0 0 24 24" fill="#fff"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg> Facebook</div>
+              <div class="qr-box" id="qr-mokino-fb"></div>
+              <div class="qr-label">Mokino</div>
+              <a class="qr-link" href="https://www.facebook.com/profile.php?id=61573866717655" target="_blank">Abrir →</a>
+            </div>
+            <div class="qr-card qr-ig">
+              <div class="qr-platform-badge"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="#fff" stroke="none"/></svg> Instagram</div>
+              <div class="qr-box" id="qr-mokino-ig"></div>
+              <div class="qr-label">@mokino_decoraciones</div>
+              <a class="qr-link" href="https://www.instagram.com/mokino_decoraciones/" target="_blank">Abrir →</a>
+            </div>
+            <div class="qr-card qr-tt">
+              <div class="qr-platform-badge"><svg width="14" height="14" viewBox="0 0 24 24" fill="#fff"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.18 8.18 0 0 0 4.78 1.52V6.76a4.85 4.85 0 0 1-1.01-.07z"/></svg> TikTok</div>
+              <div class="qr-box" id="qr-mokino-tt"></div>
+              <div class="qr-label">@mokino_decoraciones</div>
+              <a class="qr-link" href="https://www.tiktok.com/@mokino_decoraciones" target="_blank">Abrir →</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- VALPA -->
+        <div style="margin-bottom:24px">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid rgba(64,217,192,.2)">
+            <div style="width:28px;height:28px;background:linear-gradient(135deg,var(--teal-700),var(--teal-400));border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:13px">💌</div>
+            <span style="font-family:'DM Serif Display',serif;font-size:15px;color:var(--teal-400)">Valpa</span>
+          </div>
+          <div class="qr-grid">
+            <div class="qr-card qr-fb">
+              <div class="qr-platform-badge"><svg width="14" height="14" viewBox="0 0 24 24" fill="#fff"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg> Facebook</div>
+              <div class="qr-box" id="qr-valpa-fb"></div>
+              <div class="qr-label">Valpa Studio</div>
+              <a class="qr-link" href="https://www.facebook.com/profile.php?id=61584309809065" target="_blank">Abrir →</a>
+            </div>
+            <div class="qr-card qr-ig">
+              <div class="qr-platform-badge"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="#fff" stroke="none"/></svg> Instagram</div>
+              <div class="qr-box" id="qr-valpa-ig"></div>
+              <div class="qr-label">@valpa_studio</div>
+              <a class="qr-link" href="https://www.instagram.com/valpa_studio/" target="_blank">Abrir →</a>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /redes panel -->
+
     </div><!-- /content -->
   </div>
 </div>
@@ -4554,7 +4631,126 @@ function switchCasaTab(tab) {
 }
 .casa-panel { display: none; }
 .casa-panel.active { display: block; }
+
+/* QR Cards */
+.qr-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  gap: 12px;
+}
+.qr-card {
+  border-radius: 16px;
+  padding: 14px 12px 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  position: relative;
+  overflow: hidden;
+}
+.qr-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 16px;
+  opacity: .06;
+}
+.qr-fb { background: rgba(24,119,242,.12); border: 1.5px solid rgba(24,119,242,.3); }
+.qr-ig { background: rgba(225,48,108,.1); border: 1.5px solid rgba(225,48,108,.28); }
+.qr-tt { background: rgba(0,0,0,.25); border: 1.5px solid rgba(255,255,255,.18); }
+.qr-platform-badge {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .06em;
+  color: rgba(255,255,255,.75);
+  text-transform: uppercase;
+  background: rgba(255,255,255,.08);
+  border-radius: 20px;
+  padding: 3px 10px;
+}
+.qr-box {
+  width: 108px;
+  height: 108px;
+  background: #fff;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  padding: 4px;
+  box-shadow: 0 4px 16px rgba(0,0,0,.35);
+}
+.qr-box canvas, .qr-box img { width: 100% !important; height: 100% !important; }
+.qr-label {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 10px;
+  font-weight: 600;
+  color: rgba(168,240,232,.7);
+  text-align: center;
+  letter-spacing: .03em;
+}
+.qr-link {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--teal-400);
+  text-decoration: none;
+  letter-spacing: .05em;
+  padding: 4px 10px;
+  border: 1px solid rgba(64,217,192,.25);
+  border-radius: 20px;
+  background: rgba(64,217,192,.07);
+  transition: background .15s;
+}
+.qr-link:hover { background: rgba(64,217,192,.18); }
 </style>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script>
+(function initQRCodes() {
+  const QRS = [
+    { id: 'qr-valkibah-fb', url: 'https://www.facebook.com/profile.php?id=61584236672820', color: '#1877f2' },
+    { id: 'qr-mokino-fb',   url: 'https://www.facebook.com/profile.php?id=61573866717655', color: '#1877f2' },
+    { id: 'qr-mokino-ig',   url: 'https://www.instagram.com/mokino_decoraciones/',          color: '#e1306c' },
+    { id: 'qr-mokino-tt',   url: 'https://www.tiktok.com/@mokino_decoraciones',             color: '#010101' },
+    { id: 'qr-valpa-fb',    url: 'https://www.facebook.com/profile.php?id=61584309809065',  color: '#1877f2' },
+    { id: 'qr-valpa-ig',    url: 'https://www.instagram.com/valpa_studio/',                 color: '#e1306c' },
+  ];
+
+  function buildQRs() {
+    QRS.forEach(function(q) {
+      var el = document.getElementById(q.id);
+      if (el && !el.dataset.done) {
+        el.dataset.done = '1';
+        new QRCode(el, {
+          text: q.url,
+          width: 100,
+          height: 100,
+          colorDark: q.color,
+          colorLight: '#ffffff',
+          correctLevel: QRCode.CorrectLevel.M
+        });
+      }
+    });
+  }
+
+  // Build when redes tab is first opened
+  var origSwitch = window.switchCasaTab;
+  window.switchCasaTab = function(tab) {
+    origSwitch(tab);
+    if (tab === 'redes') { buildQRs(); }
+  };
+  // Also build if modal opens directly to redes
+  var origOpen = window.openCasaModal;
+  window.openCasaModal = function(tab) {
+    origOpen(tab);
+    if (tab === 'redes') { buildQRs(); }
+  };
+})();
+</script>
 </body>
 </html>
