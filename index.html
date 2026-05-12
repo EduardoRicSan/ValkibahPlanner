@@ -794,7 +794,13 @@ align-items:center;justify-content:flex-start;padding:0}
     <!-- KANBAN -->
     <div class="gview" id="gview-kanban">
       <div style="font-family:'DM Serif Display',serif;font-size:20px;color:var(--teal-400);margin-bottom:10px">🗂 Tablero General</div>
-      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px" id="kanban-filter-btns"></div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px" id="kanban-filter-btns"></div>
+      <div style="display:flex;gap:7px;flex-wrap:wrap;margin-bottom:14px" id="gkanban-prio-filter-btns">
+        <button class="al-filter-btn active" data-pval="all" onclick="setGKanbanPrioFilter('all',this)">✨ Todas</button>
+        <button class="al-filter-btn" data-pval="alta" onclick="setGKanbanPrioFilter('alta',this)">🔴 Alta</button>
+        <button class="al-filter-btn" data-pval="media" onclick="setGKanbanPrioFilter('media',this)">🟡 Media</button>
+        <button class="al-filter-btn" data-pval="baja" onclick="setGKanbanPrioFilter('baja',this)">🔵 Baja</button>
+      </div>
       <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;align-items:start">
         <div class="kanban-col"><div class="kanban-col-header kh-pendiente"><span>⏳ Pendiente</span><span class="kanban-count" id="gkcount-pendiente">0</span></div><div class="kanban-col-body" id="gkcol-pendiente"></div></div>
         <div class="kanban-col"><div class="kanban-col-header kh-en-progreso"><span>🔄 En Progreso</span><span class="kanban-count" id="gkcount-en-progreso">0</span></div><div class="kanban-col-body" id="gkcol-en-progreso"></div></div>
@@ -2718,7 +2724,7 @@ function buildHome(){
 
 // ── GENERAL SCREEN ──
 let _gKanbanActs={},_gKanbanUnsubs=[],_gIdeas=[],_gIdeasUnsub=null;
-let _gKanbanFilter='all',_gIdeasFilter='all';
+let _gKanbanFilter='all',_gIdeasFilter='all',_gKanbanPrioFilter='all';
 let presupItems=[],presupSaved=[],presupCurrentId=null,presupEditingItemId=null,mdoType='pct',ganType='pct';
 let _evs=[],_evCalY=new Date().getFullYear(),_evCalM=new Date().getMonth();
 let _evSelDate=null,_evDetailId=null,_evEditId=null,_evUnsub=null;
@@ -2748,6 +2754,7 @@ function buildGeneralFilterBtns(){
 }
 function setKanbanFilter(k,btn){_gKanbanFilter=k;document.querySelectorAll('#kanban-filter-btns .gtab').forEach(b=>b.classList.remove('active'));if(btn)btn.classList.add('active');renderGKanban();}
 function setIdeasFilter(k,btn){_gIdeasFilter=k;document.querySelectorAll('#ideas-filter-btns .gtab').forEach(b=>b.classList.remove('active'));if(btn)btn.classList.add('active');renderGIdeas();}
+function setGKanbanPrioFilter(val,btn){_gKanbanPrioFilter=val;document.querySelectorAll('#gkanban-prio-filter-btns .al-filter-btn').forEach(b=>b.classList.toggle('active',b.dataset.pval===val));renderGKanban();}
 
 function openGeneral(tab){
   document.getElementById('screen-home').classList.remove('active');
@@ -2833,6 +2840,7 @@ function renderGKanban(){
   const cols=['pendiente','en-progreso','completada','bloqueada'];
   let all=Object.values(_gKanbanActs).flat();
   if(_gKanbanFilter!=='all')all=all.filter(a=>getActivityParticipantKeys(a).includes(_gKanbanFilter));
+  if(_gKanbanPrioFilter!=='all')all=all.filter(a=>(a.priority||'media')===_gKanbanPrioFilter);
   cols.forEach(s=>{
     const col=document.getElementById('gkcol-'+s),cnt=document.getElementById('gkcount-'+s);
     if(!col)return;col.innerHTML='';
@@ -2867,7 +2875,9 @@ function renderGKanban(){
         return '<div style="display:inline-flex;align-items:center;gap:4px;background:'+pp.person_light+';border-radius:10px;padding:2px 8px;font-size:10px;font-weight:700;color:'+pp.person_main+'">'+avEl+' '+pp.person.split(' ')[0]+'</div>';
       }).join('');
       const collabTxt=participants.length>1?'<div class="kc-collabs">Actividad en colaboración</div>':'';
-      card.innerHTML='<div class="kc-name">'+act.name+'</div><div class="kc-date">📅 '+formatDisplayDate(act.date)+' · '+h+'</div><div style="margin-top:5px;display:flex;flex-wrap:wrap;gap:5px">'+badges+'</div>'+collabTxt;
+      const prio=act.priority||'media';
+      const prioM={alta:{label:'🔴 Alta',color:'#ef4444',bg:'rgba(239,68,68,.12)'},media:{label:'🟡 Media',color:'#f59e0b',bg:'rgba(245,158,11,.1)'},baja:{label:'🔵 Baja',color:'#94a3b8',bg:'rgba(100,116,139,.1)'}}[prio]||{label:'🟡 Media',color:'#f59e0b',bg:'rgba(245,158,11,.1)'};
+      card.innerHTML='<div class="kc-name">'+act.name+'</div><div style="margin-bottom:3px"><span style="font-size:9px;font-weight:700;padding:1px 7px;border-radius:6px;background:'+prioM.bg+';color:'+prioM.color+'">'+prioM.label+'</span></div><div class="kc-date">📅 '+formatDisplayDate(act.date)+' · '+h+'</div><div style="margin-top:5px;display:flex;flex-wrap:wrap;gap:5px">'+badges+'</div>'+collabTxt;
       card.ondragstart=e=>{e.dataTransfer.setData('gkanban-id',act._pk+'::'+act.id);card.classList.add('dragging');};
       card.ondragend=()=>card.classList.remove('dragging');
       card.ontouchstart=()=>{window._gKanbanDrag={personKey:act._pk,actId:act.id};};
