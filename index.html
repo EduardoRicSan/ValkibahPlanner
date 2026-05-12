@@ -1023,7 +1023,7 @@ align-items:center;justify-content:flex-start;padding:0}
     <!-- Tabs dentro del modal -->
     <div style="display:flex;gap:0;border-radius:10px;overflow:hidden;border:1.5px solid rgba(64,217,192,.2);margin-bottom:18px">
       <button id="cadm-tab-crear" onclick="switchCAdmTab('crear')" style="flex:1;padding:9px;background:rgba(64,217,192,.18);border:none;color:var(--teal-400);font-family:'DM Sans',sans-serif;font-size:12px;font-weight:700;cursor:pointer">➕ Nuevo</button>
-      <button id="cadm-tab-lista" onclick="switchCAdmTab('lista')" style="flex:1;padding:9px;background:transparent;border:none;color:var(--teal-600);font-family:'DM Sans',sans-serif;font-size:12px;font-weight:700;cursor:pointer">📋 Mis Cursos</button>
+      <button id="cadm-tab-lista" onclick="switchCAdmTab('lista')" style="flex:1;padding:9px;background:transparent;border:none;color:var(--teal-600);font-family:'DM Sans',sans-serif;font-size:12px;font-weight:700;cursor:pointer">📋 Valkibah Aprende</button>
       <button id="cadm-tab-solicitudes" onclick="switchCAdmTab('solicitudes')" style="flex:1;padding:9px;background:transparent;border:none;color:var(--teal-600);font-family:'DM Sans',sans-serif;font-size:12px;font-weight:700;cursor:pointer">📬 Solicitudes</button>
     </div>
 
@@ -1427,7 +1427,7 @@ align-items:center;justify-content:flex-start;padding:0}
       <nav class="nav-tabs">
         <button class="nav-tab active" onclick="showView('calendar')" id="tab-calendar">📅 Calendario</button>
         <button class="nav-tab" onclick="showView('registro')" id="tab-registro">📋 Registro</button>
-        <button class="nav-tab" onclick="showView('cursos')" id="tab-cursos">🎓 Mis Cursos</button>
+        <button class="nav-tab" onclick="showView('cursos')" id="tab-cursos">🚀 Iniciativas</button>
       </nav>
       <div class="month-selector">
         <label>Mes del Calendario</label>
@@ -1555,9 +1555,51 @@ align-items:center;justify-content:flex-start;padding:0}
         </div>
       </div>
 
-      <!-- CURSOS (vista por perfil) -->
+      <!-- INICIATIVAS (vista por perfil) -->
       <div class="view" id="view-cursos" style="background:var(--teal-900);min-height:100%">
-        <div style="padding:24px">
+
+        <!-- ── LANDING de Iniciativas ── -->
+        <div id="iniciativas-landing" style="padding:24px">
+          <div style="margin-bottom:28px">
+            <div style="font-family:'DM Serif Display',serif;font-size:24px;color:var(--teal-400);margin-bottom:6px">🚀 Iniciativas</div>
+            <div style="font-size:13px;color:rgba(168,240,232,.55)">Explora las iniciativas diseñadas para tu crecimiento dentro de Grupo Valkibah.</div>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:18px">
+
+            <!-- Card: Valkibah Aprende -->
+            <div onclick="mostrarValkibahAprende()" style="cursor:pointer;background:linear-gradient(135deg,rgba(26,122,122,.35),rgba(64,217,192,.12));border:1.5px solid rgba(64,217,192,.3);border-radius:18px;padding:24px 20px;transition:all .2s;position:relative;overflow:hidden" onmouseenter="this.style.transform='translateY(-4px)';this.style.borderColor='var(--teal-400)'" onmouseleave="this.style.transform='';this.style.borderColor='rgba(64,217,192,.3)'">
+              <div style="position:absolute;top:-18px;right:-14px;font-size:72px;opacity:.08;pointer-events:none">🎓</div>
+              <div style="font-size:38px;margin-bottom:14px">🎓</div>
+              <div style="font-family:'DM Serif Display',serif;font-size:18px;color:#fff;margin-bottom:6px">Valkibah Aprende</div>
+              <div style="font-size:12px;color:rgba(168,240,232,.65);line-height:1.55">Accede a los cursos y capacitaciones disponibles para tu desarrollo profesional.</div>
+              <div style="margin-top:16px;display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;color:var(--teal-400)">Ver cursos <span>→</span></div>
+            </div>
+
+            <!-- Card: Huella Valkibah -->
+            <div onclick="abrirProximamenteModal('Huella Valkibah')" style="cursor:pointer;background:linear-gradient(135deg,rgba(90,50,160,.3),rgba(140,80,220,.1));border:1.5px solid rgba(140,80,220,.25);border-radius:18px;padding:24px 20px;transition:all .2s;position:relative;overflow:hidden" onmouseenter="this.style.transform='translateY(-4px)';this.style.borderColor='rgba(180,100,255,.6)'" onmouseleave="this.style.transform='';this.style.borderColor='rgba(140,80,220,.25)'">
+              <div style="position:absolute;top:-18px;right:-14px;font-size:72px;opacity:.08;pointer-events:none">🌱</div>
+              <div style="font-size:38px;margin-bottom:14px">🌱</div>
+              <div style="font-family:'DM Serif Display',serif;font-size:18px;color:#fff;margin-bottom:6px">Huella Valkibah</div>
+              <div style="font-size:12px;color:rgba(210,180,255,.65);line-height:1.55">Registra tu impacto y contribución al crecimiento del grupo.</div>
+              <div style="margin-top:16px;display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;color:rgba(180,120,255,.8)">Próximamente <span>✨</span></div>
+            </div>
+
+            <!-- Card: Talento Valkibah -->
+            <div onclick="abrirProximamenteModal('Talento Valkibah')" style="cursor:pointer;background:linear-gradient(135deg,rgba(200,120,20,.3),rgba(245,200,66,.1));border:1.5px solid rgba(245,200,66,.22);border-radius:18px;padding:24px 20px;transition:all .2s;position:relative;overflow:hidden" onmouseenter="this.style.transform='translateY(-4px)';this.style.borderColor='rgba(245,200,66,.6)'" onmouseleave="this.style.transform='';this.style.borderColor='rgba(245,200,66,.22)'">
+              <div style="position:absolute;top:-18px;right:-14px;font-size:72px;opacity:.08;pointer-events:none">⭐</div>
+              <div style="font-size:38px;margin-bottom:14px">⭐</div>
+              <div style="font-family:'DM Serif Display',serif;font-size:18px;color:#fff;margin-bottom:6px">Talento Valkibah</div>
+              <div style="font-size:12px;color:rgba(245,220,140,.65);line-height:1.55">Descubre y potencia las habilidades únicas de cada colaborador.</div>
+              <div style="margin-top:16px;display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;color:#f5c842">Próximamente <span>✨</span></div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- ── Vista de Valkibah Aprende (cursos) ── -->
+        <div id="valkibah-aprende-view" style="display:none;padding:24px">
+          <!-- Botón volver -->
+          <button onclick="volverAIniciativas()" style="display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);border-radius:9px;color:rgba(168,240,232,.8);padding:7px 13px;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;cursor:pointer;margin-bottom:20px;transition:all .15s" onmouseenter="this.style.background='rgba(255,255,255,.14)'" onmouseleave="this.style.background='rgba(255,255,255,.08)'">← Volver a Iniciativas</button>
           <!-- Header dinámico según perfil -->
           <div id="perfil-cursos-header"></div>
           <!-- Solicitudes de certificado sólo para Eduardo -->
@@ -1573,6 +1615,18 @@ align-items:center;justify-content:flex-start;padding:0}
           <div id="perfil-cursos-content"></div>
         </div>
       </div>
+
+      <!-- ── Modal Próximamente ── -->
+      <div id="proximamente-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.78);z-index:3000;align-items:center;justify-content:center;padding:16px" onclick="if(event.target===this)cerrarProximamenteModal()">
+        <div style="background:linear-gradient(160deg,#0f3535 0%,#082828 100%);border:1.5px solid var(--teal-600);border-radius:22px;padding:36px 28px;width:100%;max-width:400px;text-align:center;position:relative;box-shadow:0 24px 64px rgba(0,0,0,.6)">
+          <button onclick="cerrarProximamenteModal()" style="position:absolute;top:14px;right:14px;background:rgba(255,255,255,.1);border:none;border-radius:50%;width:30px;height:30px;color:#fff;font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center">✕</button>
+          <div style="font-size:48px;margin-bottom:16px">🔧</div>
+          <div id="proximamente-titulo" style="font-family:'DM Serif Display',serif;font-size:22px;color:var(--teal-400);margin-bottom:10px"></div>
+          <div style="font-size:14px;color:rgba(168,240,232,.75);line-height:1.7;margin-bottom:6px">Estamos trabajando en esto.</div>
+          <div style="font-size:14px;color:rgba(168,240,232,.55);line-height:1.7;margin-bottom:24px">¡Espera noticias muy pronto! 🚀</div>
+          <button onclick="cerrarProximamenteModal()" style="background:linear-gradient(135deg,var(--teal-700),var(--pm));border:none;border-radius:11px;color:#fff;padding:12px 28px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:700;cursor:pointer;box-shadow:0 4px 14px rgba(26,122,122,.35)">Entendido</button>
+        </div>
+      </div>
     </main>
   </div>
 
@@ -1580,7 +1634,7 @@ align-items:center;justify-content:flex-start;padding:0}
     <div class="mobile-tabbar-inner" style="grid-template-columns:repeat(3,1fr)">
       <button class="mtab active" id="mtab-calendar" onclick="showView('calendar')"><span class="mtab-icon">📅</span>Calendario</button>
       <button class="mtab" id="mtab-registro" onclick="showView('registro')"><span class="mtab-icon">📋</span>Registro</button>
-      <button class="mtab" id="mtab-cursos" onclick="showView('cursos')"><span class="mtab-icon">🎓</span>Cursos</button>
+      <button class="mtab" id="mtab-cursos" onclick="showView('cursos')"><span class="mtab-icon">🚀</span>Iniciativas</button>
     </div>
   </div>
 </div>
@@ -3614,7 +3668,49 @@ function renderAlianzas(){
 
 
 
-// ── CURSOS ─────────────────────────────────────────────────────────
+// ── INICIATIVAS ────────────────────────────────────────────────
+function mostrarValkibahAprende() {
+  const landing = document.getElementById('iniciativas-landing');
+  const aprende = document.getElementById('valkibah-aprende-view');
+  if (landing) landing.style.display = 'none';
+  if (aprende) aprende.style.display = 'block';
+  renderPerfilCursos();
+}
+
+function volverAIniciativas() {
+  const landing = document.getElementById('iniciativas-landing');
+  const aprende = document.getElementById('valkibah-aprende-view');
+  if (aprende) aprende.style.display = 'none';
+  if (landing) landing.style.display = 'block';
+}
+
+function abrirProximamenteModal(nombre) {
+  const overlay = document.getElementById('proximamente-overlay');
+  const titulo = document.getElementById('proximamente-titulo');
+  if (titulo) titulo.textContent = nombre;
+  if (overlay) { overlay.style.display = 'flex'; }
+}
+
+function cerrarProximamenteModal() {
+  const overlay = document.getElementById('proximamente-overlay');
+  if (overlay) overlay.style.display = 'none';
+}
+
+// Asegurarse de mostrar landing al entrar a la vista cursos
+(function() {
+  const _origShowView = window.showView;
+  window.showView = function(v) {
+    _origShowView(v);
+    if (v === 'cursos') {
+      // Reset to landing each time we enter Iniciativas
+      const landing = document.getElementById('iniciativas-landing');
+      const aprende = document.getElementById('valkibah-aprende-view');
+      if (landing) landing.style.display = 'block';
+      if (aprende) aprende.style.display = 'none';
+    }
+  };
+})();
+
 let _cursos = [], _cursosCats = [], _cursosFilter = 'all', _certEditCursoId = null;
 const ADMIN_KEY = 'eduardo'; // único que puede agregar cursos
 
@@ -4065,7 +4161,7 @@ function renderPerfilCursos() {
     hdr.innerHTML = `
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;flex-wrap:wrap;gap:10px">
         <div>
-          <div style="font-family:'DM Serif Display',serif;font-size:22px;color:var(--teal-400)">🎓 ${admin ? 'Gestión de Cursos' : 'Mis Cursos'}</div>
+          <div style="font-family:'DM Serif Display',serif;font-size:22px;color:var(--teal-400)">🎓 ${admin ? 'Gestión de Cursos' : 'Valkibah Aprende'}</div>
           <div style="font-size:12px;color:rgba(168,240,232,.55);margin-top:2px">${admin ? 'Administra los cursos y revisa solicitudes de certificado.' : 'Completa cursos y solicita tu certificado al terminar.'}</div>
         </div>
         ${admin ? `<button onclick="openCursosAdminModal('lista')" style="background:var(--teal-600);border:none;border-radius:10px;color:#fff;padding:9px 16px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap">📋 Gestionar Cursos</button>` : ''}
