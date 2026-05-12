@@ -1516,6 +1516,12 @@ align-items:center;justify-content:flex-start;padding:0}
         <div class="kanban-header">
           <div style="font-family:'DM Serif Display',serif;font-size:22px;color:var(--teal-800)">🗂 Tablero de Actividades</div>
         </div>
+        <div id="kanban-prio-filter" style="display:flex;gap:7px;flex-wrap:wrap;margin-bottom:12px;padding:0 0 4px">
+          <button class="al-filter-btn active" data-pval="all">✨ Todas</button>
+          <button class="al-filter-btn" data-pval="alta">🔴 Alta</button>
+          <button class="al-filter-btn" data-pval="media">🟡 Media</button>
+          <button class="al-filter-btn" data-pval="baja">🔵 Baja</button>
+        </div>
         <div class="kanban-board">
           <div class="kanban-col">
             <div class="kanban-col-header kh-pendiente"><span>⏳ Pendiente</span><span class="kanban-count" id="kcount-pendiente">0</span></div>
@@ -2310,6 +2316,13 @@ function openDetailModal(id){
   const sL={"pendiente":"⏳ Pendiente","en-progreso":"🔄 En Progreso","completada":"✅ Completada","bloqueada":"🚫 Bloqueada"};
   const horario=act.start==="todo-el-dia"?"☀️ Todo el día":act.start+(act.end?" – "+act.end:"");
   const collabTxt=renderCollaboratorText(act.collaborators);
+  const _pMeta={
+    alta: {emoji:'🔴',label:'Alta', bg:'rgba(239,68,68,.15)', color:'#ef9a9a', border:'rgba(239,68,68,.35)'},
+    media:{emoji:'🟡',label:'Media',bg:'rgba(245,158,11,.13)',color:'#fcd34d', border:'rgba(245,158,11,.35)'},
+    baja: {emoji:'🟢',label:'Baja', bg:'rgba(34,197,94,.13)', color:'#86efac', border:'rgba(34,197,94,.3)'},
+  };
+  const pm=_pMeta[act.priority]||_pMeta.media;
+  const prioHTML=`<span style="display:inline-flex;align-items:center;gap:5px;padding:4px 12px;border-radius:999px;background:${pm.bg};color:${pm.color};border:1.5px solid ${pm.border};font-size:12px;font-weight:700">${pm.emoji} ${pm.label}</span>`;
   document.getElementById("modal-title").textContent=act.name;
   document.getElementById("modal-body").innerHTML=`
     <div class="modal-info-row"><span>Descripción</span><span>${act.desc||"—"}</span></div>
@@ -2317,6 +2330,7 @@ function openDetailModal(id){
     <div class="modal-info-row"><span>Horario</span><span>${horario}</span></div>
     <div class="modal-info-row"><span>Equipo</span><span>${collabTxt||"—"}</span></div>
     <div class="modal-info-row"><span>Estado</span><span class="status-badge sb-${act.status||'pendiente'}">${sL[act.status||"pendiente"]}</span></div>
+    <div class="modal-info-row"><span>Prioridad</span>${prioHTML}</div>
     ${locked?'<div style="margin-top:10px;font-size:12px;color:#aaa">🔒 Semana bloqueada</div>':""}`;
   const btns=document.getElementById("modal-btns");btns.innerHTML="";
   btns.className="modal-btn-row";
@@ -2365,24 +2379,14 @@ const PRIO_META = {alta:{label:'🔴 Alta',color:'#ef4444',bg:'rgba(239,68,68,.1
 const PRIO_ORDER = {alta:0, media:1, baja:2};
 
 function renderKanban(){
-  // ── Priority filter bar ──────────────────────────────────────────
-  let fb = document.getElementById('kanban-prio-filter');
-  if (!fb) {
-    fb = document.createElement('div');
-    fb.id = 'kanban-prio-filter';
-    fb.style.cssText = 'display:flex;gap:7px;flex-wrap:wrap;margin-bottom:12px';
-    const filterContainer = document.getElementById('kanban-filter-btns')?.parentNode;
-    const kanbanFilterBtns = document.getElementById('kanban-filter-btns');
-    if (kanbanFilterBtns) kanbanFilterBtns.after(fb);
-    // Build buttons
-    [['all','✨ Todas'],['alta','🔴 Alta'],['media','🟡 Media'],['baja','🔵 Baja']].forEach(([val,label]) => {
-      const b = document.createElement('button');
-      b.className = 'al-filter-btn' + (_kanbanPrioFilter===val?' active':'');
-      b.textContent = label; b.dataset.pval = val;
-      b.onclick = () => { _kanbanPrioFilter = val; document.querySelectorAll('#kanban-prio-filter .al-filter-btn').forEach(x=>x.classList.toggle('active', x.dataset.pval===val)); renderKanban(); };
-      fb.appendChild(b);
-    });
-  }
+  // ── Priority filter bar (static HTML, wired here) ───────────────
+  document.querySelectorAll('#kanban-prio-filter .al-filter-btn').forEach(b => {
+    b.onclick = () => {
+      _kanbanPrioFilter = b.dataset.pval;
+      document.querySelectorAll('#kanban-prio-filter .al-filter-btn').forEach(x => x.classList.toggle('active', x.dataset.pval === _kanbanPrioFilter));
+      renderKanban();
+    };
+  });
 
   const cols=["pendiente","en-progreso","completada","bloqueada"];
   const allActs = window._allKanbanActs || [];
@@ -4845,6 +4849,79 @@ function switchCasaTab(tab) {
 .redes-open-btn:hover { background: rgba(64,217,192,.16); }
 </style>
 
+<!-- ══ MODAL DE NUEVA ASIGNACIÓN ══ -->
+<div id="assign-notif-overlay" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.65);backdrop-filter:blur(6px);align-items:center;justify-content:center;padding:20px">
+  <div id="assign-notif-box" style="
+    background:linear-gradient(145deg,#071f1f 0%,#0a3030 60%,#0d3d2a 100%);
+    border:2px solid rgba(64,217,192,.5);
+    border-radius:28px;
+    padding:32px 28px 26px;
+    width:100%;max-width:420px;
+    box-shadow:0 0 0 1px rgba(64,217,192,.15),0 24px 80px rgba(0,0,0,.7),0 0 60px rgba(64,217,192,.12);
+    position:relative;
+    animation:assignPop .38s cubic-bezier(.34,1.56,.64,1) both;
+    text-align:center;
+  ">
+    <!-- Glow orb -->
+    <div style="position:absolute;top:-30px;left:50%;transform:translateX(-50%);width:80px;height:80px;background:radial-gradient(circle,rgba(64,217,192,.55),transparent 70%);filter:blur(18px);pointer-events:none"></div>
+    <!-- Icono animado -->
+    <div id="assign-notif-icon" style="font-size:52px;margin-bottom:12px;animation:assignBounce 1s ease infinite alternate">🔔</div>
+    <!-- Título -->
+    <div style="font-family:'DM Serif Display',serif;font-size:22px;color:#7fffd4;margin-bottom:6px;line-height:1.2" id="assign-notif-title">¡Tienes nuevas asignaciones!</div>
+    <!-- Subtítulo -->
+    <div style="font-size:13px;color:rgba(168,240,232,.65);margin-bottom:20px" id="assign-notif-sub">Salma Castillo te asignó actividades</div>
+    <!-- Lista de actividades -->
+    <div id="assign-notif-list" style="
+      display:flex;flex-direction:column;gap:8px;
+      max-height:220px;overflow-y:auto;
+      margin-bottom:22px;
+      scrollbar-width:thin;scrollbar-color:rgba(64,217,192,.25) transparent;
+      text-align:left;
+    "></div>
+    <!-- Botones -->
+    <div style="display:flex;gap:10px">
+      <button onclick="closeAssignNotif()" style="
+        flex:1;padding:13px;border-radius:12px;border:1.5px solid rgba(255,255,255,.15);
+        background:rgba(255,255,255,.07);color:rgba(168,240,232,.7);
+        font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;cursor:pointer;
+        transition:all .15s;
+      " onmouseover="this.style.background='rgba(255,255,255,.13)'" onmouseout="this.style.background='rgba(255,255,255,.07)'">Cerrar</button>
+      <button onclick="closeAssignNotifAndGoCalendar()" style="
+        flex:2;padding:13px;border-radius:12px;border:none;
+        background:linear-gradient(135deg,#1a7a7a,#0e6b6b);
+        color:#fff;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:700;
+        cursor:pointer;box-shadow:0 4px 18px rgba(26,122,122,.45);
+        transition:all .15s;
+      " onmouseover="this.style.transform='translateY(-1px)'" onmouseout="this.style.transform='none'">📅 Ver mis actividades</button>
+    </div>
+    <!-- Indicador de cantidad -->
+    <div id="assign-notif-badge" style="
+      position:absolute;top:-12px;right:18px;
+      background:linear-gradient(135deg,#e05555,#c0392b);
+      color:#fff;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:800;
+      padding:4px 11px;border-radius:999px;
+      box-shadow:0 3px 12px rgba(224,85,85,.55);
+      border:2px solid rgba(255,255,255,.15);
+      display:none;
+    "></div>
+  </div>
+</div>
+
+<style>
+@keyframes assignPop {
+  from { opacity:0; transform:scale(.82) translateY(24px); }
+  to   { opacity:1; transform:scale(1)  translateY(0); }
+}
+@keyframes assignBounce {
+  from { transform:translateY(0) rotate(-8deg); }
+  to   { transform:translateY(-6px) rotate(8deg); }
+}
+#assign-notif-overlay.open { display:flex !important; }
+#assign-notif-list::-webkit-scrollbar { width:4px }
+#assign-notif-list::-webkit-scrollbar-track { background:transparent }
+#assign-notif-list::-webkit-scrollbar-thumb { background:rgba(64,217,192,.3);border-radius:4px }
+</style>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script>
 // ── Redes Modals ───────────────────────────────────────────
@@ -4893,6 +4970,137 @@ function closeRedesModal(brand) {
   overlay.classList.remove('open');
   setTimeout(function() { overlay.style.display = ''; }, 280);
 }
+</script>
+
+<script>
+// ══════════════════════════════════════════════════════════════
+//  SISTEMA DE NOTIFICACIÓN DE ASIGNACIONES
+//  Detecta actividades asignadas por Salma (u otro can_assign_to)
+//  que el colaborador aún no ha visto, y muestra un modal llamativo.
+// ══════════════════════════════════════════════════════════════
+
+const SEEN_ASSIGNS_KEY = 'valkibah_seen_assigns_v1';
+
+function getSeenAssigns() {
+  try { return JSON.parse(localStorage.getItem(SEEN_ASSIGNS_KEY) || '[]'); } catch { return []; }
+}
+function markAssignsSeen(ids) {
+  const seen = new Set(getSeenAssigns());
+  ids.forEach(id => seen.add(String(id)));
+  localStorage.setItem(SEEN_ASSIGNS_KEY, JSON.stringify([...seen]));
+}
+
+function checkNewAssignments(newActivities) {
+  if (!currentPerson) return;
+  // Solo colaboradores sin permisos de asignación reciben notificación.
+  // Salma (y cualquier perfil con can_assign_to) nunca debe ver este modal.
+  if ((currentPerson.can_assign_to || []).length > 0) return;
+
+  const seen = new Set(getSeenAssigns());
+  const newAssigned = newActivities.filter(a =>
+    a._assignedFrom &&                        // tiene campo de asignación
+    a._assignedFrom !== currentPerson.key &&  // no fue auto-asignada por ella misma
+    !seen.has(String(a.id))                   // aún no vista
+  );
+  if (!newAssigned.length) return;
+
+  // Agrupar por asignador
+  const byAssigner = {};
+  newAssigned.forEach(a => {
+    const name = a._assignedFromName || a._assignedFrom;
+    if (!byAssigner[name]) byAssigner[name] = [];
+    byAssigner[name].push(a);
+  });
+  const assignerNames = Object.keys(byAssigner);
+  const total = newAssigned.length;
+
+  // Título
+  document.getElementById('assign-notif-title').textContent =
+    total === 1 ? '¡Tienes una nueva asignación!' : `¡Tienes ${total} nuevas asignaciones!`;
+
+  // Subtítulo
+  document.getElementById('assign-notif-sub').innerHTML =
+    assignerNames.map(n => `<strong style="color:#7fffd4">${n}</strong>`).join(' y ')
+    + ' te asign' + (total === 1 ? 'ó una actividad' : 'ó actividades');
+
+  // Badge cantidad
+  const badge = document.getElementById('assign-notif-badge');
+  badge.textContent = total;
+  badge.style.display = 'block';
+
+  // Lista
+  const list = document.getElementById('assign-notif-list');
+  list.innerHTML = '';
+  const PRIO_COLORS = {
+    alta:  { bg:'rgba(224,85,85,.2)',   color:'#ef9a9a', border:'rgba(224,85,85,.35)',   label:'🔴 Alta' },
+    media: { bg:'rgba(255,193,7,.15)',  color:'#ffd54f', border:'rgba(255,193,7,.3)',    label:'🟡 Media' },
+    baja:  { bg:'rgba(105,240,174,.15)',color:'#69f0ae', border:'rgba(105,240,174,.3)',  label:'🟢 Baja' },
+  };
+  newAssigned.forEach(a => {
+    const [y,m,d] = (a.date||'').split('-');
+    const dateStr = a.date ? `${d}/${m}/${y}` : '—';
+    const timeStr = a.start && a.start !== 'todo-el-dia' ? ` · ${a.start}${a.end?' – '+a.end:''}` : '';
+    const p = PRIO_COLORS[a.priority] || PRIO_COLORS.media;
+    const item = document.createElement('div');
+    item.style.cssText = 'display:flex;align-items:flex-start;gap:10px;background:rgba(64,217,192,.07);border:1.5px solid rgba(64,217,192,.18);border-radius:12px;padding:10px 12px;';
+    item.innerHTML = `
+      <div style="font-size:20px;flex-shrink:0;line-height:1">📌</div>
+      <div style="flex:1;min-width:0">
+        <div style="font-weight:700;font-size:13px;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${a.name||'Sin nombre'}</div>
+        <div style="font-size:11px;color:rgba(168,240,232,.6);margin-top:2px">📅 ${dateStr}${timeStr}</div>
+        ${a.desc ? `<div style="font-size:11px;color:rgba(168,240,232,.45);margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${a.desc}</div>` : ''}
+      </div>
+      <span style="flex-shrink:0;font-size:10px;font-weight:700;padding:3px 8px;border-radius:999px;background:${p.bg};color:${p.color};border:1px solid ${p.border}">${p.label}</span>
+    `;
+    list.appendChild(item);
+  });
+
+  window._pendingAssignIds = newAssigned.map(a => String(a.id));
+
+  // Mostrar modal
+  const overlay = document.getElementById('assign-notif-overlay');
+  overlay.style.display = 'flex';
+  requestAnimationFrame(() => overlay.classList.add('open'));
+}
+
+function closeAssignNotif() {
+  const overlay = document.getElementById('assign-notif-overlay');
+  overlay.classList.remove('open');
+  setTimeout(() => { overlay.style.display = 'none'; }, 300);
+  if (window._pendingAssignIds) {
+    markAssignsSeen(window._pendingAssignIds);
+    window._pendingAssignIds = null;
+  }
+}
+
+function closeAssignNotifAndGoCalendar() {
+  closeAssignNotif();
+  showView('calendar');
+}
+
+// Cerrar al tocar el fondo oscuro
+document.getElementById('assign-notif-overlay').addEventListener('click', function(e) {
+  if (e.target === this) closeAssignNotif();
+});
+
+// ── Patch openPerson para inyectar chequeo en la suscripción ──
+(function() {
+  const _orig = openPerson;
+  window.openPerson = function(p) {
+    _orig(p);
+    // Re-suscribirse con chequeo de asignaciones incluido
+    // (esperamos un tick para que _orig haya creado _unsubActs)
+    setTimeout(function() {
+      if (window._unsubActs) { window._unsubActs(); }
+      window._unsubActs = window._fbSubscribe(p.storage_key, function(data) {
+        activities = data ? (data.activities || []) : [];
+        activities.forEach(function(a) { if (!a.status) a.status = 'pendiente'; });
+        renderCalendar(); renderRegistro(); renderKanban();
+        checkNewAssignments(activities);
+      });
+    }, 0);
+  };
+})();
 </script>
 </body>
 </html>
