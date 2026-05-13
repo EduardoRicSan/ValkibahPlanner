@@ -1520,6 +1520,7 @@ align-items:center;justify-content:flex-start;padding:0}
         <button class="nav-tab active" onclick="showView('calendar')" id="tab-calendar">📅 Calendario</button>
         <button class="nav-tab" onclick="showView('registro')" id="tab-registro">📋 Registro</button>
         <button class="nav-tab" onclick="showView('cursos')" id="tab-cursos">🚀 Iniciativas</button>
+        <button class="nav-tab" onclick="showView('referidos')" id="tab-referidos" style="display:none">🎁 Referidos</button>
       </nav>
       <div class="month-selector">
         <label>Mes del Calendario</label>
@@ -1708,6 +1709,11 @@ align-items:center;justify-content:flex-start;padding:0}
         </div>
       </div>
 
+      <!-- ── REFERIDOS (solo Salma y Eduardo) ── -->
+      <div class="view" id="view-referidos" style="background:var(--teal-900);min-height:100%">
+        <div id="ref-root" style="padding:20px 20px 100px"></div>
+      </div>
+
       <!-- ── Modal Próximamente ── -->
       <div id="proximamente-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.78);z-index:3000;align-items:center;justify-content:center;padding:16px" onclick="if(event.target===this)cerrarProximamenteModal()">
         <div style="background:linear-gradient(160deg,#0f3535 0%,#082828 100%);border:1.5px solid var(--teal-600);border-radius:22px;padding:36px 28px;width:100%;max-width:400px;text-align:center;position:relative;box-shadow:0 24px 64px rgba(0,0,0,.6)">
@@ -1723,10 +1729,11 @@ align-items:center;justify-content:flex-start;padding:0}
   </div>
 
   <div class="mobile-tabbar">
-    <div class="mobile-tabbar-inner" style="grid-template-columns:repeat(3,1fr)">
+    <div class="mobile-tabbar-inner" id="mobile-tabbar-inner" style="grid-template-columns:repeat(3,1fr)">
       <button class="mtab active" id="mtab-calendar" onclick="showView('calendar')"><span class="mtab-icon">📅</span>Calendario</button>
       <button class="mtab" id="mtab-registro" onclick="showView('registro')"><span class="mtab-icon">📋</span>Registro</button>
       <button class="mtab" id="mtab-cursos" onclick="showView('cursos')"><span class="mtab-icon">🚀</span>Iniciativas</button>
+      <button class="mtab" id="mtab-referidos" onclick="showView('referidos')" style="display:none"><span class="mtab-icon">🎁</span>Referidos</button>
     </div>
   </div>
 </div>
@@ -1899,6 +1906,26 @@ function openPerson(p) {
   const scb = document.getElementById("sidebar-cursos-btn");
   if (scb) scb.style.display = p.key === ADMIN_KEY ? 'block' : 'none';
 
+  // Referidos tab — solo Salma y Eduardo
+  const canReferidos = p.key === ADMIN_KEY || p.key === 'salma';
+  const tabRef = document.getElementById('tab-referidos');
+  const mtabRef = document.getElementById('mtab-referidos');
+  if (tabRef)  tabRef.style.display  = canReferidos ? 'block' : 'none';
+  if (mtabRef) mtabRef.style.display = canReferidos ? 'flex'  : 'none';
+  // Ajustar columnas mobile tabbar
+  const mti = document.getElementById('mobile-tabbar-inner');
+  if (mti) mti.style.gridTemplateColumns = canReferidos ? 'repeat(4,1fr)' : 'repeat(3,1fr)';
+
+  // Subscribe referidos live
+  if (canReferidos && window._fbSubscribeShared) {
+    if (window._unsubReferidos) { try { window._unsubReferidos(); } catch {} }
+    window._unsubReferidos = window._fbSubscribeShared('valkibah_referidos', data => {
+      _refCampanas = data ? (data.campanas || []) : [];
+      _refCodigos  = data ? (data.codigos  || []) : [];
+      if (document.getElementById('view-referidos')?.classList.contains('active')) renderReferidos();
+    });
+  }
+
   // Subscribe to live Firestore updates
   if (window._unsubActs) window._unsubActs();
   if (window._unsubIdeas) window._unsubIdeas();
@@ -1936,6 +1963,7 @@ function goHome() {
   if (window._unsubIdeas) { window._unsubIdeas(); window._unsubIdeas = null; }
   if (window._unsubCursos) { try { window._unsubCursos(); } catch {} window._unsubCursos = null; }
   if (window._unsubCertReqs) { try { window._unsubCertReqs(); } catch {} window._unsubCertReqs = null; }
+  if (window._unsubReferidos) { try { window._unsubReferidos(); } catch {} window._unsubReferidos = null; }
   document.getElementById("screen-app").classList.remove("active");
   document.getElementById("screen-home").classList.add("active");
   currentPerson = null;
@@ -5659,6 +5687,601 @@ function deleteInvItem(scope, id) {
     renderInventario();
   };
 }
+
+
+// ════════════════════════════════════════════════════════════════
+// 🎁 SISTEMA DE REFERIDOS — solo Salma Castillo y Eduardo Rico
+// ════════════════════════════════════════════════════════════════
+let _refCampanas = [];
+let _refCodigos  = [];
+let _refView     = 'campanas'; // 'campanas' | 'codigos' | 'nueva-campana'
+let _refCampanaFiltro = 'all';
+
+// ── Guardar en Firebase ──────────────────────────────────────
+async function _refSave() {
+  if (window._fbSaveShared) {
+    await window._fbSaveShared('valkibah_referidos', { campanas: _refCampanas, codigos: _refCodigos });
+  }
+}
+
+// ── Render principal ─────────────────────────────────────────
+function renderReferidos() {
+  const root = document.getElementById('ref-root');
+  if (!root) return;
+
+  const totalCodigos   = _refCodigos.length;
+  const usados         = _refCodigos.filter(c => c.usado).length;
+  const disponibles    = _refCodigos.filter(c => !c.usado).length;
+  const campActivas    = _refCampanas.filter(c => c.activa).length;
+
+  let html = `
+  <!-- Header -->
+  <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:22px">
+    <div>
+      <div style="font-family:'DM Serif Display',serif;font-size:24px;color:var(--teal-400)">🎁 Referidos</div>
+      <div style="font-size:12px;color:rgba(168,240,232,.5);margin-top:2px">Gestión de campañas y códigos de descuento</div>
+    </div>
+    <button onclick="refAbrirNuevaCampana()" style="background:linear-gradient(135deg,var(--teal-700),var(--teal-600));border:none;border-radius:11px;color:#fff;padding:10px 18px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:700;cursor:pointer;box-shadow:0 4px 14px rgba(64,217,192,.2);display:flex;align-items:center;gap:7px">
+      ＋ Nueva Campaña
+    </button>
+  </div>
+
+  <!-- Stats -->
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px;margin-bottom:22px">
+    <div style="background:rgba(64,217,192,.07);border:1.5px solid rgba(64,217,192,.18);border-radius:12px;padding:14px;text-align:center">
+      <div style="font-family:'DM Serif Display',serif;font-size:26px;color:var(--teal-400)">${campActivas}</div>
+      <div style="font-size:11px;color:rgba(168,240,232,.5);margin-top:3px">Campañas activas</div>
+    </div>
+    <div style="background:rgba(64,217,192,.07);border:1.5px solid rgba(64,217,192,.18);border-radius:12px;padding:14px;text-align:center">
+      <div style="font-family:'DM Serif Display',serif;font-size:26px;color:#fff">${totalCodigos}</div>
+      <div style="font-size:11px;color:rgba(168,240,232,.5);margin-top:3px">Códigos totales</div>
+    </div>
+    <div style="background:rgba(105,240,174,.07);border:1.5px solid rgba(105,240,174,.18);border-radius:12px;padding:14px;text-align:center">
+      <div style="font-family:'DM Serif Display',serif;font-size:26px;color:#69f0ae">${disponibles}</div>
+      <div style="font-size:11px;color:rgba(168,240,232,.5);margin-top:3px">Disponibles</div>
+    </div>
+    <div style="background:rgba(255,167,38,.07);border:1.5px solid rgba(255,167,38,.18);border-radius:12px;padding:14px;text-align:center">
+      <div style="font-family:'DM Serif Display',serif;font-size:26px;color:#ffa726">${usados}</div>
+      <div style="font-size:11px;color:rgba(168,240,232,.5);margin-top:3px">Utilizados</div>
+    </div>
+  </div>
+
+  <!-- Sub-tabs -->
+  <div style="display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap">
+    <button onclick="refSetView('campanas')" style="padding:8px 18px;border-radius:20px;border:1.5px solid ${_refView==='campanas'?'var(--teal-400)':'rgba(255,255,255,.18)'};background:${_refView==='campanas'?'var(--teal-700)':'transparent'};color:${_refView==='campanas'?'#fff':'var(--teal-200)'};font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:all .15s">🏷️ Campañas</button>
+    <button onclick="refSetView('codigos')" style="padding:8px 18px;border-radius:20px;border:1.5px solid ${_refView==='codigos'?'var(--teal-400)':'rgba(255,255,255,.18)'};background:${_refView==='codigos'?'var(--teal-700)':'transparent'};color:${_refView==='codigos'?'#fff':'var(--teal-200)'};font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:all .15s">🔑 Todos los Códigos</button>
+  </div>`;
+
+  if (_refView === 'campanas') html += _refRenderCampanas();
+  else html += _refRenderTodosCodigos();
+
+  root.innerHTML = html;
+}
+
+function refSetView(v) { _refView = v; renderReferidos(); }
+
+// ── Vista: Campañas ──────────────────────────────────────────
+function _refRenderCampanas() {
+  if (!_refCampanas.length) {
+    return `<div style="text-align:center;padding:60px 20px;color:rgba(255,255,255,.3)">
+      <div style="font-size:40px;margin-bottom:12px">🎁</div>
+      <div style="font-size:14px">Aún no hay campañas. ¡Crea la primera!</div>
+    </div>`;
+  }
+  return _refCampanas.slice().reverse().map(camp => {
+    const codsCamp = _refCodigos.filter(c => c.campanaId === camp.id);
+    const usados   = codsCamp.filter(c => c.usado).length;
+    const total    = codsCamp.length;
+    const pct      = total ? Math.round(usados/total*100) : 0;
+    const vencida  = camp.vencimiento && new Date(camp.vencimiento) < new Date();
+    const estado   = !camp.activa ? 'Inactiva' : vencida ? 'Vencida' : 'Activa';
+    const estColor = estado==='Activa' ? '#69f0ae' : estado==='Vencida' ? '#ffa726' : '#aaa';
+    const tipoBadge = { descuento:'🏷️ Descuento %', monto:'💵 Monto fijo', especial:'✨ Oferta especial' };
+    return `
+    <div style="background:rgba(255,255,255,.04);border:1.5px solid rgba(255,255,255,.1);border-radius:16px;padding:20px;margin-bottom:14px;transition:border-color .15s" onmouseenter="this.style.borderColor='rgba(64,217,192,.3)'" onmouseleave="this.style.borderColor='rgba(255,255,255,.1)'">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap">
+        <div style="flex:1;min-width:180px">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;flex-wrap:wrap">
+            <span style="font-family:'DM Serif Display',serif;font-size:17px;color:#fff">${camp.nombre}</span>
+            <span style="font-size:11px;font-weight:700;padding:3px 9px;border-radius:20px;background:${estColor}22;color:${estColor};border:1px solid ${estColor}55">${estado}</span>
+          </div>
+          <div style="font-size:12px;color:rgba(168,240,232,.6);margin-bottom:4px">${tipoBadge[camp.tipo]||camp.tipo} · <strong style="color:var(--teal-400)">${camp.tipo==='descuento'?camp.valor+'% off':camp.tipo==='monto'?'$'+camp.valor+' off':camp.valor}</strong></div>
+          ${camp.descripcion ? `<div style="font-size:12px;color:rgba(255,255,255,.4);margin-bottom:4px">${camp.descripcion}</div>` : ''}
+          ${camp.vencimiento ? `<div style="font-size:11px;color:rgba(255,255,255,.35)">⏳ Vence: ${camp.vencimiento}</div>` : ''}
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:8px">
+          <div style="text-align:right">
+            <div style="font-size:22px;font-family:'DM Serif Display',serif;color:#fff">${total}</div>
+            <div style="font-size:10px;color:rgba(168,240,232,.5)">códigos</div>
+          </div>
+          <div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end">
+            <button onclick="refVerCodigos('${camp.id}')" style="background:rgba(64,217,192,.12);border:1px solid rgba(64,217,192,.3);border-radius:8px;color:var(--teal-400);padding:6px 12px;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;cursor:pointer">Ver códigos</button>
+            <button onclick="refAbrirGenerarCodigos('${camp.id}')" style="background:rgba(64,217,192,.2);border:1px solid rgba(64,217,192,.4);border-radius:8px;color:#fff;padding:6px 12px;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:700;cursor:pointer">+ Generar</button>
+            <button onclick="refToggleCampana('${camp.id}')" style="background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.15);border-radius:8px;color:rgba(255,255,255,.5);padding:6px 10px;font-family:'DM Sans',sans-serif;font-size:12px;cursor:pointer">${camp.activa?'Pausar':'Activar'}</button>
+            <button onclick="refEliminarCampana('${camp.id}')" style="background:rgba(224,85,85,.08);border:1px solid rgba(224,85,85,.2);border-radius:8px;color:#ef9a9a;padding:6px 10px;font-family:'DM Sans',sans-serif;font-size:12px;cursor:pointer">🗑</button>
+          </div>
+        </div>
+      </div>
+      ${total ? `
+      <div style="margin-top:14px">
+        <div style="display:flex;justify-content:space-between;font-size:11px;color:rgba(168,240,232,.5);margin-bottom:4px"><span>Uso</span><span>${usados}/${total} (${pct}%)</span></div>
+        <div style="height:5px;background:rgba(255,255,255,.1);border-radius:4px"><div style="height:5px;background:linear-gradient(90deg,var(--teal-400),#69f0ae);border-radius:4px;width:${pct}%;transition:width .4s"></div></div>
+      </div>` : ''}
+    </div>`;
+  }).join('');
+}
+
+// ── Vista: Todos los códigos ─────────────────────────────────
+function _refRenderTodosCodigos() {
+  // Filter bar por campaña
+  const campIds = [...new Set(_refCodigos.map(c=>c.campanaId))];
+  let filterHtml = `<div style="display:flex;gap:7px;flex-wrap:wrap;margin-bottom:16px">
+    <button onclick="_refSetCampFiltro('all')" style="padding:6px 14px;border-radius:20px;border:1.5px solid ${_refCampanaFiltro==='all'?'var(--teal-400)':'rgba(255,255,255,.18)'};background:${_refCampanaFiltro==='all'?'var(--teal-700)':'transparent'};color:${_refCampanaFiltro==='all'?'#fff':'var(--teal-200)'};font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;cursor:pointer">Todas</button>`;
+  campIds.forEach(id => {
+    const c = _refCampanas.find(x=>x.id===id);
+    if (!c) return;
+    filterHtml += `<button onclick="_refSetCampFiltro('${id}')" style="padding:6px 14px;border-radius:20px;border:1.5px solid ${_refCampanaFiltro===id?'var(--teal-400)':'rgba(255,255,255,.18)'};background:${_refCampanaFiltro===id?'var(--teal-700)':'transparent'};color:${_refCampanaFiltro===id?'#fff':'var(--teal-200)'};font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;cursor:pointer">${c.nombre}</button>`;
+  });
+  filterHtml += `</div>`;
+
+  const filtered = _refCampanaFiltro === 'all' ? _refCodigos : _refCodigos.filter(c=>c.campanaId===_refCampanaFiltro);
+  if (!filtered.length) return filterHtml + `<div style="text-align:center;padding:40px;color:rgba(255,255,255,.3);font-size:13px">Sin códigos generados aún</div>`;
+
+  const rows = filtered.slice().reverse().map(cod => {
+    const camp = _refCampanas.find(c=>c.id===cod.campanaId);
+    const estadoColor = cod.usado ? '#ffa726' : '#69f0ae';
+    const estadoTxt   = cod.usado ? 'Usado' : 'Disponible';
+    return `<tr style="border-bottom:1px solid rgba(255,255,255,.06);transition:background .12s" onmouseenter="this.style.background='rgba(255,255,255,.03)'" onmouseleave="this.style.background=''">
+      <td style="padding:10px 8px;font-family:'DM Mono',monospace,sans-serif;font-size:13px;font-weight:700;color:var(--teal-400);letter-spacing:.06em">${cod.codigo}</td>
+      <td style="padding:10px 8px;font-size:12px;color:rgba(255,255,255,.7)">${camp?camp.nombre:'—'}</td>
+      <td style="padding:10px 8px;font-size:12px;color:rgba(255,255,255,.5)">${cod.asignadoA||'—'}</td>
+      <td style="padding:10px 8px"><span style="font-size:11px;font-weight:700;padding:3px 9px;border-radius:20px;background:${estadoColor}22;color:${estadoColor};border:1px solid ${estadoColor}55">${estadoTxt}</span></td>
+      <td style="padding:10px 8px;font-size:11px;color:rgba(255,255,255,.35)">${cod.creadoEn||'—'}</td>
+      <td style="padding:10px 8px">
+        <div style="display:flex;gap:5px;justify-content:flex-end">
+          <button onclick="refAbrirDetalleCodigo('${cod.id}')" style="background:rgba(64,217,192,.12);border:1px solid rgba(64,217,192,.25);border-radius:7px;color:var(--teal-400);padding:5px 9px;font-size:11px;font-weight:600;cursor:pointer">Ver</button>
+          ${!cod.usado?`<button onclick="refMarcarUsado('${cod.id}')" style="background:rgba(255,167,38,.1);border:1px solid rgba(255,167,38,.25);border-radius:7px;color:#ffa726;padding:5px 9px;font-size:11px;cursor:pointer">✓ Usar</button>`:''}
+        </div>
+      </td>
+    </tr>`;
+  }).join('');
+
+  return filterHtml + `<div style="overflow-x:auto;border-radius:12px;border:1px solid rgba(255,255,255,.08)">
+    <table style="width:100%;border-collapse:collapse;font-family:'DM Sans',sans-serif">
+      <thead>
+        <tr style="background:rgba(64,217,192,.08)">
+          <th style="padding:10px 8px;text-align:left;font-size:11px;color:var(--teal-400);text-transform:uppercase;letter-spacing:.1em;white-space:nowrap">Código</th>
+          <th style="padding:10px 8px;text-align:left;font-size:11px;color:var(--teal-400);text-transform:uppercase;letter-spacing:.1em">Campaña</th>
+          <th style="padding:10px 8px;text-align:left;font-size:11px;color:var(--teal-400);text-transform:uppercase;letter-spacing:.1em">Asignado a</th>
+          <th style="padding:10px 8px;text-align:left;font-size:11px;color:var(--teal-400);text-transform:uppercase;letter-spacing:.1em">Estado</th>
+          <th style="padding:10px 8px;text-align:left;font-size:11px;color:var(--teal-400);text-transform:uppercase;letter-spacing:.1em">Creado</th>
+          <th style="padding:10px 8px;text-align:right;font-size:11px;color:var(--teal-400);text-transform:uppercase;letter-spacing:.1em">Acciones</th>
+        </tr>
+      </thead>
+      <tbody>${rows}</tbody>
+    </table>
+  </div>`;
+}
+
+function _refSetCampFiltro(id) { _refCampanaFiltro = id; renderReferidos(); }
+
+// ── Ver códigos de una campaña específica ────────────────────
+function refVerCodigos(campanaId) {
+  _refCampanaFiltro = campanaId;
+  _refView = 'codigos';
+  renderReferidos();
+}
+
+// ── Modal: Nueva Campaña ─────────────────────────────────────
+function refAbrirNuevaCampana() {
+  const overlay = document.getElementById('ref-campana-overlay');
+  if (overlay) { overlay.style.display = 'flex'; return; }
+  // Create modal on first use
+  const el = document.createElement('div');
+  el.id = 'ref-campana-overlay';
+  el.style.cssText = 'display:flex;position:fixed;inset:0;background:rgba(0,0,0,.78);z-index:3200;align-items:center;justify-content:center;padding:16px';
+  el.onclick = e => { if(e.target===el) el.style.display='none'; };
+  el.innerHTML = `
+  <div style="background:linear-gradient(160deg,#0b3030 0%,#071e1e 100%);border:1.5px solid rgba(64,217,192,.3);border-radius:20px;padding:28px 24px;width:100%;max-width:480px;max-height:90vh;overflow-y:auto;position:relative">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
+      <div style="font-family:'DM Serif Display',serif;font-size:20px;color:var(--teal-400)">🏷️ Nueva Campaña</div>
+      <button onclick="document.getElementById('ref-campana-overlay').style.display='none'" style="background:rgba(255,255,255,.1);border:none;border-radius:50%;width:30px;height:30px;color:#fff;font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center">✕</button>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:14px">
+      <div><label style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--teal-400);display:block;margin-bottom:5px">Nombre de la campaña *</label>
+        <input id="ref-camp-nombre" placeholder="Ej: Boda Temporada 2026" style="width:100%;background:rgba(255,255,255,.07);border:1.5px solid rgba(255,255,255,.15);border-radius:8px;padding:10px 12px;font-family:'DM Sans',sans-serif;font-size:13px;color:#fff;outline:none;box-sizing:border-box" onfocus="this.style.borderColor='var(--teal-400)'" onblur="this.style.borderColor='rgba(255,255,255,.15)'">
+      </div>
+      <div><label style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--teal-400);display:block;margin-bottom:5px">Tipo de beneficio *</label>
+        <select id="ref-camp-tipo" onchange="refUpdateTipoUI()" style="width:100%;background:#0a2e2e;border:1.5px solid rgba(255,255,255,.15);border-radius:8px;padding:10px 12px;font-family:'DM Sans',sans-serif;font-size:13px;color:#fff;outline:none;box-sizing:border-box">
+          <option value="descuento">🏷️ Descuento %</option>
+          <option value="monto">💵 Monto fijo ($)</option>
+          <option value="especial">✨ Oferta especial (texto libre)</option>
+        </select>
+      </div>
+      <div id="ref-camp-valor-wrap"><label style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--teal-400);display:block;margin-bottom:5px">Valor *</label>
+        <input id="ref-camp-valor" type="number" min="0" placeholder="Ej: 15 (para 15%)" style="width:100%;background:rgba(255,255,255,.07);border:1.5px solid rgba(255,255,255,.15);border-radius:8px;padding:10px 12px;font-family:'DM Sans',sans-serif;font-size:13px;color:#fff;outline:none;box-sizing:border-box" onfocus="this.style.borderColor='var(--teal-400)'" onblur="this.style.borderColor='rgba(255,255,255,.15)'">
+      </div>
+      <div><label style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--teal-400);display:block;margin-bottom:5px">Descripción (opcional)</label>
+        <textarea id="ref-camp-desc" placeholder="Ej: Válido para decoraciones de boda en paquete básico" rows="2" style="width:100%;background:rgba(255,255,255,.07);border:1.5px solid rgba(255,255,255,.15);border-radius:8px;padding:10px 12px;font-family:'DM Sans',sans-serif;font-size:13px;color:#fff;outline:none;resize:vertical;box-sizing:border-box" onfocus="this.style.borderColor='var(--teal-400)'" onblur="this.style.borderColor='rgba(255,255,255,.15)'"></textarea>
+      </div>
+      <div><label style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--teal-400);display:block;margin-bottom:5px">Fecha de vencimiento (opcional)</label>
+        <input id="ref-camp-vencimiento" type="date" style="width:100%;background:rgba(255,255,255,.07);border:1.5px solid rgba(255,255,255,.15);border-radius:8px;padding:10px 12px;font-family:'DM Sans',sans-serif;font-size:13px;color:#fff;outline:none;box-sizing:border-box;color-scheme:dark" onfocus="this.style.borderColor='var(--teal-400)'" onblur="this.style.borderColor='rgba(255,255,255,.15)'">
+      </div>
+      <div><label style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--teal-400);display:block;margin-bottom:5px">Mensaje personalizado (opcional)</label>
+        <textarea id="ref-camp-mensaje" placeholder="Se incluirá en el mensaje al compartir el código. Si lo dejas vacío se genera automáticamente." rows="3" style="width:100%;background:rgba(255,255,255,.07);border:1.5px solid rgba(255,255,255,.15);border-radius:8px;padding:10px 12px;font-family:'DM Sans',sans-serif;font-size:13px;color:#fff;outline:none;resize:vertical;box-sizing:border-box" onfocus="this.style.borderColor='var(--teal-400)'" onblur="this.style.borderColor='rgba(255,255,255,.15)'"></textarea>
+      </div>
+      <button onclick="refGuardarCampana()" style="background:linear-gradient(135deg,var(--teal-700),var(--teal-600));border:none;border-radius:11px;color:#fff;padding:13px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:700;cursor:pointer;box-shadow:0 4px 14px rgba(64,217,192,.2);margin-top:4px">Crear Campaña</button>
+    </div>
+  </div>`;
+  document.body.appendChild(el);
+}
+
+function refUpdateTipoUI() {
+  const tipo = document.getElementById('ref-camp-tipo')?.value;
+  const wrap = document.getElementById('ref-camp-valor-wrap');
+  const inp  = document.getElementById('ref-camp-valor');
+  if (!wrap || !inp) return;
+  if (tipo === 'especial') {
+    inp.type = 'text'; inp.placeholder = 'Ej: 2x1 en listones, Instalación gratis';
+  } else if (tipo === 'monto') {
+    inp.type = 'number'; inp.placeholder = 'Ej: 200 (pesos)';
+  } else {
+    inp.type = 'number'; inp.placeholder = 'Ej: 15 (para 15%)';
+  }
+}
+
+async function refGuardarCampana() {
+  const nombre = document.getElementById('ref-camp-nombre')?.value.trim();
+  const tipo   = document.getElementById('ref-camp-tipo')?.value;
+  const valor  = document.getElementById('ref-camp-valor')?.value.trim();
+  if (!nombre || !valor) { alert('Completa los campos obligatorios.'); return; }
+  const camp = {
+    id:          'camp_' + Date.now(),
+    nombre, tipo, valor,
+    descripcion: document.getElementById('ref-camp-desc')?.value.trim() || '',
+    vencimiento: document.getElementById('ref-camp-vencimiento')?.value || '',
+    mensaje:     document.getElementById('ref-camp-mensaje')?.value.trim() || '',
+    activa:      true,
+    creadoEn:    new Date().toISOString().slice(0,10),
+    creadoPor:   currentPerson?.person || '',
+  };
+  _refCampanas.push(camp);
+  await _refSave();
+  document.getElementById('ref-campana-overlay').style.display = 'none';
+  renderReferidos();
+}
+
+async function refToggleCampana(id) {
+  const c = _refCampanas.find(x=>x.id===id);
+  if (c) { c.activa = !c.activa; await _refSave(); renderReferidos(); }
+}
+
+async function refEliminarCampana(id) {
+  // Show custom confirm
+  if (!confirm) return;
+  const codsCamp = _refCodigos.filter(c=>c.campanaId===id).length;
+  const msg = codsCamp > 0 ? `Esta campaña tiene ${codsCamp} códigos. ¿Eliminar campaña y todos sus códigos?` : '¿Eliminar esta campaña?';
+  _refShowConfirm(msg, async () => {
+    _refCampanas = _refCampanas.filter(x=>x.id!==id);
+    _refCodigos  = _refCodigos.filter(x=>x.campanaId!==id);
+    await _refSave();
+    renderReferidos();
+  });
+}
+
+// ── Modal: Generar códigos ────────────────────────────────────
+function refAbrirGenerarCodigos(campanaId) {
+  const camp = _refCampanas.find(c=>c.id===campanaId);
+  if (!camp) return;
+
+  let el = document.getElementById('ref-generar-overlay');
+  if (!el) {
+    el = document.createElement('div');
+    el.id = 'ref-generar-overlay';
+    el.style.cssText = 'display:flex;position:fixed;inset:0;background:rgba(0,0,0,.78);z-index:3200;align-items:center;justify-content:center;padding:16px';
+    el.onclick = e => { if(e.target===el) el.style.display='none'; };
+    document.body.appendChild(el);
+  }
+  el.innerHTML = `
+  <div style="background:linear-gradient(160deg,#0b3030 0%,#071e1e 100%);border:1.5px solid rgba(64,217,192,.3);border-radius:20px;padding:28px 24px;width:100%;max-width:440px;position:relative">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px">
+      <div>
+        <div style="font-family:'DM Serif Display',serif;font-size:19px;color:var(--teal-400)">🔑 Generar Códigos</div>
+        <div style="font-size:12px;color:rgba(168,240,232,.5);margin-top:2px">${camp.nombre}</div>
+      </div>
+      <button onclick="document.getElementById('ref-generar-overlay').style.display='none'" style="background:rgba(255,255,255,.1);border:none;border-radius:50%;width:30px;height:30px;color:#fff;font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center">✕</button>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:14px">
+      <div><label style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--teal-400);display:block;margin-bottom:5px">Cantidad de códigos *</label>
+        <input id="ref-gen-cantidad" type="number" min="1" max="500" value="10" style="width:100%;background:rgba(255,255,255,.07);border:1.5px solid rgba(255,255,255,.15);border-radius:8px;padding:10px 12px;font-family:'DM Sans',sans-serif;font-size:13px;color:#fff;outline:none;box-sizing:border-box" onfocus="this.style.borderColor='var(--teal-400)'" onblur="this.style.borderColor='rgba(255,255,255,.15)'">
+      </div>
+      <div><label style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--teal-400);display:block;margin-bottom:5px">Prefijo personalizado (opcional)</label>
+        <input id="ref-gen-prefijo" placeholder="Ej: BODA, VK, MOKINO" maxlength="10" style="width:100%;background:rgba(255,255,255,.07);border:1.5px solid rgba(255,255,255,.15);border-radius:8px;padding:10px 12px;font-family:'DM Sans',sans-serif;font-size:13px;color:#fff;outline:none;box-sizing:border-box;text-transform:uppercase" onfocus="this.style.borderColor='var(--teal-400)'" onblur="this.style.borderColor='rgba(255,255,255,.15)'" oninput="this.value=this.value.toUpperCase()">
+      </div>
+      <div style="background:rgba(64,217,192,.06);border:1px solid rgba(64,217,192,.15);border-radius:10px;padding:12px">
+        <div style="font-size:12px;color:rgba(168,240,232,.6);margin-bottom:4px">Vista previa del código</div>
+        <div style="font-family:'DM Mono',monospace,sans-serif;font-size:15px;color:var(--teal-400);font-weight:700" id="ref-gen-preview">VK-X7K2-B3F1</div>
+      </div>
+      <button onclick="refGenerarLote('${campanaId}')" style="background:linear-gradient(135deg,var(--teal-700),var(--teal-600));border:none;border-radius:11px;color:#fff;padding:13px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:700;cursor:pointer;box-shadow:0 4px 14px rgba(64,217,192,.2)">Generar códigos</button>
+    </div>
+  </div>`;
+  el.style.display = 'flex';
+
+  // Live preview
+  const prefijoInp = el.querySelector('#ref-gen-prefijo');
+  prefijoInp.addEventListener('input', () => {
+    const prev = el.querySelector('#ref-gen-preview');
+    if (prev) prev.textContent = _refGenerarCodigo(prefijoInp.value || 'VK');
+  });
+}
+
+function _refGenerarCodigo(prefijo = 'VK') {
+  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  const seg = () => Array.from({length:4}, () => chars[Math.floor(Math.random()*chars.length)]).join('');
+  return `${prefijo.toUpperCase()}-${seg()}-${seg()}`;
+}
+
+async function refGenerarLote(campanaId) {
+  const cantidad = parseInt(document.getElementById('ref-gen-cantidad')?.value) || 1;
+  const prefijo  = (document.getElementById('ref-gen-prefijo')?.value.trim().toUpperCase()) || 'VK';
+  if (cantidad < 1 || cantidad > 500) { alert('Cantidad entre 1 y 500.'); return; }
+
+  const existentes = new Set(_refCodigos.map(c=>c.codigo));
+  const nuevos = [];
+  let intentos = 0;
+  while (nuevos.length < cantidad && intentos < cantidad * 10) {
+    const cod = _refGenerarCodigo(prefijo);
+    if (!existentes.has(cod)) { existentes.add(cod); nuevos.push(cod); }
+    intentos++;
+  }
+
+  const hoy = new Date().toISOString().slice(0,10);
+  nuevos.forEach(cod => {
+    _refCodigos.push({ id:'cod_'+Date.now()+'_'+Math.random().toString(36).slice(2,6), codigo:cod, campanaId, asignadoA:'', usado:false, usadoEn:'', creadoPor:currentPerson?.person||'', creadoEn:hoy });
+  });
+
+  await _refSave();
+  document.getElementById('ref-generar-overlay').style.display = 'none';
+  _refCampanaFiltro = campanaId;
+  _refView = 'codigos';
+  renderReferidos();
+}
+
+// ── Modal: Detalle del código ────────────────────────────────
+function refAbrirDetalleCodigo(codId) {
+  const cod  = _refCodigos.find(c=>c.id===codId);
+  const camp = cod ? _refCampanas.find(c=>c.id===cod.campanaId) : null;
+  if (!cod || !camp) return;
+
+  const beneficio = camp.tipo==='descuento' ? `${camp.valor}% de descuento`
+                  : camp.tipo==='monto'     ? `$${camp.valor} de descuento`
+                  : camp.valor;
+
+  const mensajeBase = camp.mensaje ||
+    `¡Hola! 🎉 Te compartimos tu código de referido Valkibah.\n\n🎁 Beneficio: ${beneficio}\n🔑 Código: ${cod.codigo}\n${camp.descripcion?'📝 '+camp.descripcion+'\n':''}${camp.vencimiento?'⏳ Válido hasta: '+camp.vencimiento+'\n':''}\nPresenta este código al contactarnos. ¡Gracias por tu preferencia! 🌴`;
+
+  let el = document.getElementById('ref-detalle-overlay');
+  if (!el) {
+    el = document.createElement('div');
+    el.id = 'ref-detalle-overlay';
+    el.style.cssText = 'display:flex;position:fixed;inset:0;background:rgba(0,0,0,.82);z-index:3300;align-items:center;justify-content:center;padding:16px';
+    el.onclick = e => { if(e.target===el) el.style.display='none'; };
+    document.body.appendChild(el);
+  }
+
+  el.innerHTML = `
+  <div style="background:linear-gradient(160deg,#0b3030 0%,#071e1e 100%);border:1.5px solid rgba(64,217,192,.3);border-radius:20px;padding:0;width:100%;max-width:460px;max-height:92vh;overflow-y:auto;position:relative">
+    <!-- Imagen/tarjeta del código -->
+    <div id="ref-card-preview" style="background:linear-gradient(135deg,#0a3535 0%,#1a7a7a 50%,#0a3535 100%);padding:32px 24px;text-align:center;border-radius:18px 18px 0 0;position:relative;overflow:hidden">
+      <div style="position:absolute;inset:0;background:radial-gradient(circle at 70% 30%,rgba(64,217,192,.25),transparent 60%);pointer-events:none"></div>
+      <div style="position:absolute;top:-30px;right:-30px;font-size:120px;opacity:.06;pointer-events:none">🎁</div>
+      <div style="font-family:'DM Serif Display',serif;font-size:13px;color:rgba(168,240,232,.6);letter-spacing:.2em;text-transform:uppercase;margin-bottom:6px;position:relative">Grupo Valkibah</div>
+      <div style="font-family:'DM Serif Display',serif;font-size:22px;color:#fff;margin-bottom:18px;position:relative">Código de Referido</div>
+      <div style="background:rgba(0,0,0,.35);border:2px dashed rgba(64,217,192,.5);border-radius:14px;padding:16px 20px;display:inline-block;position:relative;min-width:200px">
+        <div style="font-size:10px;color:rgba(168,240,232,.5);letter-spacing:.15em;text-transform:uppercase;margin-bottom:6px">Tu código</div>
+        <div style="font-family:'DM Mono',monospace,sans-serif;font-size:26px;font-weight:900;color:var(--teal-400);letter-spacing:.12em">${cod.codigo}</div>
+      </div>
+      <div style="margin-top:16px;font-size:14px;color:rgba(168,240,232,.8);position:relative">🎁 ${beneficio}</div>
+      ${camp.vencimiento?`<div style="margin-top:6px;font-size:11px;color:rgba(168,240,232,.45);position:relative">⏳ Válido hasta ${camp.vencimiento}</div>`:''}
+      <div style="margin-top:8px;font-size:11px;color:rgba(168,240,232,.35);position:relative">mokino.valkibah.com</div>
+    </div>
+
+    <!-- Acciones -->
+    <div style="padding:22px 24px">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+        <div>
+          <div style="font-size:13px;font-weight:700;color:#fff">${camp.nombre}</div>
+          <div style="font-size:11px;color:rgba(168,240,232,.45);margin-top:2px">Asignado a: ${cod.asignadoA||'Sin asignar'} · ${cod.usado?'✅ Utilizado':'🟢 Disponible'}</div>
+        </div>
+        <button onclick="document.getElementById('ref-detalle-overlay').style.display='none'" style="background:rgba(255,255,255,.1);border:none;border-radius:50%;width:30px;height:30px;color:#fff;font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0">✕</button>
+      </div>
+
+      <!-- Asignar a -->
+      <div style="margin-bottom:14px">
+        <label style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--teal-400);display:block;margin-bottom:5px">Asignado a (nombre del cliente)</label>
+        <div style="display:flex;gap:8px">
+          <input id="ref-det-asignado" value="${cod.asignadoA||''}" placeholder="Ej: Familia González" style="flex:1;background:rgba(255,255,255,.07);border:1.5px solid rgba(255,255,255,.15);border-radius:8px;padding:9px 11px;font-family:'DM Sans',sans-serif;font-size:13px;color:#fff;outline:none" onfocus="this.style.borderColor='var(--teal-400)'" onblur="this.style.borderColor='rgba(255,255,255,.15)'">
+          <button onclick="refActualizarAsignado('${cod.id}')" style="background:rgba(64,217,192,.15);border:1px solid rgba(64,217,192,.3);border-radius:8px;color:var(--teal-400);padding:9px 13px;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap">Guardar</button>
+        </div>
+      </div>
+
+      <!-- Mensaje para copiar -->
+      <div style="margin-bottom:14px">
+        <label style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--teal-400);display:block;margin-bottom:5px">Mensaje para compartir</label>
+        <textarea id="ref-det-mensaje" rows="6" style="width:100%;background:rgba(255,255,255,.06);border:1.5px solid rgba(255,255,255,.12);border-radius:8px;padding:10px 12px;font-family:'DM Sans',sans-serif;font-size:12px;color:rgba(255,255,255,.85);outline:none;resize:vertical;box-sizing:border-box;line-height:1.6">${mensajeBase}</textarea>
+      </div>
+
+      <!-- Botones de acción -->
+      <div style="display:flex;flex-direction:column;gap:9px">
+        <button onclick="refCopiarMensaje('${cod.id}')" style="background:linear-gradient(135deg,var(--teal-700),var(--teal-600));border:none;border-radius:11px;color:#fff;padding:13px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px">
+          📋 Copiar mensaje
+        </button>
+        <button onclick="refDescargarImagen('${cod.id}')" style="background:rgba(255,255,255,.07);border:1.5px solid rgba(255,255,255,.18);border-radius:11px;color:#fff;padding:12px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px">
+          🖼️ Descargar imagen
+        </button>
+        ${!cod.usado ? `<button onclick="refMarcarUsado('${cod.id}')" style="background:rgba(255,167,38,.1);border:1.5px solid rgba(255,167,38,.3);border-radius:11px;color:#ffa726;padding:12px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px">✓ Marcar como utilizado</button>` : ''}
+      </div>
+    </div>
+  </div>`;
+  el.style.display = 'flex';
+}
+
+async function refActualizarAsignado(codId) {
+  const cod = _refCodigos.find(c=>c.id===codId);
+  const val = document.getElementById('ref-det-asignado')?.value.trim();
+  if (!cod) return;
+  cod.asignadoA = val;
+  await _refSave();
+  // Update display
+  const lbl = document.querySelector('#ref-detalle-overlay .asig-lbl');
+  renderReferidos();
+}
+
+function refCopiarMensaje(codId) {
+  const txt = document.getElementById('ref-det-mensaje')?.value;
+  if (!txt) return;
+  navigator.clipboard.writeText(txt).then(() => {
+    const btn = document.querySelector('#ref-detalle-overlay button[onclick*="refCopiarMensaje"]');
+    if (btn) { const orig=btn.innerHTML; btn.innerHTML='✅ ¡Copiado!'; btn.style.background='rgba(105,240,174,.2)'; setTimeout(()=>{btn.innerHTML=orig;btn.style.background='';},2000); }
+  }).catch(()=>alert('No se pudo copiar automáticamente. Selecciona el texto manualmente.'));
+}
+
+async function refMarcarUsado(codId) {
+  const cod = _refCodigos.find(c=>c.id===codId);
+  if (!cod) return;
+  cod.usado   = true;
+  cod.usadoEn = new Date().toISOString().slice(0,10);
+  await _refSave();
+  const det = document.getElementById('ref-detalle-overlay');
+  if (det) det.style.display='none';
+  renderReferidos();
+}
+
+// ── Generar imagen con canvas ────────────────────────────────
+function refDescargarImagen(codId) {
+  const cod  = _refCodigos.find(c=>c.id===codId);
+  const camp = cod ? _refCampanas.find(c=>c.id===cod.campanaId) : null;
+  if (!cod||!camp) return;
+
+  const beneficio = camp.tipo==='descuento' ? `${camp.valor}% de descuento`
+                  : camp.tipo==='monto'     ? `$${camp.valor} de descuento`
+                  : camp.valor;
+
+  const W=900, H=500;
+  const canvas = document.createElement('canvas');
+  canvas.width=W; canvas.height=H;
+  const ctx = canvas.getContext('2d');
+
+  // Fondo
+  const grad = ctx.createLinearGradient(0,0,W,H);
+  grad.addColorStop(0,'#051515');
+  grad.addColorStop(0.5,'#0a3535');
+  grad.addColorStop(1,'#051515');
+  ctx.fillStyle=grad; ctx.fillRect(0,0,W,H);
+
+  // Acento radial
+  const rad = ctx.createRadialGradient(W*.65,H*.3,0,W*.65,H*.3,350);
+  rad.addColorStop(0,'rgba(64,217,192,.22)'); rad.addColorStop(1,'transparent');
+  ctx.fillStyle=rad; ctx.fillRect(0,0,W,H);
+
+  // Borde
+  ctx.strokeStyle='rgba(64,217,192,.4)'; ctx.lineWidth=2;
+  _roundRect(ctx,16,16,W-32,H-32,24); ctx.stroke();
+
+  // Logo V
+  ctx.fillStyle='rgba(64,217,192,.15)';
+  _roundRect(ctx,52,52,60,60,14); ctx.fill();
+  ctx.fillStyle='#40d9c0'; ctx.font='bold 28px serif'; ctx.textAlign='center';
+  ctx.fillText('V',82,92);
+
+  // Marca
+  ctx.fillStyle='rgba(168,240,232,.55)'; ctx.font='600 13px DM Sans,sans-serif';
+  ctx.textAlign='left'; ctx.letterSpacing='0.18em';
+  ctx.fillText('GRUPO VALKIBAH', 126,78);
+  ctx.fillStyle='rgba(168,240,232,.35)'; ctx.font='11px DM Sans,sans-serif';
+  ctx.fillText('Código de Referido', 126,98);
+
+  // Línea divisoria
+  ctx.strokeStyle='rgba(64,217,192,.2)'; ctx.lineWidth=1;
+  ctx.beginPath(); ctx.moveTo(52,126); ctx.lineTo(W-52,126); ctx.stroke();
+
+  // Nombre campaña
+  ctx.fillStyle='rgba(168,240,232,.6)'; ctx.font='14px DM Sans,sans-serif';
+  ctx.textAlign='center';
+  ctx.fillText(camp.nombre.toUpperCase(), W/2, 170);
+
+  // Código grande
+  ctx.fillStyle='#40d9c0'; ctx.font='bold 54px DM Mono,monospace,sans-serif';
+  ctx.textAlign='center'; ctx.letterSpacing='0.1em';
+  ctx.fillText(cod.codigo, W/2, 250);
+
+  // Caja dashed alrededor del código
+  ctx.strokeStyle='rgba(64,217,192,.35)'; ctx.lineWidth=1.5;
+  ctx.setLineDash([7,5]);
+  const cw=460,ch=70;
+  _roundRect(ctx,(W-cw)/2,200,cw,ch,12); ctx.stroke();
+  ctx.setLineDash([]);
+
+  // Beneficio
+  ctx.fillStyle='#fff'; ctx.font='bold 20px DM Sans,sans-serif';
+  ctx.textAlign='center';
+  ctx.fillText(`🎁 ${beneficio}`, W/2, 320);
+
+  // Descripción
+  if (camp.descripcion) {
+    ctx.fillStyle='rgba(168,240,232,.55)'; ctx.font='14px DM Sans,sans-serif';
+    ctx.fillText(camp.descripcion.slice(0,80), W/2, 352);
+  }
+
+  // Vencimiento
+  if (camp.vencimiento) {
+    ctx.fillStyle='rgba(168,240,232,.4)'; ctx.font='13px DM Sans,sans-serif';
+    ctx.fillText(`⏳ Válido hasta ${camp.vencimiento}`, W/2, 384);
+  }
+
+  // Footer
+  ctx.fillStyle='rgba(168,240,232,.25)'; ctx.font='12px DM Sans,sans-serif';
+  ctx.fillText('Presenta este código al contactarnos · mokino.valkibah.com', W/2, H-36);
+
+  // Asignado a
+  if (cod.asignadoA) {
+    ctx.fillStyle='rgba(168,240,232,.4)'; ctx.font='13px DM Sans,sans-serif';
+    ctx.textAlign='right';
+    ctx.fillText(`Para: ${cod.asignadoA}`, W-60, H-36);
+  }
+
+  // Download
+  const a = document.createElement('a');
+  a.download = `referido_${cod.codigo}.png`;
+  a.href = canvas.toDataURL('image/png');
+  a.click();
+}
+
+function _roundRect(ctx,x,y,w,h,r){
+  ctx.beginPath();ctx.moveTo(x+r,y);ctx.lineTo(x+w-r,y);ctx.quadraticCurveTo(x+w,y,x+w,y+r);
+  ctx.lineTo(x+w,y+h-r);ctx.quadraticCurveTo(x+w,y+h,x+w-r,y+h);ctx.lineTo(x+r,y+h);
+  ctx.quadraticCurveTo(x,y+h,x,y+h-r);ctx.lineTo(x,y+r);ctx.quadraticCurveTo(x,y,x+r,y);ctx.closePath();
+}
+
+// ── Confirm custom (reusa el modal de eliminar inventario) ────
+function _refShowConfirm(msg, onConfirm) {
+  const overlay = document.getElementById('inv-delete-overlay');
+  const nameEl  = document.getElementById('inv-delete-name');
+  const btn     = document.getElementById('inv-delete-confirm-btn');
+  if (!overlay) { if(confirm(msg)) onConfirm(); return; }
+  nameEl.textContent = msg;
+  overlay.style.display = 'flex';
+  btn.onclick = () => { closeInvDeleteModal(); onConfirm(); };
+}
+
+// ── Hook showView para renderizar referidos ──────────────────
+(function() {
+  const _orig = window.showView;
+  window.showView = function(v) {
+    _orig(v);
+    if (v === 'referidos') renderReferidos();
+  };
+})();
 
 function closeInvDeleteModal() {
   const overlay = document.getElementById('inv-delete-overlay');
