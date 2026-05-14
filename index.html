@@ -1040,9 +1040,10 @@ align-items:center;justify-content:flex-start;padding:0}
     <!-- INVENTARIO -->
     <div class="gview" id="gview-inventario">
       <!-- Sub-tabs -->
-      <div style="display:flex;gap:0;border-radius:12px;overflow:hidden;border:1.5px solid rgba(64,217,192,.22);margin-bottom:22px;max-width:520px">
+      <div style="display:flex;gap:0;border-radius:12px;overflow:hidden;border:1.5px solid rgba(64,217,192,.22);margin-bottom:22px;max-width:680px">
         <button id="inv-subtab-general" onclick="switchInvTab('general')" class="inv-subtab inv-subtab-active">🏠 Inventario General</button>
         <button id="inv-subtab-mokino" onclick="switchInvTab('mokino')" class="inv-subtab">🌸 Mokino</button>
+        <button id="inv-subtab-req" onclick="switchInvTab('req')" class="inv-subtab">📋 Requisiciones</button>
       </div>
 
       <!-- ── INVENTARIO GENERAL ── -->
@@ -1074,8 +1075,86 @@ align-items:center;justify-content:flex-start;padding:0}
         <!-- Tabla -->
         <div id="inv-mokino-content"></div>
       </div>
-    </div>
 
+      <!-- ── REQUISICIONES ── -->
+      <div id="inv-panel-req" style="display:none">
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:20px">
+          <div>
+            <div style="font-family:'DM Serif Display',serif;font-size:20px;color:var(--teal-400)">📋 Requisiciones de Productos</div>
+            <div style="font-size:12px;color:rgba(168,240,232,.5);margin-top:2px">Solicita los materiales que necesitas para un evento. Salma recibirá tu solicitud.</div>
+          </div>
+          <button onclick="openReqForm()" class="btn btn-primary btn-sm">+ Nueva Requisición</button>
+        </div>
+        <div style="display:flex;gap:7px;flex-wrap:wrap;margin-bottom:16px" id="req-filter-bar">
+          <button class="al-filter-btn active" onclick="setReqFilter('all',this)">✨ Todas</button>
+          <button class="al-filter-btn" onclick="setReqFilter('pendiente',this)">⏳ Pendientes</button>
+          <button class="al-filter-btn" onclick="setReqFilter('aprobada',this)">✅ Aprobadas</button>
+          <button class="al-filter-btn" onclick="setReqFilter('rechazada',this)">❌ Rechazadas</button>
+        </div>
+        <div id="req-list-container">
+          <div style="color:rgba(168,240,232,.3);font-size:13px;text-align:center;padding:32px 0">Sin requisiciones registradas.</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ── MODAL NUEVA REQUISICIÓN ── -->
+<div id="req-form-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.78);z-index:3000;align-items:center;justify-content:center;padding:16px" onclick="if(event.target===this)closeReqForm()">
+  <div style="background:linear-gradient(160deg,#0a2e2e 0%,#061e1e 100%);border:1.5px solid var(--teal-600);border-radius:22px;padding:28px;width:100%;max-width:580px;max-height:92vh;overflow-y:auto;position:relative">
+    <button onclick="closeReqForm()" style="position:absolute;top:14px;right:14px;background:rgba(255,255,255,.1);border:none;border-radius:50%;width:30px;height:30px;color:#fff;font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center">✕</button>
+    <div style="font-family:'DM Serif Display',serif;font-size:20px;color:var(--teal-400);margin-bottom:4px">📋 Nueva Requisición</div>
+    <div style="font-size:12px;color:rgba(168,240,232,.45);margin-bottom:20px">Completa los datos. Salma recibirá esta solicitud.</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+      <div style="grid-column:1/-1;display:flex;flex-direction:column;gap:4px">
+        <label style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--teal-600)">👤 Solicitante *</label>
+        <select id="req-solicitante" style="background:rgba(255,255,255,.07);border:1.5px solid rgba(255,255,255,.15);border-radius:8px;padding:10px 12px;font-family:'DM Sans',sans-serif;font-size:13px;color:#fff;outline:none">
+          <option value="">— Selecciona el solicitante —</option>
+          <option value="Mayo">Mayo</option>
+          <option value="Paloma">Paloma</option>
+          <option value="Eduardo">Eduardo</option>
+        </select>
+      </div>
+      <div style="grid-column:1/-1;display:flex;flex-direction:column;gap:4px">
+        <label style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--teal-600)">🎉 Evento *</label>
+        <select id="req-evento" style="background:rgba(255,255,255,.07);border:1.5px solid rgba(255,255,255,.15);border-radius:8px;padding:10px 12px;font-family:'DM Sans',sans-serif;font-size:13px;color:#fff;outline:none"><option value="">— Selecciona el evento —</option></select>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:4px">
+        <label style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--teal-600)">📅 Fecha requerida *</label>
+        <input type="date" id="req-fecha" style="background:rgba(255,255,255,.07);border:1.5px solid rgba(255,255,255,.15);border-radius:8px;padding:10px 12px;font-family:'DM Sans',sans-serif;font-size:13px;color:#fff;outline:none;color-scheme:dark">
+      </div>
+      <div style="display:flex;flex-direction:column;gap:4px">
+        <label style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--teal-600)">🚦 Prioridad</label>
+        <select id="req-prioridad" style="background:rgba(255,255,255,.07);border:1.5px solid rgba(255,255,255,.15);border-radius:8px;padding:10px 12px;font-family:'DM Sans',sans-serif;font-size:13px;color:#fff;outline:none">
+          <option value="alta">🔴 Alta</option><option value="media" selected>🟡 Media</option><option value="baja">🔵 Baja</option>
+        </select>
+      </div>
+      <div style="grid-column:1/-1;display:flex;flex-direction:column;gap:4px">
+        <label style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--teal-600)">💬 Notas / Contexto</label>
+        <textarea id="req-notas" rows="2" placeholder="Contexto adicional, instrucciones especiales…" style="background:rgba(255,255,255,.07);border:1.5px solid rgba(255,255,255,.15);border-radius:8px;padding:10px 12px;font-family:'DM Sans',sans-serif;font-size:13px;color:#fff;outline:none;resize:vertical"></textarea>
+      </div>
+    </div>
+    <div style="margin-top:18px">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+        <label style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--teal-600)">📦 Productos solicitados *</label>
+        <button onclick="reqAddProductRow()" style="background:rgba(64,217,192,.15);border:1.5px solid rgba(64,217,192,.3);border-radius:8px;color:var(--teal-400);padding:5px 12px;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:700;cursor:pointer">+ Agregar</button>
+      </div>
+      <div id="req-products-list" style="display:flex;flex-direction:column;gap:8px"></div>
+      <div id="req-products-empty" style="color:rgba(168,240,232,.3);font-size:12px;text-align:center;padding:14px 0">Agrega al menos un producto</div>
+    </div>
+    <div style="display:flex;gap:10px;margin-top:22px;flex-wrap:wrap">
+      <button onclick="saveRequisicion()" style="flex:1;background:linear-gradient(135deg,var(--teal-700),var(--pm));border:none;border-radius:10px;color:#fff;padding:12px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:700;cursor:pointer;box-shadow:0 4px 14px rgba(26,122,122,.35)">📨 Enviar Requisición</button>
+      <button onclick="closeReqForm()" style="background:rgba(255,255,255,.07);border:1.5px solid rgba(255,255,255,.15);border-radius:10px;color:var(--teal-200);padding:12px 18px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;cursor:pointer">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── MODAL DETALLE / RESPUESTA REQUISICIÓN ── -->
+<div id="req-detail-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.82);z-index:3100;align-items:center;justify-content:center;padding:16px" onclick="if(event.target===this)closeReqDetail()">
+  <div id="req-detail-box" style="background:linear-gradient(160deg,#0a2e2e 0%,#061e1e 100%);border:1.5px solid var(--teal-600);border-radius:22px;padding:28px;width:100%;max-width:560px;max-height:92vh;overflow-y:auto;position:relative">
+    <button onclick="closeReqDetail()" style="position:absolute;top:14px;right:14px;background:rgba(255,255,255,.1);border:none;border-radius:50%;width:30px;height:30px;color:#fff;font-size:15px;cursor:pointer">✕</button>
+    <div id="req-detail-content"></div>
   </div>
 </div>
 
@@ -1521,6 +1600,7 @@ align-items:center;justify-content:flex-start;padding:0}
         <button class="nav-tab" onclick="showView('registro')" id="tab-registro">📋 Registro</button>
         <button class="nav-tab" onclick="showView('cursos')" id="tab-cursos">🚀 Iniciativas</button>
         <button class="nav-tab" onclick="showView('referidos')" id="tab-referidos" style="display:none">🎁 Referidos</button>
+        <button class="nav-tab" onclick="showView('gestion')" id="tab-gestion" style="display:none">🗂 Gestión</button>
       </nav>
       <div class="month-selector">
         <label>Mes del Calendario</label>
@@ -1712,6 +1792,44 @@ align-items:center;justify-content:flex-start;padding:0}
       <!-- ── REFERIDOS (solo Salma y Eduardo) ── -->
       <div class="view" id="view-referidos" style="background:var(--teal-900);min-height:100%">
         <div id="ref-root" style="padding:20px 20px 100px"></div>
+      </div>
+
+      <!-- ── GESTIÓN DE ACTIVIDADES (solo Salma) ── -->
+      <div class="view" id="view-gestion" style="background:var(--teal-900);min-height:100%;padding:24px 20px 80px">
+        <!-- Tabs internos -->
+        <div style="display:flex;gap:0;border-radius:12px;overflow:hidden;border:1.5px solid rgba(64,217,192,.22);margin-bottom:24px;max-width:420px">
+          <button id="gtab-acts" onclick="switchGestionTab('acts')" style="flex:1;padding:10px;background:rgba(64,217,192,.18);border:none;color:var(--teal-400);font-family:'DM Sans',sans-serif;font-size:13px;font-weight:700;cursor:pointer">🗂 Actividades</button>
+          <button id="gtab-reqs" onclick="switchGestionTab('reqs')" style="flex:1;padding:10px;background:transparent;border:none;color:rgba(168,240,232,.5);font-family:'DM Sans',sans-serif;font-size:13px;font-weight:700;cursor:pointer;position:relative">📋 Requisiciones<span id="req-pending-badge" style="display:none;margin-left:6px;background:#e53935;color:#fff;border-radius:9px;font-size:9px;font-weight:700;padding:1px 6px;vertical-align:middle">0</span></button>
+        </div>
+
+        <!-- Panel: Actividades -->
+        <div id="gpanel-acts">
+          <div style="margin-bottom:18px">
+            <div style="font-family:'DM Serif Display',serif;font-size:20px;color:var(--teal-400);margin-bottom:4px">🗂 Gestión de Actividades</div>
+            <div style="font-size:13px;color:rgba(168,240,232,.5)">Aquí aparecen únicamente las actividades que tú asignaste a tus colaboradores.</div>
+          </div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px" id="gestion-collab-tabs"></div>
+          <div id="gestion-acts-container">
+            <div style="color:rgba(168,240,232,.3);font-size:13px;text-align:center;padding:32px 0">Selecciona un colaborador para ver sus actividades.</div>
+          </div>
+        </div>
+
+        <!-- Panel: Requisiciones recibidas -->
+        <div id="gpanel-reqs" style="display:none">
+          <div style="margin-bottom:18px">
+            <div style="font-family:'DM Serif Display',serif;font-size:20px;color:var(--teal-400);margin-bottom:4px">📋 Requisiciones Recibidas</div>
+            <div style="font-size:13px;color:rgba(168,240,232,.5)">Requisiciones de productos enviadas por tu equipo.</div>
+          </div>
+          <div style="display:flex;gap:7px;flex-wrap:wrap;margin-bottom:16px" id="salma-req-filter-bar">
+            <button class="al-filter-btn active" onclick="setSalmaReqFilter('all',this)">✨ Todas</button>
+            <button class="al-filter-btn" onclick="setSalmaReqFilter('pendiente',this)">⏳ Pendientes</button>
+            <button class="al-filter-btn" onclick="setSalmaReqFilter('aprobada',this)">✅ Aprobadas</button>
+            <button class="al-filter-btn" onclick="setSalmaReqFilter('rechazada',this)">❌ Rechazadas</button>
+          </div>
+          <div id="salma-req-list">
+            <div style="color:rgba(168,240,232,.3);font-size:13px;text-align:center;padding:32px 0">Sin requisiciones recibidas aún.</div>
+          </div>
+        </div>
       </div>
 
       <!-- ── Modal Próximamente ── -->
@@ -1915,6 +2033,9 @@ function openPerson(p) {
   // Ajustar columnas mobile tabbar
   const mti = document.getElementById('mobile-tabbar-inner');
   if (mti) mti.style.gridTemplateColumns = canReferidos ? 'repeat(4,1fr)' : 'repeat(3,1fr)';
+  // Gestión tab — solo Salma
+  const tabGestion = document.getElementById('tab-gestion');
+  if (tabGestion) tabGestion.style.display = p.key === 'salma' ? 'block' : 'none';
 
   // Subscribe referidos live
   if (canReferidos && window._fbSubscribeShared) {
@@ -1945,12 +2066,21 @@ function openPerson(p) {
   if (window._fbSubscribeShared) {
     if (window._unsubCursos) { try { window._unsubCursos(); } catch {} }
     if (window._unsubCertReqs) { try { window._unsubCertReqs(); } catch {} }
+    if (window._unsubReqs) { try { window._unsubReqs(); } catch {} }
     window._unsubCursos = window._fbSubscribeShared('valkibah_cursos', data => {
       _cursos = data ? (data.cursos || []) : [];
       _cursosCats = data ? (data.cats || []) : [];
     });
     window._unsubCertReqs = window._fbSubscribeShared('valkibah_cert_requests', data => {
       _certRequests = data ? (data.requests || []) : [];
+    });
+    window._unsubReqs = window._fbSubscribeShared('valkibah_requisiciones', data => {
+      _requisiciones = data ? (data.items || []) : [];
+      if (p.key === 'salma') {
+        updateReqBadge();
+        if (document.getElementById('gpanel-reqs')?.style.display !== 'none') renderSalmaReqList();
+      }
+      if (document.getElementById('inv-panel-req')?.style.display === 'block') renderReqList();
     });
   }
 
@@ -1964,6 +2094,7 @@ function goHome() {
   if (window._unsubCursos) { try { window._unsubCursos(); } catch {} window._unsubCursos = null; }
   if (window._unsubCertReqs) { try { window._unsubCertReqs(); } catch {} window._unsubCertReqs = null; }
   if (window._unsubReferidos) { try { window._unsubReferidos(); } catch {} window._unsubReferidos = null; }
+  if (window._unsubReqNotif) { try { window._unsubReqNotif(); } catch {} window._unsubReqNotif = null; }
   document.getElementById("screen-app").classList.remove("active");
   document.getElementById("screen-home").classList.add("active");
   currentPerson = null;
@@ -2750,14 +2881,25 @@ function openProfileModal(){
   _renderProfileModalContent(p);
   document.getElementById("profile-sidebar-overlay").classList.add("open");
   document.getElementById("profile-sidebar").classList.add("open");
-  
+
   // If Eduardo, subscribe to cursos updates so list stays fresh
   if (p.key === ADMIN_KEY && window._fbSubscribeShared) {
     if (window._profileCursosUnsub) { try { window._profileCursosUnsub(); } catch {} }
     window._profileCursosUnsub = window._fbSubscribeShared('valkibah_cursos', data => {
       _cursos = data ? (data.cursos || []) : [];
       _cursosCats = data ? (data.cats || []) : [];
-      // Re-render if modal still open
+      const sidebar = document.getElementById("profile-sidebar");
+      if (sidebar && sidebar.classList.contains("open")) {
+        _renderProfileModalContent(p);
+      }
+    });
+  }
+
+  // If Salma, re-render when requisiciones data arrives (async Firebase)
+  if (p.key === 'salma' && window._fbSubscribeShared) {
+    if (window._profileReqsUnsub) { try { window._profileReqsUnsub(); } catch {} }
+    window._profileReqsUnsub = window._fbSubscribeShared('valkibah_requisiciones', data => {
+      _requisiciones = data ? (data.items || []) : [];
       const sidebar = document.getElementById("profile-sidebar");
       if (sidebar && sidebar.classList.contains("open")) {
         _renderProfileModalContent(p);
@@ -2794,6 +2936,47 @@ function _renderProfileModalContent(p) {
         </div>`;
     }
   }
+
+  // ── Sección de notificación de requisiciones (solo Salma) ──
+  let reqNotifSection = '';
+  if (p.key === 'salma') {
+    const newPending = _requisiciones.filter(r => r.status === 'pendiente');
+
+    if (newPending.length > 0) {
+      const count = newPending.length;
+      const items = newPending.map(r => `
+        <div style="background:rgba(64,217,192,.07);border:1.5px solid rgba(64,217,192,.2);border-radius:10px;padding:9px 12px;display:flex;align-items:center;gap:10px">
+          <div style="font-size:16px;flex-shrink:0">📌</div>
+          <div style="flex:1;min-width:0">
+            <div style="font-weight:700;font-size:12px;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${r.eventoNombre}</div>
+            <div style="font-size:11px;color:rgba(168,240,232,.55);margin-top:1px">👤 ${r.solicitante} · 📅 ${formatDisplayDate(r.fechaRequerida)}</div>
+          </div>
+        </div>`).join('');
+
+      reqNotifSection = `
+        <div style="width:100%;margin-top:18px;background:linear-gradient(135deg,rgba(224,85,85,.1),rgba(200,60,60,.06));border:1.5px solid rgba(224,85,85,.35);border-radius:16px;padding:16px;position:relative;overflow:hidden">
+          <div style="position:absolute;top:-16px;right:-16px;width:70px;height:70px;background:radial-gradient(circle,rgba(224,85,85,.18),transparent 70%);pointer-events:none"></div>
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+            <div style="font-size:26px;animation:assignBounce 1s ease infinite alternate">🔔</div>
+            <div>
+              <div style="font-family:'DM Serif Display',serif;font-size:15px;color:#ef9a9a;line-height:1.2">${count === 1 ? '¡Nueva requisición!' : `¡${count} nuevas requisiciones!`}</div>
+              <div style="font-size:11px;color:rgba(239,154,154,.65);margin-top:2px">Pendientes de revisión</div>
+            </div>
+            <div style="margin-left:auto;background:linear-gradient(135deg,#e05555,#c0392b);color:#fff;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:800;padding:3px 10px;border-radius:999px;flex-shrink:0">${count}</div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:6px;margin-bottom:12px">
+            ${items}
+          </div>
+          <button onclick="closeProfileModal();showView('gestion');switchGestionTab('reqs')"
+            style="width:100%;padding:10px;border-radius:10px;border:none;background:linear-gradient(135deg,rgba(224,85,85,.25),rgba(200,60,60,.2));color:#ef9a9a;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:700;cursor:pointer;border:1px solid rgba(224,85,85,.35);transition:all .15s"
+            onmouseover="this.style.background='linear-gradient(135deg,rgba(224,85,85,.4),rgba(200,60,60,.3))';this.style.color='#fff'"
+            onmouseout="this.style.background='linear-gradient(135deg,rgba(224,85,85,.25),rgba(200,60,60,.2))';this.style.color='#ef9a9a'">
+            📋 Ir a Requisiciones
+          </button>
+        </div>`;
+    }
+  }
+
   document.getElementById("profile-modal-body").innerHTML=`
     <div class="profile-avatar-wrap" style="background:${p.person_light}" onclick="triggerAvatarUpload()" title="Cambiar foto">
       ${getAvatarImg(p)}
@@ -2805,12 +2988,14 @@ function _renderProfileModalContent(p) {
     <div class="profile-divider"></div>
     <div class="profile-bio">${p.bio||""}</div>
     <span class="profile-schedule">🕐 ${p.schedule}</span>
+    ${reqNotifSection}
     ${cursosSection}`;
 }
 function closeProfileModal(){
   document.getElementById("profile-sidebar-overlay").classList.remove("open");
   document.getElementById("profile-sidebar").classList.remove("open");
   if (window._profileCursosUnsub) { try { window._profileCursosUnsub(); } catch {} window._profileCursosUnsub = null; }
+  if (window._profileReqsUnsub) { try { window._profileReqsUnsub(); } catch {} window._profileReqsUnsub = null; }
 }
 function openDrawer(){document.getElementById("drawer").classList.add("open");document.getElementById("drawer-overlay").classList.add("open");}
 function closeDrawer(){document.getElementById("drawer").classList.remove("open");document.getElementById("drawer-overlay").classList.remove("open");}
@@ -2976,6 +3161,11 @@ function startGSubs(){
     });
     window._fbSubscribeShared('valkibah_inventario_general',data=>{_invGeneral=data?data.items||[]:[]; if(document.getElementById('gview-inventario')?.classList.contains('active')&&_invTab==='general') renderInvGeneral();});
     window._fbSubscribeShared('valkibah_inventario_mokino',data=>{_invMokino=data?data.items||[]:[]; if(document.getElementById('gview-inventario')?.classList.contains('active')&&_invTab==='mokino') renderInvMokino();});
+    window._fbSubscribeShared('valkibah_requisiciones',data=>{
+      _requisiciones=data?data.items||[]:[]; 
+      if(document.getElementById('gview-inventario')?.classList.contains('active')&&_invTab==='req') renderReqList();
+      updateReqBadge();
+    });
   }
   _evCalY=new Date().getFullYear();_evCalM=new Date().getMonth();
   setTimeout(()=>{renderEvCal();renderEvUpcoming();},300);
@@ -5351,8 +5541,133 @@ document.getElementById('assign-notif-overlay').addEventListener('click', functi
         checkNewAssignments(activities);
       });
     }, 0);
+    // Si es Salma, suscribirse a requisiciones y mostrar notif si hay pendientes nuevas
+    if (p.key === 'salma' && window._fbSubscribeShared) {
+      if (window._unsubReqNotif) { try { window._unsubReqNotif(); } catch {} window._unsubReqNotif = null; }
+      var _notifShown = false;
+      window._unsubReqNotif = window._fbSubscribeShared('valkibah_requisiciones', function(data) {
+        _requisiciones = data ? (data.items || []) : [];
+        updateReqBadge();
+        if (!_notifShown) {
+          _notifShown = true;
+          checkNewRequisiciones(_requisiciones);
+        }
+      });
+    }
   };
 })();
+</script>
+
+<!-- ══════════════════════════════════════════════════════════════
+     MODAL DE NOTIFICACIÓN DE REQUISICIONES PARA SALMA
+     Mismo patrón que el modal de asignaciones para colaboradores
+     ══════════════════════════════════════════════════════════════ -->
+<div id="req-salma-notif-overlay" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.65);backdrop-filter:blur(6px);align-items:center;justify-content:center;padding:20px">
+  <div style="
+    background:linear-gradient(145deg,#071f1f 0%,#0a3030 60%,#0d3d2a 100%);
+    border:2px solid rgba(64,217,192,.5);
+    border-radius:28px;
+    padding:32px 28px 26px;
+    width:100%;max-width:420px;
+    box-shadow:0 0 0 1px rgba(64,217,192,.15),0 24px 80px rgba(0,0,0,.7),0 0 60px rgba(64,217,192,.12);
+    position:relative;
+    animation:assignPop .38s cubic-bezier(.34,1.56,.64,1) both;
+    text-align:center;
+  ">
+    <div style="position:absolute;top:-30px;left:50%;transform:translateX(-50%);width:80px;height:80px;background:radial-gradient(circle,rgba(64,217,192,.55),transparent 70%);filter:blur(18px);pointer-events:none"></div>
+    <div style="font-size:52px;margin-bottom:12px;animation:assignBounce 1s ease infinite alternate">🔔</div>
+    <div style="font-family:'DM Serif Display',serif;font-size:22px;color:#7fffd4;margin-bottom:6px;line-height:1.2" id="req-salma-notif-title">¡Tienes nuevas requisiciones!</div>
+    <div style="font-size:13px;color:rgba(168,240,232,.65);margin-bottom:20px" id="req-salma-notif-sub">Pendientes de tu revisión y aprobación</div>
+    <div id="req-salma-notif-list" style="display:flex;flex-direction:column;gap:8px;max-height:220px;overflow-y:auto;margin-bottom:22px;scrollbar-width:thin;scrollbar-color:rgba(64,217,192,.25) transparent;text-align:left;"></div>
+    <div style="display:flex;gap:10px">
+      <button onclick="closeReqSalmaNotif()" style="flex:1;padding:13px;border-radius:12px;border:1.5px solid rgba(255,255,255,.15);background:rgba(255,255,255,.07);color:rgba(168,240,232,.7);font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;cursor:pointer;" onmouseover="this.style.background='rgba(255,255,255,.13)'" onmouseout="this.style.background='rgba(255,255,255,.07)'">Cerrar</button>
+      <button onclick="closeReqSalmaNotifAndGo()" style="flex:2;padding:13px;border-radius:12px;border:none;background:linear-gradient(135deg,#1a7a7a,#0e6b6b);color:#fff;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:700;cursor:pointer;box-shadow:0 4px 18px rgba(26,122,122,.45);" onmouseover="this.style.transform='translateY(-1px)'" onmouseout="this.style.transform='none'">📋 Ver requisiciones</button>
+    </div>
+    <div id="req-salma-notif-badge" style="position:absolute;top:-12px;right:18px;background:linear-gradient(135deg,#e05555,#c0392b);color:#fff;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:800;padding:4px 11px;border-radius:999px;box-shadow:0 3px 12px rgba(224,85,85,.55);border:2px solid rgba(255,255,255,.15);display:none;"></div>
+  </div>
+</div>
+<style>
+#req-salma-notif-overlay.open { display:flex !important; }
+#req-salma-notif-list::-webkit-scrollbar { width:4px }
+#req-salma-notif-list::-webkit-scrollbar-track { background:transparent }
+#req-salma-notif-list::-webkit-scrollbar-thumb { background:rgba(64,217,192,.3);border-radius:4px }
+</style>
+
+<script>
+// ══════════════════════════════════════════════════════════════
+//  NOTIFICACIÓN DE REQUISICIONES PARA SALMA
+//  Mismo patrón que checkNewAssignments para colaboradores
+// ══════════════════════════════════════════════════════════════
+
+const SEEN_REQS_KEY = 'valkibah_salma_seen_reqs_v2';
+function getSeenReqs() {
+  try { return JSON.parse(localStorage.getItem(SEEN_REQS_KEY) || '[]'); } catch { return []; }
+}
+function markReqsSeen(ids) {
+  const seen = new Set(getSeenReqs());
+  ids.forEach(id => seen.add(String(id)));
+  localStorage.setItem(SEEN_REQS_KEY, JSON.stringify([...seen]));
+}
+
+function checkNewRequisiciones(reqs) {
+  if (!currentPerson || currentPerson.key !== 'salma') return;
+  const seen = new Set(getSeenReqs());
+  const newPending = reqs.filter(r => r.status === 'pendiente' && !seen.has(String(r.id)));
+  if (!newPending.length) return;
+
+  const total = newPending.length;
+  document.getElementById('req-salma-notif-title').textContent =
+    total === 1 ? '¡Tienes una nueva requisición!' : `¡Tienes ${total} nuevas requisiciones!`;
+  document.getElementById('req-salma-notif-sub').textContent =
+    total === 1 ? 'Pendiente de tu revisión y aprobación' : 'Pendientes de tu revisión y aprobación';
+
+  const badge = document.getElementById('req-salma-notif-badge');
+  badge.textContent = total;
+  badge.style.display = 'block';
+
+  const list = document.getElementById('req-salma-notif-list');
+  list.innerHTML = '';
+  const PRIO_COLORS = {
+    alta:  { bg:'rgba(224,85,85,.2)',    color:'#ef9a9a', border:'rgba(224,85,85,.35)',    label:'🔴 Alta' },
+    media: { bg:'rgba(255,193,7,.15)',   color:'#ffd54f', border:'rgba(255,193,7,.3)',     label:'🟡 Media' },
+    baja:  { bg:'rgba(105,240,174,.15)', color:'#69f0ae', border:'rgba(105,240,174,.3)',   label:'🟢 Baja' },
+  };
+  newPending.forEach(r => {
+    const p = PRIO_COLORS[r.prioridad] || PRIO_COLORS.media;
+    const item = document.createElement('div');
+    item.style.cssText = 'display:flex;align-items:flex-start;gap:10px;background:rgba(64,217,192,.07);border:1.5px solid rgba(64,217,192,.18);border-radius:12px;padding:10px 12px;';
+    item.innerHTML = `
+      <div style="font-size:20px;flex-shrink:0;line-height:1">📌</div>
+      <div style="flex:1;min-width:0">
+        <div style="font-weight:700;font-size:13px;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${r.eventoNombre || 'Sin nombre'}</div>
+        <div style="font-size:11px;color:rgba(168,240,232,.6);margin-top:2px">👤 ${r.solicitante || '—'} · 📅 ${typeof formatDisplayDate === 'function' ? formatDisplayDate(r.fechaRequerida) : (r.fechaRequerida || '—')}</div>
+      </div>
+      <span style="flex-shrink:0;font-size:10px;font-weight:700;padding:3px 8px;border-radius:999px;background:${p.bg};color:${p.color};border:1px solid ${p.border}">${p.label}</span>`;
+    list.appendChild(item);
+  });
+
+  window._pendingReqIds = newPending.map(r => String(r.id));
+  const overlay = document.getElementById('req-salma-notif-overlay');
+  overlay.style.display = 'flex';
+  requestAnimationFrame(() => overlay.classList.add('open'));
+}
+
+function closeReqSalmaNotif() {
+  const overlay = document.getElementById('req-salma-notif-overlay');
+  overlay.classList.remove('open');
+  setTimeout(() => { overlay.style.display = 'none'; }, 300);
+  if (window._pendingReqIds) { markReqsSeen(window._pendingReqIds); window._pendingReqIds = null; }
+}
+
+function closeReqSalmaNotifAndGo() {
+  closeReqSalmaNotif();
+  showView('gestion');
+  if (typeof switchGestionTab === 'function') switchGestionTab('reqs');
+}
+
+document.getElementById('req-salma-notif-overlay').addEventListener('click', function(e) {
+  if (e.target === this) closeReqSalmaNotif();
+});
 </script>
 
 <script>
@@ -5393,15 +5708,17 @@ const INV_ESTADOS = ['Bueno','Regular','Dañado','Agotado'];
 // ── Tab switch ───────────────────────────────────────────────
 function switchInvTab(tab) {
   _invTab = tab;
-  // Reset status filters when switching tabs
   _invStatusFilterGeneral = 'all';
   _invStatusFilterMokino  = 'all';
-  ['general','mokino'].forEach(t => {
-    document.getElementById('inv-subtab-'+t).classList.toggle('inv-subtab-active', t===tab);
-    document.getElementById('inv-panel-'+t).style.display = t===tab ? 'block' : 'none';
+  ['general','mokino','req'].forEach(t => {
+    const btn = document.getElementById('inv-subtab-'+t);
+    const panel = document.getElementById('inv-panel-'+t);
+    if (btn) btn.classList.toggle('inv-subtab-active', t===tab);
+    if (panel) panel.style.display = t===tab ? 'block' : 'none';
   });
   if (tab === 'general') renderInvGeneral();
-  else renderInvMokino();
+  else if (tab === 'mokino') renderInvMokino();
+  else if (tab === 'req') renderReqList();
 }
 
 // ── Live form helpers ────────────────────────────────────────
@@ -6364,18 +6681,586 @@ function _refShowConfirm(titulo, msg, onConfirm) {
   btn.onclick = () => { closeInvDeleteModal(); onConfirm(); };
 }
 
-// ── Hook showView para renderizar referidos ──────────────────
+// ── Hook showView para renderizar referidos y gestión ────────
 (function() {
   const _orig = window.showView;
   window.showView = function(v) {
     _orig(v);
     if (v === 'referidos') renderReferidos();
+    if (v === 'gestion') renderGestion();
   };
 })();
+
+// ══════════════════════════════════════════
+//  GESTIÓN DE ACTIVIDADES (solo Salma)
+// ══════════════════════════════════════════
+let _gestionKey = null;          // colaborador activo en la vista
+let _gestionData = {};           // { key: activities[] } cacheado
+let _gestionUnsubs = {};         // unsub de snapshots
+
+function renderGestion() {
+  if (!currentPerson || currentPerson.key !== 'salma') return;
+
+  // Construir tabs de colaboradores
+  const assignable = (currentPerson.can_assign_to || []);
+  const tabsEl = document.getElementById('gestion-collab-tabs');
+  if (!tabsEl) return;
+
+  tabsEl.innerHTML = '';
+  assignable.forEach(key => {
+    const p = PERSONS_DATA.find(x => x.key === key);
+    if (!p) return;
+    const btn = document.createElement('button');
+    btn.textContent = p.emoji + ' ' + p.person.split(' ')[0];
+    btn.style.cssText = 'padding:8px 18px;border-radius:20px;border:1.5px solid rgba(255,255,255,.18);font-family:DM Sans,sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:all .15s;background:transparent;color:rgba(168,240,232,.75)';
+    btn.dataset.key = key;
+    btn.onclick = () => selectGestionCollab(key);
+    if (_gestionKey === key) {
+      btn.style.background = 'var(--teal-700)';
+      btn.style.borderColor = 'var(--teal-400)';
+      btn.style.color = '#fff';
+    }
+    tabsEl.appendChild(btn);
+
+    // Suscribir si no está suscrito
+    if (!_gestionUnsubs[key] && window._fbSubscribe) {
+      _gestionUnsubs[key] = window._fbSubscribe(p.storage_key, data => {
+        _gestionData[key] = data ? (data.activities || []) : [];
+        if (_gestionKey === key) renderGestionList();
+      });
+    }
+  });
+
+  if (!_gestionKey && assignable.length) selectGestionCollab(assignable[0]);
+  else renderGestionList();
+}
+
+function selectGestionCollab(key) {
+  _gestionKey = key;
+  // Actualizar estilos de tabs
+  document.querySelectorAll('#gestion-collab-tabs button').forEach(btn => {
+    const active = btn.dataset.key === key;
+    btn.style.background = active ? 'var(--teal-700)' : 'transparent';
+    btn.style.borderColor = active ? 'var(--teal-400)' : 'rgba(255,255,255,.18)';
+    btn.style.color = active ? '#fff' : 'rgba(168,240,232,.75)';
+  });
+  renderGestionList();
+}
+
+function renderGestionList() {
+  const container = document.getElementById('gestion-acts-container');
+  if (!container) return;
+  const key = _gestionKey;
+  const p = PERSONS_DATA.find(x => x.key === key);
+  if (!p) return;
+  // Solo mostrar actividades asignadas por Salma
+  const allActs = (_gestionData[key] || []).slice().sort((a, b) => a.date.localeCompare(b.date));
+  const acts = allActs.filter(a => a._assignedFrom === 'salma');
+
+  if (!acts.length) {
+    container.innerHTML = '<div style="color:rgba(168,240,232,.3);font-size:13px;text-align:center;padding:32px 0">No has asignado actividades a ' + p.person.split(' ')[0] + ' aún.</div>';
+    return;
+  }
+
+  const statusColors = {
+    'pendiente':   { bg:'rgba(133,100,4,.3)',   color:'#ffc107' },
+    'en-progreso': { bg:'rgba(8,66,152,.3)',     color:'#90caf9' },
+    'completada':  { bg:'rgba(15,81,50,.3)',     color:'#69f0ae' },
+    'bloqueada':   { bg:'rgba(132,32,41,.3)',    color:'#ef9a9a' },
+  };
+
+  let html = '<div style="display:flex;flex-direction:column;gap:10px">';
+  acts.forEach(act => {
+    const sc = statusColors[act.status] || statusColors['pendiente'];
+    const badge = `<span style="display:inline-block;padding:2px 10px;border-radius:8px;font-size:10px;font-weight:700;background:${sc.bg};color:${sc.color}">${act.status || 'pendiente'}</span>`;
+    const assignedTag = act._assignedFrom === 'salma'
+      ? '<span style="font-size:10px;color:var(--teal-400);margin-left:6px">📌 Asignada por ti</span>'
+      : '';
+    html += `<div style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:14px 16px;display:flex;align-items:flex-start;justify-content:space-between;gap:12px">
+      <div style="flex:1;min-width:0">
+        <div style="font-weight:700;font-size:13px;color:#fff;margin-bottom:4px">${act.name}${assignedTag}</div>
+        ${act.desc ? `<div style="font-size:11px;color:rgba(168,240,232,.5);margin-bottom:6px;line-height:1.4">${act.desc}</div>` : ''}
+        <div style="display:flex;flex-wrap:wrap;gap:6px;align-items:center">
+          <span style="font-size:11px;color:var(--teal-400)">📅 ${formatDisplayDate(act.date)}</span>
+          ${act.start ? `<span style="font-size:11px;color:rgba(168,240,232,.45)">⏰ ${act.start}${act.end ? '–'+act.end : ''}</span>` : ''}
+          ${badge}
+        </div>
+      </div>
+      <button onclick="gestionDeleteAct('${key}','${act.id}')" title="Eliminar actividad"
+        style="flex-shrink:0;background:rgba(224,85,85,.1);border:1.5px solid rgba(224,85,85,.25);border-radius:8px;color:#ef9a9a;padding:7px 10px;font-size:13px;cursor:pointer;transition:all .15s;white-space:nowrap"
+        onmouseenter="this.style.background='rgba(224,85,85,.25)';this.style.color='#fff'"
+        onmouseleave="this.style.background='rgba(224,85,85,.1)';this.style.color='#ef9a9a'">🗑 Eliminar</button>
+    </div>`;
+  });
+  html += '</div>';
+
+  container.innerHTML = `
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px">
+      <div style="font-size:13px;color:rgba(168,240,232,.6)">${acts.length} actividad${acts.length !== 1 ? 'es' : ''} — ${p.person}</div>
+      <button onclick="gestionDeleteAll('${key}')"
+        style="background:rgba(224,85,85,.1);border:1.5px solid rgba(224,85,85,.25);border-radius:8px;color:#ef9a9a;padding:7px 14px;font-family:DM Sans,sans-serif;font-size:12px;font-weight:700;cursor:pointer;transition:all .15s"
+        onmouseenter="this.style.background='rgba(224,85,85,.25)';this.style.color='#fff'"
+        onmouseleave="this.style.background='rgba(224,85,85,.1)';this.style.color='#ef9a9a'">🗑 Borrar todas</button>
+    </div>
+    ${html}`;
+}
+
+async function gestionDeleteAct(personKey, actId) {
+  const p = PERSONS_DATA.find(x => x.key === personKey);
+  if (!p) return;
+  const numId = Number(actId);
+  const acts = (_gestionData[personKey] || []).filter(a => a.id !== numId && a.id !== actId);
+  if (!window._fbSave) return;
+  await window._fbSave(p.storage_key, { activities: acts });
+  _gestionData[personKey] = acts;
+  renderGestionList();
+  showToast('🗑 Actividad eliminada');
+}
+
+async function gestionDeleteAll(personKey) {
+  const p = PERSONS_DATA.find(x => x.key === personKey);
+  if (!p) return;
+  const count = (_gestionData[personKey] || []).length;
+  if (!count) { showToast('Sin actividades que eliminar'); return; }
+
+  // Reutiliza el modal de confirmación existente
+  const overlay = document.getElementById('inv-delete-overlay');
+  const nameEl  = document.getElementById('inv-delete-name');
+  const titleEl = document.getElementById('inv-delete-title');
+  const btn     = document.getElementById('inv-delete-confirm-btn');
+  if (!overlay) {
+    if (!confirm(`¿Borrar las ${count} actividades de ${p.person}? Esta acción no se puede deshacer.`)) return;
+    await _gestionClearAll(p, personKey);
+    return;
+  }
+  if (titleEl) titleEl.textContent = '¿Borrar todas las actividades?';
+  nameEl.textContent = `Se eliminarán ${count} actividades de ${p.person}. Esta acción no se puede deshacer.`;
+  overlay.style.display = 'flex';
+  btn.onclick = async () => {
+    closeInvDeleteModal();
+    await _gestionClearAll(p, personKey);
+  };
+}
+
+async function _gestionClearAll(p, personKey) {
+  if (!window._fbSave) return;
+  await window._fbSave(p.storage_key, { activities: [] });
+  _gestionData[personKey] = [];
+  renderGestionList();
+  showToast('✅ Todas las actividades eliminadas');
+}
 
 function closeInvDeleteModal() {
   const overlay = document.getElementById('inv-delete-overlay');
   overlay.style.display = 'none';
+}
+
+// ══════════════════════════════════════════
+//  REQUISICIONES DE PRODUCTOS
+// ══════════════════════════════════════════
+let _requisiciones = [];
+let _reqFilter = 'all';
+let _salmaReqFilter = 'all';
+let _reqProductRows = 0;
+let _gestionInternalTab = 'acts';
+
+// ── Cambio de tab interno en Gestión (Salma) ──────────────────
+function switchGestionTab(tab) {
+  _gestionInternalTab = tab;
+  const panelActs = document.getElementById('gpanel-acts');
+  const panelReqs = document.getElementById('gpanel-reqs');
+  const btnActs   = document.getElementById('gtab-acts');
+  const btnReqs   = document.getElementById('gtab-reqs');
+  if (panelActs) panelActs.style.display = tab === 'acts' ? 'block' : 'none';
+  if (panelReqs) panelReqs.style.display = tab === 'reqs' ? 'block' : 'none';
+  if (btnActs) { btnActs.style.background = tab === 'acts' ? 'rgba(64,217,192,.18)' : 'transparent'; btnActs.style.color = tab === 'acts' ? 'var(--teal-400)' : 'rgba(168,240,232,.5)'; }
+  if (btnReqs) { btnReqs.style.background = tab === 'reqs' ? 'rgba(64,217,192,.18)' : 'transparent'; btnReqs.style.color = tab === 'reqs' ? 'var(--teal-400)' : 'rgba(168,240,232,.5)'; }
+  if (tab === 'reqs') renderSalmaReqList();
+  if (tab === 'acts') renderGestion();
+}
+
+// ── Badge de pendientes en tab ────────────────────────────────
+function updateReqBadge() {
+  const badge = document.getElementById('req-pending-badge');
+  if (!badge) return;
+  const pending = _requisiciones.filter(r => r.status === 'pendiente').length;
+  badge.textContent = pending;
+  badge.style.display = pending > 0 ? 'inline' : 'none';
+}
+
+// ── Abrir / cerrar form ───────────────────────────────────────
+function openReqForm() {
+  // Poblar selector de eventos
+  const sel = document.getElementById('req-evento');
+  sel.innerHTML = '<option value="">— Selecciona el evento —</option>';
+  (_evs || []).forEach(ev => {
+    const opt = document.createElement('option');
+    opt.value = ev.id;
+    opt.textContent = ev.nombre + (ev.fecha ? ' · ' + formatDisplayDate(ev.fecha) : '');
+    sel.appendChild(opt);
+  });
+  if (!(_evs || []).length) {
+    const opt = document.createElement('option');
+    opt.value = '__sin_evento__'; opt.textContent = '(Sin evento registrado)';
+    sel.appendChild(opt);
+  }
+  // Limpiar productos
+  _reqProductRows = 0;
+  document.getElementById('req-solicitante').value = '';
+  document.getElementById('req-products-list').innerHTML = '';
+  document.getElementById('req-products-empty').style.display = 'block';
+  document.getElementById('req-notas').value = '';
+  document.getElementById('req-fecha').value = '';
+  document.getElementById('req-prioridad').value = 'media';
+  reqAddProductRow();
+  document.getElementById('req-form-overlay').style.display = 'flex';
+}
+
+function closeReqForm() {
+  document.getElementById('req-form-overlay').style.display = 'none';
+}
+
+// ── Agregar fila de producto ──────────────────────────────────
+function reqAddProductRow(existingData) {
+  _reqProductRows++;
+  const id = _reqProductRows;
+  const list = document.getElementById('req-products-list');
+  document.getElementById('req-products-empty').style.display = 'none';
+  const row = document.createElement('div');
+  row.id = 'req-row-' + id;
+  row.style.cssText = 'display:flex;align-items:center;gap:6px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:8px;padding:6px 8px';
+
+  const nameVal = existingData ? existingData.nombre : '';
+  const qtyVal  = existingData ? existingData.cantidad : '1';
+  const unitVal = existingData ? existingData.unidad : '';
+
+  row.innerHTML = `
+    <input type="text" id="req-prod-name-${id}" value="${nameVal}" placeholder="Producto…"
+      style="flex:2;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:6px;padding:5px 8px;font-family:'DM Sans',sans-serif;font-size:12px;color:#fff;outline:none;min-width:0">
+    <input type="number" id="req-prod-qty-${id}" value="${qtyVal}" placeholder="Cant." min="1" step="1"
+      style="width:52px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:6px;padding:5px 6px;font-family:'DM Sans',sans-serif;font-size:12px;color:#fff;outline:none;text-align:center;flex-shrink:0">
+    <input type="text" id="req-prod-unit-${id}" value="${unitVal}" placeholder="Unidad"
+      style="width:60px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:6px;padding:5px 6px;font-family:'DM Sans',sans-serif;font-size:12px;color:#fff;outline:none;text-align:center;flex-shrink:0">`;
+
+  // Botón eliminar pequeño
+  const delBtn = document.createElement('button');
+  delBtn.title = 'Eliminar';
+  delBtn.innerHTML = '✕';
+  delBtn.style.cssText = 'background:rgba(224,85,85,.1);border:1px solid rgba(224,85,85,.25);border-radius:6px;color:#ef9a9a;padding:4px 7px;cursor:pointer;font-size:11px;flex-shrink:0;transition:all .15s';
+  delBtn.onclick = () => { row.remove(); if (!document.getElementById('req-products-list').children.length) document.getElementById('req-products-empty').style.display = 'block'; };
+  row.appendChild(delBtn);
+  list.appendChild(row);
+}
+
+// ── Guardar requisición ───────────────────────────────────────
+async function saveRequisicion() {
+  const solicitante = document.getElementById('req-solicitante').value;
+  const eventoId = document.getElementById('req-evento').value;
+  const fecha    = document.getElementById('req-fecha').value;
+  const prio     = document.getElementById('req-prioridad').value;
+  const notas    = document.getElementById('req-notas').value.trim();
+  if (!solicitante) { showToast('⚠️ Selecciona el solicitante'); return; }
+  if (!eventoId) { showToast('⚠️ Selecciona el evento'); return; }
+  if (!fecha)    { showToast('⚠️ Indica la fecha requerida'); return; }
+
+  // Recopilar productos
+  const productos = [];
+  document.querySelectorAll('#req-products-list > div').forEach(row => {
+    const rowId = row.id.replace('req-row-','');
+    const nombre = document.getElementById('req-prod-name-'+rowId)?.value.trim();
+    const cantidad = document.getElementById('req-prod-qty-'+rowId)?.value;
+    const unidad = document.getElementById('req-prod-unit-'+rowId)?.value.trim();
+    if (nombre) productos.push({ nombre, cantidad: Number(cantidad)||1, unidad: unidad||'pz' });
+  });
+  if (!productos.length) { showToast('⚠️ Agrega al menos un producto'); return; }
+
+  const evento = (_evs||[]).find(e=>e.id==eventoId) || { nombre: 'Sin evento', id: eventoId };
+  const req = {
+    id: Date.now(),
+    eventoId,
+    eventoNombre: evento.nombre,
+    eventoFecha: evento.fecha || '',
+    fechaRequerida: fecha,
+    prioridad: prio,
+    notas,
+    productos,
+    solicitante: solicitante,
+    solicitanteKey: solicitante.toLowerCase(),
+    status: 'pendiente',
+    creadaEn: new Date().toISOString().slice(0,10),
+    comentarioSalma: ''
+  };
+
+  const updated = [..._requisiciones, req];
+  await window._fbSaveShared('valkibah_requisiciones', { items: updated });
+  _requisiciones = updated;
+  closeReqForm();
+  renderReqList();
+  showToast('📨 Requisición enviada a Salma');
+}
+
+// ── Render lista de requisiciones (pantalla general inventario) ──
+function setReqFilter(f, btn) {
+  _reqFilter = f;
+  document.querySelectorAll('#req-filter-bar .al-filter-btn').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  renderReqList();
+}
+
+function renderReqList() {
+  const container = document.getElementById('req-list-container');
+  if (!container) return;
+  let list = _requisiciones.slice().sort((a,b)=>b.id-a.id);
+  if (_reqFilter !== 'all') list = list.filter(r=>r.status===_reqFilter);
+
+  if (!list.length) {
+    container.innerHTML = '<div style="color:rgba(168,240,232,.3);font-size:13px;text-align:center;padding:32px 0">Sin requisiciones' + (_reqFilter!=='all'?' en este estado':' registradas') + '.</div>';
+    return;
+  }
+  container.innerHTML = list.map(req => _reqCard(req, false)).join('');
+}
+
+// ── Render lista en perfil de Salma ──────────────────────────
+function setSalmaReqFilter(f, btn) {
+  _salmaReqFilter = f;
+  document.querySelectorAll('#salma-req-filter-bar .al-filter-btn').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  renderSalmaReqList();
+}
+
+function renderSalmaReqList() {
+  const container = document.getElementById('salma-req-list');
+  if (!container) return;
+  let list = _requisiciones.slice().sort((a,b)=>b.id-a.id);
+  if (_salmaReqFilter !== 'all') list = list.filter(r=>r.status===_salmaReqFilter);
+
+  if (!list.length) {
+    container.innerHTML = '<div style="color:rgba(168,240,232,.3);font-size:13px;text-align:center;padding:32px 0">Sin requisiciones' + (_salmaReqFilter!=='all'?' en este estado':' aún') + '.</div>';
+    return;
+  }
+  container.innerHTML = list.map(req => _reqCard(req, true)).join('');
+}
+
+// ── Tarjeta de requisición ────────────────────────────────────
+function _reqCard(req, isSalma) {
+  const statusMap = {
+    pendiente:  { label:'⏳ Pendiente',  bg:'rgba(133,100,4,.3)',  color:'#ffc107' },
+    aprobada:   { label:'✅ Aprobada',   bg:'rgba(15,81,50,.3)',   color:'#69f0ae' },
+    rechazada:  { label:'❌ Rechazada',  bg:'rgba(132,32,41,.3)',  color:'#ef9a9a' },
+  };
+  const prioMap = { alta:'🔴 Alta', media:'🟡 Media', baja:'🔵 Baja' };
+  const sc = statusMap[req.status] || statusMap.pendiente;
+  const prods = (req.productos||[]).map(p=>`<li style="color:rgba(168,240,232,.75);font-size:12px;margin-bottom:2px"><span style="color:#fff;font-weight:600">${p.nombre}</span> — ${p.cantidad} ${p.unidad}</li>`).join('');
+  const comentario = req.comentarioSalma ? `<div style="margin-top:8px;padding:8px 10px;background:rgba(64,217,192,.08);border-radius:8px;border:1px solid rgba(64,217,192,.2);font-size:12px;color:rgba(168,240,232,.8)"><span style="font-weight:700;color:var(--teal-400)">💬 Salma:</span> ${req.comentarioSalma}</div>` : '';
+  const actionBtns = isSalma && req.status === 'pendiente'
+    ? `<div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap">
+        <button onclick="responderReq(${req.id},'aprobada')" style="flex:1;background:rgba(105,240,174,.12);border:1.5px solid rgba(105,240,174,.3);border-radius:8px;color:#69f0ae;padding:8px;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:700;cursor:pointer">✅ Aprobar</button>
+        <button onclick="responderReq(${req.id},'rechazada')" style="flex:1;background:rgba(224,85,85,.1);border:1.5px solid rgba(224,85,85,.25);border-radius:8px;color:#ef9a9a;padding:8px;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:700;cursor:pointer">❌ Rechazar</button>
+       </div>` : '';
+  const downloadBtn = isSalma
+    ? `<button onclick="descargarReqImagen(${req.id})" title="Descargar imagen" style="background:rgba(64,217,192,.12);border:1.5px solid rgba(64,217,192,.25);border-radius:8px;color:var(--teal-400);padding:7px 10px;font-size:13px;cursor:pointer;flex-shrink:0" onmouseenter="this.style.background='rgba(64,217,192,.22)'" onmouseleave="this.style.background='rgba(64,217,192,.12)'">⬇️</button>` : '';
+
+  const deleteBtn = !isSalma
+    ? `<button onclick="eliminarRequisicion(${req.id})" title="Eliminar requisición"
+        style="background:rgba(224,85,85,.1);border:1.5px solid rgba(224,85,85,.25);border-radius:8px;color:#ef9a9a;padding:7px 10px;font-size:13px;cursor:pointer;flex-shrink:0;transition:all .15s"
+        onmouseenter="this.style.background='rgba(224,85,85,.25)';this.style.color='#fff'"
+        onmouseleave="this.style.background='rgba(224,85,85,.1)';this.style.color='#ef9a9a'">🗑</button>` : '';
+
+  return `<div style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:16px;margin-bottom:12px">
+    <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:10px">
+      <div style="flex:1;min-width:0">
+        <div style="font-weight:700;font-size:14px;color:#fff;margin-bottom:2px">🎉 ${req.eventoNombre}</div>
+        <div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:4px">
+          <span style="display:inline-block;padding:2px 10px;border-radius:8px;font-size:10px;font-weight:700;background:${sc.bg};color:${sc.color}">${sc.label}</span>
+          <span style="font-size:11px;color:rgba(168,240,232,.5)">${prioMap[req.prioridad]||''}</span>
+          <span style="font-size:11px;color:rgba(168,240,232,.45)">📅 Requerida: ${formatDisplayDate(req.fechaRequerida)}</span>
+          ${isSalma ? `<span style="font-size:11px;color:var(--teal-400)">👤 ${req.solicitante}</span>` : ''}
+        </div>
+      </div>
+      <div style="display:flex;gap:6px;align-items:center;flex-shrink:0">
+        ${downloadBtn}
+        ${deleteBtn}
+      </div>
+    </div>
+    <ul style="list-style:none;margin:0 0 4px;padding:0 0 0 4px">${prods}</ul>
+    ${req.notas ? `<div style="font-size:12px;color:rgba(168,240,232,.45);margin-top:6px;font-style:italic">"${req.notas}"</div>` : ''}
+    ${comentario}
+    ${actionBtns}
+  </div>`;
+}
+
+// ── Eliminar requisición (vista Inventario) ───────────────────
+async function eliminarRequisicion(reqId) {
+  const req = _requisiciones.find(r => r.id === reqId);
+  if (!req) return;
+
+  // Usar modal de confirmación existente si está disponible
+  const overlay = document.getElementById('inv-delete-overlay');
+  const nameEl  = document.getElementById('inv-delete-name');
+  const titleEl = document.getElementById('inv-delete-title');
+  const btn     = document.getElementById('inv-delete-confirm-btn');
+
+  if (overlay && nameEl && btn) {
+    if (titleEl) titleEl.textContent = '¿Eliminar requisición?';
+    nameEl.textContent = `${req.eventoNombre} — ${req.solicitante}`;
+    overlay.style.display = 'flex';
+    btn.onclick = async () => {
+      closeInvDeleteModal();
+      _requisiciones = _requisiciones.filter(r => r.id !== reqId);
+      await window._fbSaveShared('valkibah_requisiciones', { items: _requisiciones });
+      renderReqList();
+      updateReqBadge();
+      showToast('🗑 Requisición eliminada');
+    };
+  } else {
+    // Fallback sin modal
+    if (!confirm(`¿Eliminar la requisición de "${req.eventoNombre}"? Esta acción no se puede deshacer.`)) return;
+    _requisiciones = _requisiciones.filter(r => r.id !== reqId);
+    await window._fbSaveShared('valkibah_requisiciones', { items: _requisiciones });
+    renderReqList();
+    updateReqBadge();
+    showToast('🗑 Requisición eliminada');
+  }
+}
+
+// ── Responder requisición (Salma) ─────────────────────────────
+function responderReq(reqId, decision) {
+  const req = _requisiciones.find(r=>r.id===reqId);
+  if (!req) return;
+  const overlay = document.getElementById('req-detail-overlay');
+  const content = document.getElementById('req-detail-content');
+  const label = decision === 'aprobada' ? '✅ Aprobar Requisición' : '❌ Rechazar Requisición';
+  const color = decision === 'aprobada' ? '#69f0ae' : '#ef9a9a';
+  content.innerHTML = `
+    <div style="font-family:'DM Serif Display',serif;font-size:19px;color:var(--teal-400);margin-bottom:4px">${label}</div>
+    <div style="font-size:13px;color:rgba(168,240,232,.5);margin-bottom:16px">Evento: ${req.eventoNombre} · Solicitante: ${req.solicitante}</div>
+    <div style="display:flex;flex-direction:column;gap:4px;margin-bottom:16px">
+      <label style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--teal-600)">💬 Comentario (opcional)</label>
+      <textarea id="req-resp-comment" rows="3" placeholder="Agrega una nota para el solicitante…"
+        style="background:rgba(255,255,255,.07);border:1.5px solid rgba(255,255,255,.15);border-radius:8px;padding:10px 12px;font-family:'DM Sans',sans-serif;font-size:13px;color:#fff;outline:none;resize:vertical"></textarea>
+    </div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap">
+      <button onclick="confirmarRespuestaReq(${reqId},'${decision}')" style="flex:1;background:linear-gradient(135deg,var(--teal-700),var(--pm));border:none;border-radius:10px;color:#fff;padding:12px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:700;cursor:pointer">${label}</button>
+      <button onclick="closeReqDetail()" style="background:rgba(255,255,255,.07);border:1.5px solid rgba(255,255,255,.15);border-radius:10px;color:var(--teal-200);padding:12px 16px;font-family:'DM Sans',sans-serif;font-size:13px;cursor:pointer">Cancelar</button>
+    </div>`;
+  overlay.style.display = 'flex';
+}
+
+async function confirmarRespuestaReq(reqId, decision) {
+  const comentario = document.getElementById('req-resp-comment')?.value.trim() || '';
+  const idx = _requisiciones.findIndex(r=>r.id===reqId);
+  if (idx < 0) return;
+  _requisiciones[idx].status = decision;
+  _requisiciones[idx].comentarioSalma = comentario;
+  _requisiciones[idx].respondidaEn = new Date().toISOString().slice(0,10);
+  await window._fbSaveShared('valkibah_requisiciones', { items: _requisiciones });
+  closeReqDetail();
+  renderSalmaReqList();
+  updateReqBadge();
+  showToast(decision === 'aprobada' ? '✅ Requisición aprobada' : '❌ Requisición rechazada');
+}
+
+function closeReqDetail() {
+  document.getElementById('req-detail-overlay').style.display = 'none';
+}
+
+// ── Descargar imagen de requisición (canvas) ──────────────────
+function descargarReqImagen(reqId) {
+  const req = _requisiciones.find(r=>r.id===reqId);
+  if (!req) return;
+  const statusMap = { pendiente:'⏳ PENDIENTE', aprobada:'✅ APROBADA', rechazada:'❌ RECHAZADA' };
+  const prioMap   = { alta:'🔴 Alta', media:'🟡 Media', baja:'🔵 Baja' };
+  const W=800, PH=Math.max(480, 200 + (req.productos||[]).length*34 + (req.notas?40:0) + (req.comentarioSalma?50:0));
+  const canvas = document.createElement('canvas');
+  canvas.width=W; canvas.height=PH;
+  const ctx = canvas.getContext('2d');
+
+  // Fondo
+  const grad = ctx.createLinearGradient(0,0,W,PH);
+  grad.addColorStop(0,'#051515'); grad.addColorStop(1,'#0a2e2e');
+  ctx.fillStyle=grad; ctx.fillRect(0,0,W,PH);
+
+  // Brillo superior
+  const glow = ctx.createRadialGradient(W*.6,0,0,W*.6,0,320);
+  glow.addColorStop(0,'rgba(64,217,192,.15)'); glow.addColorStop(1,'transparent');
+  ctx.fillStyle=glow; ctx.fillRect(0,0,W,PH);
+
+  // Borde
+  ctx.strokeStyle='rgba(64,217,192,.4)'; ctx.lineWidth=1.5;
+  _roundRect(ctx,14,14,W-28,PH-28,18); ctx.stroke();
+
+  let y=52;
+  // Header
+  ctx.fillStyle='rgba(64,217,192,.15)'; ctx.fillRect(14,14,W-28,54);
+  ctx.strokeStyle='rgba(64,217,192,.25)'; ctx.lineWidth=1;
+  ctx.beginPath(); ctx.moveTo(14,68); ctx.lineTo(W-14,68); ctx.stroke();
+  ctx.fillStyle='#40d9c0'; ctx.font='bold 14px DM Sans,sans-serif'; ctx.textAlign='left';
+  ctx.fillText('GRUPO VALKIBAH', 36, 38);
+  ctx.fillStyle='rgba(168,240,232,.6)'; ctx.font='12px DM Sans,sans-serif';
+  ctx.fillText('Requisición de Productos', 36, 56);
+  ctx.fillStyle='rgba(168,240,232,.5)'; ctx.textAlign='right';
+  ctx.fillText(statusMap[req.status]||'', W-36, 38);
+  ctx.fillStyle='rgba(168,240,232,.4)'; ctx.font='11px DM Sans,sans-serif';
+  ctx.fillText('Creada: '+req.creadaEn, W-36, 56);
+  y=90;
+
+  // Evento
+  ctx.textAlign='left';
+  ctx.fillStyle='rgba(168,240,232,.45)'; ctx.font='10px DM Sans,sans-serif';
+  ctx.fillText('EVENTO', 36, y+2); y+=18;
+  ctx.fillStyle='#fff'; ctx.font='bold 18px DM Sans,sans-serif';
+  ctx.fillText(req.eventoNombre, 36, y+4); y+=26;
+
+  // Meta row
+  ctx.fillStyle='#40d9c0'; ctx.font='12px DM Sans,sans-serif';
+  ctx.fillText('📅 Requerida: '+formatDisplayDate(req.fechaRequerida)+'   '+prioMap[req.prioridad]+'   👤 '+req.solicitante, 36, y); y+=28;
+
+  // Divisor
+  ctx.strokeStyle='rgba(64,217,192,.15)'; ctx.lineWidth=1;
+  ctx.beginPath(); ctx.moveTo(36,y); ctx.lineTo(W-36,y); ctx.stroke(); y+=16;
+
+  // Productos
+  ctx.fillStyle='rgba(168,240,232,.45)'; ctx.font='bold 10px DM Sans,sans-serif';
+  ctx.fillText('PRODUCTOS SOLICITADOS', 36, y); y+=18;
+  (req.productos||[]).forEach((p,i) => {
+    const alt = i%2===0;
+    if(alt){ ctx.fillStyle='rgba(255,255,255,.03)'; ctx.fillRect(28,y-14,W-56,26); }
+    ctx.fillStyle='#fff'; ctx.font='bold 13px DM Sans,sans-serif';
+    ctx.fillText(p.nombre, 44, y);
+    ctx.fillStyle='#40d9c0'; ctx.textAlign='right'; ctx.font='13px DM Sans,sans-serif';
+    ctx.fillText(p.cantidad+' '+p.unidad, W-44, y);
+    ctx.textAlign='left'; y+=28;
+  });
+  y+=6;
+
+  // Notas
+  if(req.notas){
+    ctx.strokeStyle='rgba(64,217,192,.15)'; ctx.lineWidth=1;
+    ctx.beginPath(); ctx.moveTo(36,y); ctx.lineTo(W-36,y); ctx.stroke(); y+=16;
+    ctx.fillStyle='rgba(168,240,232,.45)'; ctx.font='bold 10px DM Sans,sans-serif';
+    ctx.fillText('NOTAS', 36, y); y+=16;
+    ctx.fillStyle='rgba(168,240,232,.7)'; ctx.font='12px DM Sans,sans-serif';
+    ctx.fillText(req.notas.slice(0,90), 36, y); y+=22;
+  }
+
+  // Comentario Salma
+  if(req.comentarioSalma){
+    ctx.fillStyle='rgba(64,217,192,.08)'; ctx.fillRect(28,y-4,W-56,40);
+    ctx.strokeStyle='rgba(64,217,192,.2)'; ctx.lineWidth=1;
+    _roundRect(ctx,28,y-4,W-56,40,8); ctx.stroke();
+    ctx.fillStyle='#40d9c0'; ctx.font='bold 11px DM Sans,sans-serif';
+    ctx.fillText('💬 Salma:', 44, y+12);
+    ctx.fillStyle='rgba(168,240,232,.8)'; ctx.font='12px DM Sans,sans-serif';
+    ctx.fillText(req.comentarioSalma.slice(0,80), 120, y+12); y+=44;
+  }
+
+  // Footer
+  ctx.fillStyle='rgba(168,240,232,.2)'; ctx.font='10px DM Sans,sans-serif'; ctx.textAlign='center';
+  ctx.fillText('Grupo Valkibah · Requisición #'+req.id, W/2, PH-22);
+
+  const a = document.createElement('a');
+  a.download = 'requisicion_'+req.eventoNombre.replace(/\s+/g,'_')+'_'+req.id+'.png';
+  a.href = canvas.toDataURL('image/png'); a.click();
 }
 </script>
 </body>
