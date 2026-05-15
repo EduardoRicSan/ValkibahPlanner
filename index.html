@@ -223,7 +223,7 @@ align-items:center;justify-content:flex-start;padding:0}
 .main-area.dark-bg{background:linear-gradient(160deg,var(--teal-900) 0%,#0a2e2e 100%)}
 .view{display:none;padding:24px}
 .view.active{display:block}
-#view-calendar,#view-registro{background:linear-gradient(160deg,var(--teal-900) 0%,#0a2e2e 100%);min-height:100%;color:#fff}
+#view-calendar,#view-registro,#view-desempeno{background:linear-gradient(160deg,var(--teal-900) 0%,#0a2e2e 100%);min-height:100%;color:#fff}
 #view-calendar .ev-cal-title{color:var(--teal-400)}
 #view-calendar .ev-day-num{color:var(--teal-200)}
 #view-calendar .ev-panel-title{color:var(--teal-400)}
@@ -1599,6 +1599,7 @@ align-items:center;justify-content:flex-start;padding:0}
         <button class="nav-tab active" onclick="showView('calendar')" id="tab-calendar">📅 Calendario</button>
         <button class="nav-tab" onclick="showView('registro')" id="tab-registro">📋 Registro</button>
         <button class="nav-tab" onclick="showView('cursos')" id="tab-cursos">🚀 Iniciativas</button>
+        <button class="nav-tab" onclick="showView('desempeno')" id="tab-desempeno">📊 Mi Desempeño</button>
         <button class="nav-tab" onclick="showView('referidos')" id="tab-referidos" style="display:none">🎁 Referidos</button>
         <button class="nav-tab" onclick="showView('gestion')" id="tab-gestion" style="display:none">🗂 Gestión</button>
       </nav>
@@ -1679,6 +1680,11 @@ align-items:center;justify-content:flex-start;padding:0}
           <div class="big-icon">📭</div>
           <p>Aún no hay actividades registradas.</p>
         </div>
+      </div>
+
+      <!-- MI DESEMPEÑO -->
+      <div class="view" id="view-desempeno">
+        <div id="desempeno-root"></div>
       </div>
 
       <!-- KANBAN -->
@@ -1850,6 +1856,7 @@ align-items:center;justify-content:flex-start;padding:0}
     <div class="mobile-tabbar-inner" id="mobile-tabbar-inner" style="grid-template-columns:repeat(3,1fr)">
       <button class="mtab active" id="mtab-calendar" onclick="showView('calendar')"><span class="mtab-icon">📅</span>Calendario</button>
       <button class="mtab" id="mtab-registro" onclick="showView('registro')"><span class="mtab-icon">📋</span>Registro</button>
+      <button class="mtab" id="mtab-desempeno" onclick="showView('desempeno')"><span class="mtab-icon">📊</span>Desempeño</button>
       <button class="mtab" id="mtab-cursos" onclick="showView('cursos')"><span class="mtab-icon">🚀</span>Iniciativas</button>
       <button class="mtab" id="mtab-referidos" onclick="showView('referidos')" style="display:none"><span class="mtab-icon">🎁</span>Referidos</button>
     </div>
@@ -2032,7 +2039,7 @@ function openPerson(p) {
   if (mtabRef) mtabRef.style.display = canReferidos ? 'flex'  : 'none';
   // Ajustar columnas mobile tabbar
   const mti = document.getElementById('mobile-tabbar-inner');
-  if (mti) mti.style.gridTemplateColumns = canReferidos ? 'repeat(4,1fr)' : 'repeat(3,1fr)';
+  if (mti) mti.style.gridTemplateColumns = canReferidos ? 'repeat(5,1fr)' : 'repeat(4,1fr)';
   // Gestión tab — solo Salma
   const tabGestion = document.getElementById('tab-gestion');
   if (tabGestion) tabGestion.style.display = p.key === 'salma' ? 'block' : 'none';
@@ -2055,6 +2062,7 @@ function openPerson(p) {
     activities = data ? (data.activities || []) : [];
     activities.forEach(a => { if (!a.status) a.status = "pendiente"; });
     renderCalendar(); renderRegistro(); renderKanban();
+    if(document.getElementById('view-desempeno')?.classList.contains('active')) renderDesempeno();
   });
 
   window._unsubIdeas = window._fbSubscribe(p.storage_key + "_ideas", data => {
@@ -2206,6 +2214,7 @@ function showView(v) {
   if(mbar)mbar.style.display="none"; // no longer needed
   if(v==="calendar")renderCalendar();
   if(v==="registro")renderRegistro();
+  if(v==="desempeno")renderDesempeno();
   if(v==="kanban"){loadOtherPersonsForKanban();renderKanban();}
   if(v==="ideas")renderIdeas();
   if(v==="cursos")renderPerfilCursos();
@@ -2882,28 +2891,22 @@ function openProfileModal(){
   document.getElementById("profile-sidebar-overlay").classList.add("open");
   document.getElementById("profile-sidebar").classList.add("open");
 
-  // If Eduardo, subscribe to cursos updates so list stays fresh
   if (p.key === ADMIN_KEY && window._fbSubscribeShared) {
     if (window._profileCursosUnsub) { try { window._profileCursosUnsub(); } catch {} }
     window._profileCursosUnsub = window._fbSubscribeShared('valkibah_cursos', data => {
       _cursos = data ? (data.cursos || []) : [];
       _cursosCats = data ? (data.cats || []) : [];
       const sidebar = document.getElementById("profile-sidebar");
-      if (sidebar && sidebar.classList.contains("open")) {
-        _renderProfileModalContent(p);
-      }
+      if (sidebar && sidebar.classList.contains("open")) { _renderProfileModalContent(p); }
     });
   }
 
-  // If Salma, re-render when requisiciones data arrives (async Firebase)
   if (p.key === 'salma' && window._fbSubscribeShared) {
     if (window._profileReqsUnsub) { try { window._profileReqsUnsub(); } catch {} }
     window._profileReqsUnsub = window._fbSubscribeShared('valkibah_requisiciones', data => {
       _requisiciones = data ? (data.items || []) : [];
       const sidebar = document.getElementById("profile-sidebar");
-      if (sidebar && sidebar.classList.contains("open")) {
-        _renderProfileModalContent(p);
-      }
+      if (sidebar && sidebar.classList.contains("open")) { _renderProfileModalContent(p); }
     });
   }
 }
@@ -5530,28 +5533,24 @@ document.getElementById('assign-notif-overlay').addEventListener('click', functi
   const _orig = openPerson;
   window.openPerson = function(p) {
     _orig(p);
-    // Re-suscribirse con chequeo de asignaciones incluido
-    // (esperamos un tick para que _orig haya creado _unsubActs)
     setTimeout(function() {
       if (window._unsubActs) { window._unsubActs(); }
       window._unsubActs = window._fbSubscribe(p.storage_key, function(data) {
         activities = data ? (data.activities || []) : [];
         activities.forEach(function(a) { if (!a.status) a.status = 'pendiente'; });
         renderCalendar(); renderRegistro(); renderKanban();
+        if(document.getElementById('view-desempeno')?.classList.contains('active')) renderDesempeno();
         checkNewAssignments(activities);
       });
     }, 0);
-    // Si es Salma, suscribirse a requisiciones y mostrar notif si hay pendientes nuevas
+    // Salma: subscribe to requisiciones and show notif
     if (p.key === 'salma' && window._fbSubscribeShared) {
       if (window._unsubReqNotif) { try { window._unsubReqNotif(); } catch {} window._unsubReqNotif = null; }
       var _notifShown = false;
       window._unsubReqNotif = window._fbSubscribeShared('valkibah_requisiciones', function(data) {
         _requisiciones = data ? (data.items || []) : [];
         updateReqBadge();
-        if (!_notifShown) {
-          _notifShown = true;
-          checkNewRequisiciones(_requisiciones);
-        }
+        if (!_notifShown) { _notifShown = true; checkNewRequisiciones(_requisiciones); }
       });
     }
   };
@@ -5563,89 +5562,47 @@ document.getElementById('assign-notif-overlay').addEventListener('click', functi
      Mismo patrón que el modal de asignaciones para colaboradores
      ══════════════════════════════════════════════════════════════ -->
 <div id="req-salma-notif-overlay" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.65);backdrop-filter:blur(6px);align-items:center;justify-content:center;padding:20px">
-  <div style="
-    background:linear-gradient(145deg,#071f1f 0%,#0a3030 60%,#0d3d2a 100%);
-    border:2px solid rgba(64,217,192,.5);
-    border-radius:28px;
-    padding:32px 28px 26px;
-    width:100%;max-width:420px;
-    box-shadow:0 0 0 1px rgba(64,217,192,.15),0 24px 80px rgba(0,0,0,.7),0 0 60px rgba(64,217,192,.12);
-    position:relative;
-    animation:assignPop .38s cubic-bezier(.34,1.56,.64,1) both;
-    text-align:center;
-  ">
-    <div style="position:absolute;top:-30px;left:50%;transform:translateX(-50%);width:80px;height:80px;background:radial-gradient(circle,rgba(64,217,192,.55),transparent 70%);filter:blur(18px);pointer-events:none"></div>
+  <div style="background:linear-gradient(145deg,#071f1f 0%,#0a3030 60%,#0d3d2a 100%);border:2px solid rgba(64,217,192,.5);border-radius:28px;padding:32px 28px 26px;width:100%;max-width:420px;box-shadow:0 0 0 1px rgba(64,217,192,.15),0 24px 80px rgba(0,0,0,.7);position:relative;animation:assignPop .38s cubic-bezier(.34,1.56,.64,1) both;text-align:center">
     <div style="font-size:52px;margin-bottom:12px;animation:assignBounce 1s ease infinite alternate">🔔</div>
     <div style="font-family:'DM Serif Display',serif;font-size:22px;color:#7fffd4;margin-bottom:6px;line-height:1.2" id="req-salma-notif-title">¡Tienes nuevas requisiciones!</div>
-    <div style="font-size:13px;color:rgba(168,240,232,.65);margin-bottom:20px" id="req-salma-notif-sub">Pendientes de tu revisión y aprobación</div>
-    <div id="req-salma-notif-list" style="display:flex;flex-direction:column;gap:8px;max-height:220px;overflow-y:auto;margin-bottom:22px;scrollbar-width:thin;scrollbar-color:rgba(64,217,192,.25) transparent;text-align:left;"></div>
+    <div style="font-size:13px;color:rgba(168,240,232,.65);margin-bottom:20px" id="req-salma-notif-sub">Pendientes de tu revisión</div>
+    <div id="req-salma-notif-list" style="display:flex;flex-direction:column;gap:8px;max-height:220px;overflow-y:auto;margin-bottom:22px;text-align:left"></div>
     <div style="display:flex;gap:10px">
-      <button onclick="closeReqSalmaNotif()" style="flex:1;padding:13px;border-radius:12px;border:1.5px solid rgba(255,255,255,.15);background:rgba(255,255,255,.07);color:rgba(168,240,232,.7);font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;cursor:pointer;" onmouseover="this.style.background='rgba(255,255,255,.13)'" onmouseout="this.style.background='rgba(255,255,255,.07)'">Cerrar</button>
-      <button onclick="closeReqSalmaNotifAndGo()" style="flex:2;padding:13px;border-radius:12px;border:none;background:linear-gradient(135deg,#1a7a7a,#0e6b6b);color:#fff;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:700;cursor:pointer;box-shadow:0 4px 18px rgba(26,122,122,.45);" onmouseover="this.style.transform='translateY(-1px)'" onmouseout="this.style.transform='none'">📋 Ver requisiciones</button>
+      <button onclick="closeReqSalmaNotif()" style="flex:1;padding:13px;border-radius:12px;border:1.5px solid rgba(255,255,255,.15);background:rgba(255,255,255,.07);color:rgba(168,240,232,.7);font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;cursor:pointer">Cerrar</button>
+      <button onclick="closeReqSalmaNotifAndGo()" style="flex:2;padding:13px;border-radius:12px;border:none;background:linear-gradient(135deg,#1a7a7a,#0e6b6b);color:#fff;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:700;cursor:pointer;box-shadow:0 4px 18px rgba(26,122,122,.45)">📋 Ver requisiciones</button>
     </div>
-    <div id="req-salma-notif-badge" style="position:absolute;top:-12px;right:18px;background:linear-gradient(135deg,#e05555,#c0392b);color:#fff;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:800;padding:4px 11px;border-radius:999px;box-shadow:0 3px 12px rgba(224,85,85,.55);border:2px solid rgba(255,255,255,.15);display:none;"></div>
+    <div id="req-salma-notif-badge" style="position:absolute;top:-12px;right:18px;background:linear-gradient(135deg,#e05555,#c0392b);color:#fff;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:800;padding:4px 11px;border-radius:999px;box-shadow:0 3px 12px rgba(224,85,85,.55);border:2px solid rgba(255,255,255,.15);display:none"></div>
   </div>
 </div>
 <style>
 #req-salma-notif-overlay.open { display:flex !important; }
-#req-salma-notif-list::-webkit-scrollbar { width:4px }
-#req-salma-notif-list::-webkit-scrollbar-track { background:transparent }
-#req-salma-notif-list::-webkit-scrollbar-thumb { background:rgba(64,217,192,.3);border-radius:4px }
 </style>
 
 <script>
-// ══════════════════════════════════════════════════════════════
-//  NOTIFICACIÓN DE REQUISICIONES PARA SALMA
-//  Mismo patrón que checkNewAssignments para colaboradores
-// ══════════════════════════════════════════════════════════════
-
 const SEEN_REQS_KEY = 'valkibah_salma_seen_reqs_v2';
-function getSeenReqs() {
-  try { return JSON.parse(localStorage.getItem(SEEN_REQS_KEY) || '[]'); } catch { return []; }
-}
-function markReqsSeen(ids) {
-  const seen = new Set(getSeenReqs());
-  ids.forEach(id => seen.add(String(id)));
-  localStorage.setItem(SEEN_REQS_KEY, JSON.stringify([...seen]));
-}
+function getSeenReqs() { try { return JSON.parse(localStorage.getItem(SEEN_REQS_KEY) || '[]'); } catch { return []; } }
+function markReqsSeen(ids) { const s = new Set(getSeenReqs()); ids.forEach(id => s.add(String(id))); localStorage.setItem(SEEN_REQS_KEY, JSON.stringify([...s])); }
 
 function checkNewRequisiciones(reqs) {
   if (!currentPerson || currentPerson.key !== 'salma') return;
   const seen = new Set(getSeenReqs());
   const newPending = reqs.filter(r => r.status === 'pendiente' && !seen.has(String(r.id)));
   if (!newPending.length) return;
-
   const total = newPending.length;
-  document.getElementById('req-salma-notif-title').textContent =
-    total === 1 ? '¡Tienes una nueva requisición!' : `¡Tienes ${total} nuevas requisiciones!`;
-  document.getElementById('req-salma-notif-sub').textContent =
-    total === 1 ? 'Pendiente de tu revisión y aprobación' : 'Pendientes de tu revisión y aprobación';
-
+  document.getElementById('req-salma-notif-title').textContent = total === 1 ? '¡Tienes una nueva requisición!' : `¡Tienes ${total} nuevas requisiciones!`;
+  document.getElementById('req-salma-notif-sub').textContent = total === 1 ? 'Pendiente de tu revisión y aprobación' : 'Pendientes de tu revisión y aprobación';
   const badge = document.getElementById('req-salma-notif-badge');
-  badge.textContent = total;
-  badge.style.display = 'block';
-
+  badge.textContent = total; badge.style.display = 'block';
   const list = document.getElementById('req-salma-notif-list');
   list.innerHTML = '';
-  const PRIO_COLORS = {
-    alta:  { bg:'rgba(224,85,85,.2)',    color:'#ef9a9a', border:'rgba(224,85,85,.35)',    label:'🔴 Alta' },
-    media: { bg:'rgba(255,193,7,.15)',   color:'#ffd54f', border:'rgba(255,193,7,.3)',     label:'🟡 Media' },
-    baja:  { bg:'rgba(105,240,174,.15)', color:'#69f0ae', border:'rgba(105,240,174,.3)',   label:'🟢 Baja' },
-  };
+  const PC = { alta:{bg:'rgba(64,217,192,.15)',color:'#7fffd4',border:'rgba(64,217,192,.3)',label:'🔴 Alta'}, media:{bg:'rgba(255,193,7,.15)',color:'#ffd54f',border:'rgba(255,193,7,.3)',label:'🟡 Media'}, baja:{bg:'rgba(105,240,174,.15)',color:'#69f0ae',border:'rgba(105,240,174,.3)',label:'🟢 Baja'} };
   newPending.forEach(r => {
-    const p = PRIO_COLORS[r.prioridad] || PRIO_COLORS.media;
+    const p = PC[r.prioridad] || PC.media;
     const item = document.createElement('div');
-    item.style.cssText = 'display:flex;align-items:flex-start;gap:10px;background:rgba(64,217,192,.07);border:1.5px solid rgba(64,217,192,.18);border-radius:12px;padding:10px 12px;';
-    item.innerHTML = `
-      <div style="font-size:20px;flex-shrink:0;line-height:1">📌</div>
-      <div style="flex:1;min-width:0">
-        <div style="font-weight:700;font-size:13px;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${r.eventoNombre || 'Sin nombre'}</div>
-        <div style="font-size:11px;color:rgba(168,240,232,.6);margin-top:2px">👤 ${r.solicitante || '—'} · 📅 ${typeof formatDisplayDate === 'function' ? formatDisplayDate(r.fechaRequerida) : (r.fechaRequerida || '—')}</div>
-      </div>
-      <span style="flex-shrink:0;font-size:10px;font-weight:700;padding:3px 8px;border-radius:999px;background:${p.bg};color:${p.color};border:1px solid ${p.border}">${p.label}</span>`;
+    item.style.cssText = 'display:flex;align-items:flex-start;gap:10px;background:rgba(64,217,192,.07);border:1.5px solid rgba(64,217,192,.18);border-radius:12px;padding:10px 12px';
+    item.innerHTML = `<div style="font-size:20px;flex-shrink:0">📌</div><div style="flex:1;min-width:0"><div style="font-weight:700;font-size:13px;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${r.eventoNombre||'Sin nombre'}</div><div style="font-size:11px;color:rgba(168,240,232,.6);margin-top:2px">👤 ${r.solicitante||'—'} · 📅 ${typeof formatDisplayDate==='function'?formatDisplayDate(r.fechaRequerida):(r.fechaRequerida||'—')}</div></div><span style="flex-shrink:0;font-size:10px;font-weight:700;padding:3px 8px;border-radius:999px;background:${p.bg};color:${p.color};border:1px solid ${p.border}">${p.label}</span>`;
     list.appendChild(item);
   });
-
   window._pendingReqIds = newPending.map(r => String(r.id));
   const overlay = document.getElementById('req-salma-notif-overlay');
   overlay.style.display = 'flex';
@@ -5658,13 +5615,11 @@ function closeReqSalmaNotif() {
   setTimeout(() => { overlay.style.display = 'none'; }, 300);
   if (window._pendingReqIds) { markReqsSeen(window._pendingReqIds); window._pendingReqIds = null; }
 }
-
 function closeReqSalmaNotifAndGo() {
   closeReqSalmaNotif();
   showView('gestion');
   if (typeof switchGestionTab === 'function') switchGestionTab('reqs');
 }
-
 document.getElementById('req-salma-notif-overlay').addEventListener('click', function(e) {
   if (e.target === this) closeReqSalmaNotif();
 });
@@ -7261,6 +7216,211 @@ function descargarReqImagen(reqId) {
   const a = document.createElement('a');
   a.download = 'requisicion_'+req.eventoNombre.replace(/\s+/g,'_')+'_'+req.id+'.png';
   a.href = canvas.toDataURL('image/png'); a.click();
+}
+</script>
+
+<script>
+// ══════════════════════════════════════════════════════════════
+//  MI DESEMPEÑO — motor completo
+// ══════════════════════════════════════════════════════════════
+let _dpPeriodo='mes', _dpRangeFrom=null, _dpRangeTo=null;
+/* histórico eliminado */
+
+function _dpMonthKey(d){const[y,m]=d.split('-');return y+'-'+parseInt(m);}
+function _dpGetSelectedMonthKey(){const s=document.getElementById('month-select');return s?s.value:null;}
+function _dpFilterActs(acts){
+  if(_dpPeriodo==='mes'){
+    const mk=_dpGetSelectedMonthKey();if(!mk)return acts;
+    const[y,m]=mk.split('-').map(Number);
+    return acts.filter(a=>{const[ay,am]=a.date.split('-').map(Number);return ay===y&&am===m;});
+  }
+  if(_dpPeriodo==='rango'&&_dpRangeFrom&&_dpRangeTo){
+    const[fy,fm]=_dpRangeFrom.split('-').map(Number);
+    const[ty,tm]=_dpRangeTo.split('-').map(Number);
+    return acts.filter(a=>{const[ay,am]=a.date.split('-').map(Number);return(ay>fy||(ay===fy&&am>=fm))&&(ay<ty||(ay===ty&&am<=tm));});
+  }
+  return acts;
+}
+function _dpMonthOptions(){return(window.MONTHS_OPT||[]).map(([m,label])=>({value:'2026-'+m,label}));}
+
+function _dpDonut(stats,cx,cy,r,sw){
+  const total=stats.reduce((s,d)=>s+d.value,0);
+  if(!total)return`<circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="${sw}"/><text x="${cx}" y="${cy+5}" text-anchor="middle" font-size="13" fill="rgba(255,255,255,.25)" font-family="DM Sans,sans-serif">Sin datos</text>`;
+  let out='',offset=-90;const circ=2*Math.PI*r;
+  stats.forEach(d=>{
+    if(!d.value)return;
+    const pct=d.value/total,dash=pct*circ,gap=circ-dash;
+    out+=`<circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="${d.color}" stroke-width="${sw}" stroke-dasharray="${dash.toFixed(2)} ${gap.toFixed(2)}" stroke-dashoffset="${(-(offset/360*circ)).toFixed(2)}" style="transform-origin:${cx}px ${cy}px"/>`;
+    offset+=pct*360;
+  });
+  return out;
+}
+
+function _dpBubbles(wd,w,h){
+  if(!wd.length)return`<text x="${w/2}" y="${h/2}" text-anchor="middle" font-size="13" fill="rgba(255,255,255,.25)" font-family="DM Sans,sans-serif">Sin actividades en el periodo</text>`;
+  const maxV=Math.max(...wd.map(d=>d.total),1);
+  const maxR=Math.min(44,Math.floor((w-40)/(wd.length*2.4)));
+  const minR=8;
+  const cy=h/2-8;
+  const step=(w-40)/wd.length;
+  let out='';
+  wd.forEach((d,i)=>{
+    const cx=24+i*step+step/2;
+    const r=d.total?Math.max(minR,Math.round(minR+(d.total/maxV)*(maxR-minR))):minR;
+    let color='rgba(255,255,255,.2)',opacity='.55';
+    if(d.total>0){
+      if(d.bloqueada>0&&d.bloqueada>=d.completadas){color='#f87171';opacity='.8';}
+      else if(d.completadas>=d.total*0.6){color='#4ade80';opacity='.82';}
+      else if(d.progreso>0){color='#60a5fa';opacity='.8';}
+      else{color='rgba(255,255,255,.4)';opacity='.7';}
+    }
+    if(d.completadas>0){
+      const glowR=r+5;
+      out+=`<circle cx="${cx.toFixed(1)}" cy="${cy}" r="${glowR}" fill="none" stroke="#4ade80" stroke-width="1.5" opacity=".18"/>`;
+    }
+    out+=`<circle cx="${cx.toFixed(1)}" cy="${cy}" r="${r}" fill="${color}" opacity="${opacity}"/>`;
+    if(d.total){
+      const fs=r>14?12:10;
+      out+=`<text x="${cx.toFixed(1)}" y="${(cy+fs/3).toFixed(1)}" text-anchor="middle" font-size="${fs}" font-weight="700" fill="#fff" font-family="DM Sans,sans-serif">${d.total}</text>`;
+    }
+    out+=`<text x="${cx.toFixed(1)}" y="${(cy+r+16).toFixed(1)}" text-anchor="middle" font-size="10" fill="rgba(168,240,232,.6)" font-family="DM Sans,sans-serif">${d.label}</text>`;
+    if(d.total){
+      const statsY=(cy+r+28).toFixed(1);
+      out+=`<text x="${cx.toFixed(1)}" y="${statsY}" text-anchor="middle" font-size="9" fill="rgba(168,240,232,.38)" font-family="DM Sans,sans-serif">v${d.completadas} o${d.progreso} x${d.bloqueada}</text>`;
+    }
+  });
+  return out;
+}
+
+function _dpWeeklyData(acts){
+  if(_dpPeriodo==='mes'){
+    const mk=_dpGetSelectedMonthKey();if(!mk)return[];
+    const[y,m]=mk.split('-').map(Number);
+    const dim=new Date(y,m,0).getDate();
+    const weeks=[];let d=1,wk=1;
+    while(d<=dim){const end=Math.min(d+6,dim);weeks.push({label:'S'+wk,from:d,to:end});d=end+1;wk++;}
+    return weeks.map(wk=>{
+      const wa=acts.filter(a=>{const[,,dd]=a.date.split('-').map(Number);return dd>=wk.from&&dd<=wk.to;});
+      return{label:wk.label,total:wa.length,completadas:wa.filter(a=>a.status==='completada').length,progreso:wa.filter(a=>a.status==='en-progreso').length,pendiente:wa.filter(a=>a.status==='pendiente').length,bloqueada:wa.filter(a=>a.status==='bloqueada').length};
+    });
+  }
+  const byM={};acts.forEach(a=>{const k=_dpMonthKey(a.date);if(!byM[k])byM[k]=[];byM[k].push(a);});
+  const MN=['','Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+  return Object.keys(byM).sort().map(k=>{const[,mon]=k.split('-');const ma=byM[k];return{label:MN[parseInt(mon)]||k,total:ma.length,completadas:ma.filter(a=>a.status==='completada').length,progreso:ma.filter(a=>a.status==='en-progreso').length,pendiente:ma.filter(a=>a.status==='pendiente').length,bloqueada:ma.filter(a=>a.status==='bloqueada').length};});
+}
+
+function renderDesempeno(){
+  const root=document.getElementById('desempeno-root');if(!root)return;
+  const p=currentPerson;if(!p)return;
+  const allActs=activities||[];
+  const acts=_dpFilterActs(allActs);
+  const isSalma=p.key==='salma';
+
+  const total=acts.length;
+  const completadas=acts.filter(a=>a.status==='completada').length;
+  const progreso=acts.filter(a=>a.status==='en-progreso').length;
+  const pendiente=acts.filter(a=>a.status==='pendiente').length;
+  const bloqueada=acts.filter(a=>a.status==='bloqueada').length;
+  const tasaComp=total?Math.round(completadas/total*100):0;
+  const collabCount=acts.filter(a=>(a.collaborators||[]).length>0).length;
+  const asignadasCount=isSalma?acts.filter(a=>a._assignedFrom).length:0;
+
+  const monthOpts=_dpMonthOptions();
+  if(!_dpRangeFrom)_dpRangeFrom=monthOpts[0]?.value||'';
+  if(!_dpRangeTo)_dpRangeTo=monthOpts[monthOpts.length-1]?.value||'';
+
+  const card=(icon,label,val,sub,color='rgba(168,240,232,.9)')=>`
+    <div style="background:rgba(255,255,255,.04);border:1px solid rgba(168,240,232,.1);border-radius:16px;padding:16px 14px;display:flex;flex-direction:column;gap:4px">
+      <div style="font-size:22px">${icon}</div>
+      <div style="font-size:26px;font-weight:800;color:${color};font-family:'DM Serif Display',serif;line-height:1">${val}</div>
+      <div style="font-size:12px;font-weight:600;color:rgba(168,240,232,.7)">${label}</div>
+      ${sub?`<div style="font-size:11px;color:rgba(168,240,232,.4)">${sub}</div>`:''}
+    </div>`;
+
+  const cards=[
+    card('📋','Total actividades',total,'','rgba(168,240,232,.9)'),
+    card('✅','Completadas',completadas,`${tasaComp}% de tasa`,'#4ade80'),
+    card('🔄','En progreso',progreso,'','#60a5fa'),
+    card('⏳','Pendientes',pendiente,'','rgba(255,255,255,.7)'),
+    card('🚫','Bloqueadas',bloqueada,'','#f87171'),
+    card('🤝','Con colaboración',collabCount,'actividades compartidas','#fbbf24'),
+    ...(isSalma?[card('📌','Asignadas',asignadasCount,'a otros colaboradores','#c084fc')]:[]),
+  ];
+
+  const donutStats=[
+    {label:'Completadas',value:completadas,color:'#4ade80'},
+    {label:'En progreso',value:progreso,color:'#60a5fa'},
+    {label:'Pendientes',value:pendiente,color:'rgba(255,255,255,.35)'},
+    {label:'Bloqueadas',value:bloqueada,color:'#f87171'},
+  ].filter(d=>d.value>0);
+
+  const donutSVG=`<svg viewBox="0 0 160 160" width="160" height="160" style="flex-shrink:0">
+    ${_dpDonut(donutStats,80,80,58,22)}
+    <text x="80" y="77" text-anchor="middle" font-size="26" font-weight="800" fill="rgba(168,240,232,.9)" font-family="DM Serif Display,serif">${total}</text>
+    <text x="80" y="94" text-anchor="middle" font-size="10" fill="rgba(168,240,232,.45)" font-family="DM Sans,sans-serif">actividades</text>
+  </svg>`;
+
+  const donutLegend=donutStats.map(d=>`<div style="display:flex;align-items:center;gap:8px;font-size:12px"><span style="width:10px;height:10px;border-radius:50%;background:${d.color};flex-shrink:0;display:inline-block"></span><span style="color:rgba(168,240,232,.7)">${d.label}</span><span style="margin-left:auto;font-weight:700;color:rgba(168,240,232,.9)">${d.value}</span></div>`).join('');
+
+  const arcR=40,arcC=2*Math.PI*arcR,arcFil=(tasaComp/100)*arcC;
+  const arcSVG=`<svg viewBox="0 0 100 60" width="110" height="66" style="flex-shrink:0;overflow:visible">
+    <circle cx="50" cy="50" r="${arcR}" fill="none" stroke="rgba(255,255,255,.07)" stroke-width="10" stroke-dasharray="${(arcC/2).toFixed(2)} ${arcC.toFixed(2)}" stroke-linecap="round"/>
+    <circle cx="50" cy="50" r="${arcR}" fill="none" stroke="#4ade80" stroke-width="10" stroke-dasharray="${(arcFil/2).toFixed(2)} ${arcC.toFixed(2)}" stroke-linecap="round" transform="rotate(-180 50 50)"/>
+    <text x="50" y="46" text-anchor="middle" font-size="17" font-weight="800" fill="#4ade80" font-family="DM Serif Display,serif">${tasaComp}%</text>
+    <text x="50" y="57" text-anchor="middle" font-size="8" fill="rgba(168,240,232,.45)" font-family="DM Sans,sans-serif">completadas</text>
+  </svg>`;
+
+  const weekData=_dpWeeklyData(acts);
+  const bubbleLabel=_dpPeriodo==='mes'?'por semana':'por mes';
+  const BW=340,BH=170;
+  const bubbleSVG=`<svg viewBox="0 0 ${BW} ${BH}" width="100%" height="${BH}" style="overflow:visible">${_dpBubbles(weekData,BW,BH)}</svg>`;
+
+  const bubbleLegend=`<div style="display:flex;gap:14px;flex-wrap:wrap;margin-top:10px">${[['#4ade80','≥60% completadas'],['#60a5fa','En progreso'],['#f87171','Con bloqueadas'],['rgba(255,255,255,.4)','Sin completar']].map(([c,l])=>`<div style="display:flex;align-items:center;gap:5px;font-size:11px;color:rgba(168,240,232,.55)"><span style="width:10px;height:10px;border-radius:50%;background:${c};display:inline-block"></span>${l}</div>`).join('')}</div>`;
+
+  const selEl=document.getElementById('month-select');
+  const periodoLabel={
+    mes:selEl?selEl.options[selEl.selectedIndex]?.text:'Mes actual',
+    rango:`${_dpRangeFrom||'—'} → ${_dpRangeTo||'—'}`,
+  }[_dpPeriodo]||'Mes actual';
+
+  root.innerHTML=`<div style="padding:0 0 32px">
+    <div style="display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:20px">
+      <div>
+        <div style="font-family:'DM Serif Display',serif;font-size:22px;color:var(--teal-400)">📊 Mi Desempeño</div>
+        <div style="font-size:12px;color:rgba(168,240,232,.45);margin-top:3px">${periodoLabel}</div>
+      </div>
+      <div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap">
+          ${['mes','rango'].map(k=>{const lbs={mes:'Mes actual',rango:'Rango'};const act=_dpPeriodo===k;return`<button onclick="_dpPeriodo='${k}';renderDesempeno()" style="padding:7px 14px;border-radius:10px;border:1.5px solid ${act?'var(--teal-400)':'rgba(168,240,232,.18)'};background:${act?'rgba(64,217,192,.15)':'transparent'};color:${act?'var(--teal-300)':'rgba(168,240,232,.5)'};font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;cursor:pointer">${lbs[k]}</button>`;}).join('')}
+        </div>
+        <div id="dp-range-row" style="display:${_dpPeriodo==='rango'?'flex':'none'};gap:8px;align-items:center;flex-wrap:wrap;margin-top:10px">
+          <span style="font-size:12px;color:rgba(168,240,232,.55)">Desde</span>
+          <input type="month" id="dp-from" value="${_dpRangeFrom}" onchange="_dpRangeFrom=this.value;renderDesempeno()" style="background:rgba(255,255,255,.06);border:1px solid rgba(168,240,232,.2);color:#e0fafa;font-family:'DM Sans',sans-serif;font-size:12px;padding:5px 8px;border-radius:8px;cursor:pointer;outline:none;color-scheme:dark"/>
+          <span style="font-size:12px;color:rgba(168,240,232,.55)">Hasta</span>
+          <input type="month" id="dp-to" value="${_dpRangeTo}" onchange="_dpRangeTo=this.value;renderDesempeno()" style="background:rgba(255,255,255,.06);border:1px solid rgba(168,240,232,.2);color:#e0fafa;font-family:'DM Sans',sans-serif;font-size:12px;padding:5px 8px;border-radius:8px;cursor:pointer;outline:none;color-scheme:dark"/>
+        </div>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px;margin-bottom:24px">${cards.join('')}</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px">
+      <div style="background:rgba(255,255,255,.03);border:1px solid rgba(168,240,232,.08);border-radius:18px;padding:18px 16px">
+        <div style="font-size:13px;font-weight:700;color:rgba(168,240,232,.7);margin-bottom:14px">Distribución por estado</div>
+        <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap">${donutSVG}<div style="display:flex;flex-direction:column;gap:8px;flex:1;min-width:80px">${donutLegend||'<div style="font-size:12px;color:rgba(255,255,255,.25)">Sin datos</div>'}</div></div>
+      </div>
+      <div style="background:rgba(255,255,255,.03);border:1px solid rgba(168,240,232,.08);border-radius:18px;padding:18px 16px">
+        <div style="font-size:13px;font-weight:700;color:rgba(168,240,232,.7);margin-bottom:10px">Tasa de completación</div>
+        <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:calc(100% - 30px);gap:8px">
+          ${arcSVG}
+          <div style="text-align:center;font-size:12px;color:rgba(168,240,232,.5)">${completadas} de ${total} actividades completadas</div>
+        </div>
+      </div>
+    </div>
+    <div style="background:rgba(255,255,255,.03);border:1px solid rgba(168,240,232,.08);border-radius:18px;padding:18px 16px">
+      <div style="font-size:13px;font-weight:700;color:rgba(168,240,232,.7);margin-bottom:12px">Actividades ${bubbleLabel}</div>
+      <div style="overflow-x:auto">${bubbleSVG}</div>
+      ${bubbleLegend}
+    </div>
+  </div>`;
 }
 </script>
 </body>
