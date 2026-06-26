@@ -6872,7 +6872,15 @@ function openReqForm() {
 }
 
 function closeReqForm() {
+  _editingReqId = null;
   document.getElementById('req-form-overlay').style.display = 'none';
+  // Restaurar título y botón originales
+  const titleEl = document.querySelector('#req-form-overlay [style*="DM Serif Display"]');
+  if (titleEl) titleEl.textContent = '📋 Nueva Requisición';
+  const subEl = document.querySelector('#req-form-overlay [style*="Modifica los datos"]');
+  if (subEl) subEl.textContent = 'Completa los datos. Salma recibirá esta solicitud.';
+  const sendBtn = document.querySelector('#req-form-overlay button[onclick="saveRequisicion()"]');
+  if (sendBtn) sendBtn.textContent = '📨 Enviar Requisición';
 }
 
 // ── Agregar fila de producto ──────────────────────────────────
@@ -6888,22 +6896,27 @@ function reqAddProductRow(existingData) {
   const nameVal = existingData ? existingData.nombre : '';
   const qtyVal  = existingData ? existingData.cantidad : '1';
   const unitVal = existingData ? existingData.unidad : '';
+  const linkVal = existingData ? (existingData.link || '') : '';
+
+  row.style.cssText = 'display:flex;flex-direction:column;gap:5px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:8px;padding:8px';
 
   row.innerHTML = `
-    <input type="text" id="req-prod-name-${id}" value="${nameVal}" placeholder="Producto…"
-      style="flex:2;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:6px;padding:5px 8px;font-family:'DM Sans',sans-serif;font-size:12px;color:#fff;outline:none;min-width:0">
-    <input type="number" id="req-prod-qty-${id}" value="${qtyVal}" placeholder="Cant." min="1" step="1"
-      style="width:52px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:6px;padding:5px 6px;font-family:'DM Sans',sans-serif;font-size:12px;color:#fff;outline:none;text-align:center;flex-shrink:0">
-    <input type="text" id="req-prod-unit-${id}" value="${unitVal}" placeholder="Unidad"
-      style="width:60px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:6px;padding:5px 6px;font-family:'DM Sans',sans-serif;font-size:12px;color:#fff;outline:none;text-align:center;flex-shrink:0">`;
+    <div style="display:flex;align-items:center;gap:6px">
+      <input type="text" id="req-prod-name-${id}" value="${nameVal}" placeholder="Producto…"
+        style="flex:2;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:6px;padding:5px 8px;font-family:'DM Sans',sans-serif;font-size:12px;color:#fff;outline:none;min-width:0">
+      <input type="number" id="req-prod-qty-${id}" value="${qtyVal}" placeholder="Cant." min="1" step="1"
+        style="width:52px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:6px;padding:5px 6px;font-family:'DM Sans',sans-serif;font-size:12px;color:#fff;outline:none;text-align:center;flex-shrink:0">
+      <input type="text" id="req-prod-unit-${id}" value="${unitVal}" placeholder="Unidad"
+        style="width:60px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:6px;padding:5px 6px;font-family:'DM Sans',sans-serif;font-size:12px;color:#fff;outline:none;text-align:center;flex-shrink:0">
+      <button title="Eliminar" onclick="(function(r){r.remove();if(!document.getElementById('req-products-list').children.length)document.getElementById('req-products-empty').style.display='block';})(this.closest('#req-row-${id}'))"
+        style="background:rgba(224,85,85,.1);border:1px solid rgba(224,85,85,.25);border-radius:6px;color:#ef9a9a;padding:4px 7px;cursor:pointer;font-size:11px;flex-shrink:0;transition:all .15s">✕</button>
+    </div>
+    <div style="display:flex;align-items:center;gap:6px">
+      <span style="font-size:13px;flex-shrink:0">🛒</span>
+      <input type="url" id="req-prod-link-${id}" value="${linkVal}" placeholder="Link de compra en línea (opcional)"
+        style="flex:1;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:6px;padding:4px 8px;font-family:'DM Sans',sans-serif;font-size:11px;color:rgba(168,240,232,.7);outline:none;min-width:0" onfocus="this.style.borderColor='var(--teal-400)'" onblur="this.style.borderColor='rgba(255,255,255,.08)'">
+    </div>`;
 
-  // Botón eliminar pequeño
-  const delBtn = document.createElement('button');
-  delBtn.title = 'Eliminar';
-  delBtn.innerHTML = '✕';
-  delBtn.style.cssText = 'background:rgba(224,85,85,.1);border:1px solid rgba(224,85,85,.25);border-radius:6px;color:#ef9a9a;padding:4px 7px;cursor:pointer;font-size:11px;flex-shrink:0;transition:all .15s';
-  delBtn.onclick = () => { row.remove(); if (!document.getElementById('req-products-list').children.length) document.getElementById('req-products-empty').style.display = 'block'; };
-  row.appendChild(delBtn);
   list.appendChild(row);
 }
 
@@ -6925,13 +6938,14 @@ async function saveRequisicion() {
     const nombre = document.getElementById('req-prod-name-'+rowId)?.value.trim();
     const cantidad = document.getElementById('req-prod-qty-'+rowId)?.value;
     const unidad = document.getElementById('req-prod-unit-'+rowId)?.value.trim();
-    if (nombre) productos.push({ nombre, cantidad: Number(cantidad)||1, unidad: unidad||'pz' });
+    const link = document.getElementById('req-prod-link-'+rowId)?.value.trim() || '';
+    if (nombre) productos.push({ nombre, cantidad: Number(cantidad)||1, unidad: unidad||'pz', link });
   });
   if (!productos.length) { showToast('⚠️ Agrega al menos un producto'); return; }
 
   const evento = (_evs||[]).find(e=>e.id==eventoId) || { nombre: 'Sin evento', id: eventoId };
   const req = {
-    id: Date.now(),
+    id: _editingReqId || Date.now(),
     eventoId,
     eventoNombre: evento.nombre,
     eventoFecha: evento.fecha || '',
@@ -6946,12 +6960,24 @@ async function saveRequisicion() {
     comentarioSalma: ''
   };
 
-  const updated = [..._requisiciones, req];
+  let updated;
+  let toastMsg;
+  if (_editingReqId) {
+    const idx = _requisiciones.findIndex(r => r.id === _editingReqId);
+    if (idx >= 0) {
+      _requisiciones[idx] = { ..._requisiciones[idx], eventoId, eventoNombre: evento.nombre, eventoFecha: evento.fecha||'', fechaRequerida: fecha, prioridad: prio, notas, productos };
+    }
+    updated = [..._requisiciones];
+    toastMsg = '✏️ Requisición actualizada';
+  } else {
+    updated = [..._requisiciones, req];
+    toastMsg = '📨 Requisición enviada a Salma';
+  }
   await window._fbSaveShared('valkibah_requisiciones', { items: updated });
   _requisiciones = updated;
   closeReqForm();
   renderReqList();
-  showToast('📨 Requisición enviada a Salma');
+  showToast(toastMsg);
 }
 
 // ── Render lista de requisiciones (pantalla general inventario) ──
@@ -7005,7 +7031,7 @@ function _reqCard(req, isSalma) {
   };
   const prioMap = { alta:'🔴 Alta', media:'🟡 Media', baja:'🔵 Baja' };
   const sc = statusMap[req.status] || statusMap.pendiente;
-  const prods = (req.productos||[]).map(p=>`<li style="color:rgba(168,240,232,.75);font-size:12px;margin-bottom:2px"><span style="color:#fff;font-weight:600">${p.nombre}</span> — ${p.cantidad} ${p.unidad}</li>`).join('');
+  const prods = (req.productos||[]).map(p=>`<li style="color:rgba(168,240,232,.75);font-size:12px;margin-bottom:4px"><div><span style="color:#fff;font-weight:600">${p.nombre}</span> — ${p.cantidad} ${p.unidad}</div>${p.link?`<a href="${p.link}" target="_blank" rel="noopener noreferrer" style="display:inline-flex;align-items:center;gap:4px;margin-top:3px;font-size:11px;color:var(--teal-400);text-decoration:none;font-weight:600" onmouseenter="this.style.color='#fff'" onmouseleave="this.style.color='var(--teal-400)'">🛒 Ver link</a>`:''}   </li>`).join('');
   const comentario = req.comentarioSalma ? `<div style="margin-top:8px;padding:8px 10px;background:rgba(64,217,192,.08);border-radius:8px;border:1px solid rgba(64,217,192,.2);font-size:12px;color:rgba(168,240,232,.8)"><span style="font-weight:700;color:var(--teal-400)">💬 Salma:</span> ${req.comentarioSalma}</div>` : '';
   const actionBtns = isSalma && req.status === 'pendiente'
     ? `<div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap">
@@ -7021,6 +7047,12 @@ function _reqCard(req, isSalma) {
         onmouseenter="this.style.background='rgba(224,85,85,.25)';this.style.color='#fff'"
         onmouseleave="this.style.background='rgba(224,85,85,.1)';this.style.color='#ef9a9a'">🗑</button>` : '';
 
+  const editBtn = !isSalma && req.status === 'pendiente'
+    ? `<button onclick="editarRequisicion(${req.id})" title="Editar requisición"
+        style="background:rgba(64,217,192,.1);border:1.5px solid rgba(64,217,192,.25);border-radius:8px;color:var(--teal-400);padding:7px 10px;font-size:13px;cursor:pointer;flex-shrink:0;transition:all .15s"
+        onmouseenter="this.style.background='rgba(64,217,192,.22)';this.style.color='#fff'"
+        onmouseleave="this.style.background='rgba(64,217,192,.1)';this.style.color='var(--teal-400)'">✏️</button>` : '';
+
   return `<div style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:16px;margin-bottom:12px">
     <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:10px">
       <div style="flex:1;min-width:0">
@@ -7034,14 +7066,70 @@ function _reqCard(req, isSalma) {
       </div>
       <div style="display:flex;gap:6px;align-items:center;flex-shrink:0">
         ${downloadBtn}
+        ${editBtn}
         ${deleteBtn}
       </div>
     </div>
     <ul style="list-style:none;margin:0 0 4px;padding:0 0 0 4px">${prods}</ul>
     ${req.notas ? `<div style="font-size:12px;color:rgba(168,240,232,.45);margin-top:6px;font-style:italic">"${req.notas}"</div>` : ''}
+    ${req.linkCompra ? `<div style="margin-top:8px"><a href="${req.linkCompra}" target="_blank" rel="noopener noreferrer" style="display:inline-flex;align-items:center;gap:6px;background:rgba(64,217,192,.1);border:1px solid rgba(64,217,192,.25);border-radius:8px;padding:5px 11px;font-size:12px;color:var(--teal-400);text-decoration:none;font-weight:600;transition:all .15s" onmouseenter="this.style.background='rgba(64,217,192,.2)';this.style.color='#fff'" onmouseleave="this.style.background='rgba(64,217,192,.1)';this.style.color='var(--teal-400)'">🛒 Ver link de compra</a></div>` : ''}
     ${comentario}
     ${actionBtns}
   </div>`;
+}
+
+// ── Editar requisición ───────────────────────────────────────
+let _editingReqId = null;
+
+function editarRequisicion(reqId) {
+  const req = _requisiciones.find(r => r.id === reqId);
+  if (!req) return;
+  _editingReqId = reqId;
+
+  // Reutilizar openReqForm para poblar el selector de eventos
+  const sel = document.getElementById('req-evento');
+  sel.innerHTML = '<option value="">— Selecciona el evento —</option>';
+  (_evs || []).forEach(ev => {
+    const opt = document.createElement('option');
+    opt.value = ev.id;
+    opt.textContent = ev.nombre + (ev.fecha ? ' · ' + formatDisplayDate(ev.fecha) : '');
+    sel.appendChild(opt);
+  });
+  if (!(_evs || []).length) {
+    const opt = document.createElement('option');
+    opt.value = '__sin_evento__'; opt.textContent = '(Sin evento registrado)';
+    sel.appendChild(opt);
+  }
+
+  // Precargar datos
+  document.getElementById('req-solicitante').value = req.solicitante || '';
+  document.getElementById('req-evento').value = req.eventoId || '';
+  document.getElementById('req-fecha').value = req.fechaRequerida || '';
+  document.getElementById('req-prioridad').value = req.prioridad || 'media';
+  document.getElementById('req-notas').value = req.notas || '';
+
+  // Precargar productos
+  _reqProductRows = 0;
+  document.getElementById('req-products-list').innerHTML = '';
+  document.getElementById('req-products-empty').style.display = 'none';
+  (req.productos || []).forEach(p => reqAddProductRow(p));
+  if (!(req.productos || []).length) {
+    document.getElementById('req-products-empty').style.display = 'block';
+  }
+
+  // Cambiar título y botón del modal
+  const titleEl = document.querySelector('#req-form-overlay [style*="DM Serif Display"]');
+  if (titleEl) titleEl.textContent = '✏️ Editar Requisición';
+  const subEl = document.querySelector('#req-form-overlay [style*="Salma recibirá"]');
+  if (subEl) subEl.textContent = 'Modifica los datos. Solo puedes editar requisiciones pendientes.';
+  const sendBtn = document.querySelector('#req-form-overlay button[onclick="saveRequisicion()"]');
+  if (sendBtn) sendBtn.textContent = '💾 Guardar Cambios';
+
+  document.getElementById('req-form-overlay').style.display = 'flex';
+}
+
+async function saveRequisicionEdit() {
+  // wrapper que decide si crear o actualizar
 }
 
 // ── Eliminar requisición (vista Inventario) ───────────────────
@@ -7125,7 +7213,7 @@ function descargarReqImagen(reqId) {
   if (!req) return;
   const statusMap = { pendiente:'⏳ PENDIENTE', aprobada:'✅ APROBADA', rechazada:'❌ RECHAZADA' };
   const prioMap   = { alta:'🔴 Alta', media:'🟡 Media', baja:'🔵 Baja' };
-  const W=800, PH=Math.max(480, 200 + (req.productos||[]).length*34 + (req.notas?40:0) + (req.comentarioSalma?50:0));
+  const W=800, PH=Math.max(480, 200 + (req.productos||[]).length*40 + (req.notas?40:0) + (req.comentarioSalma?50:0));
   const canvas = document.createElement('canvas');
   canvas.width=W; canvas.height=PH;
   const ctx = canvas.getContext('2d');
@@ -7179,12 +7267,16 @@ function descargarReqImagen(reqId) {
   ctx.fillText('PRODUCTOS SOLICITADOS', 36, y); y+=18;
   (req.productos||[]).forEach((p,i) => {
     const alt = i%2===0;
-    if(alt){ ctx.fillStyle='rgba(255,255,255,.03)'; ctx.fillRect(28,y-14,W-56,26); }
-    ctx.fillStyle='#fff'; ctx.font='bold 13px DM Sans,sans-serif';
+    if(alt){ ctx.fillStyle='rgba(255,255,255,.03)'; ctx.fillRect(28,y-14,W-56,p.link?44:26); }
+    ctx.fillStyle='#fff'; ctx.font='bold 13px DM Sans,sans-serif'; ctx.textAlign='left';
     ctx.fillText(p.nombre, 44, y);
     ctx.fillStyle='#40d9c0'; ctx.textAlign='right'; ctx.font='13px DM Sans,sans-serif';
     ctx.fillText(p.cantidad+' '+p.unidad, W-44, y);
-    ctx.textAlign='left'; y+=28;
+    ctx.textAlign='left'; y+=18;
+    if(p.link){
+      ctx.fillStyle='rgba(64,217,192,.6)'; ctx.font='11px DM Sans,sans-serif';
+      ctx.fillText('🛒 '+p.link.slice(0,80), 54, y); y+=22;
+    } else { y+=10; }
   });
   y+=6;
 
